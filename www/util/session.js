@@ -1,5 +1,6 @@
 var session = require('../controllers/session.js'),
-    db = require('./db.js');
+    db = require('./db.js'),
+    request, response;
 
 /**
  * Save the current session to the database: a helper function
@@ -44,6 +45,11 @@ function getUser(callback) {
         // No logged in...
         return callback(null, null);
     }
+
+    // Check cache
+    if(req.currentUser) {
+        return callback(null, req.currentUser);
+    }
     
     var user = require('../controllers/user.js');
     user.getUser(req.session.userId, function (err, user) {
@@ -51,6 +57,7 @@ function getUser(callback) {
             return callback(err);
         }
         
+        req.currentUser = user; // Cache
         return callback(null, user.userData);
     });
 }
@@ -69,11 +76,39 @@ function endSession(callback) {
     session.endSession(req.sessionId, callback);
 }
 
+/**
+ * Check if a user is logged in. If the user is not logged in, redirect to the
+ * login page. If error occurs, redirect to a 500 page. If the user is logged in
+ * process the callback function.
+ * @param {Function} callback Callback receives the User object of the logged in
+ *  user.
+ * @returns {undefined}
+ */
+function requireLogin(callback) {
+    var req = this;
+    
+    this.getUser(function (err, user) {
+        if(err) {
+            return response.redirect('/server/500?redir=' + encodeURIComponent(req.url));
+        }
+        
+        if(!user) {
+            return response.redirect('/auth/login?next=' + encodeURIComponent(req.url));
+        }
+        
+        // User found
+        return callback(user);
+    });
+}
+
 module.exports = {
     middleware: function (req, res, next) {
         req.isLoggedIn = isLoggedIn;
         req.getUser = getUser;
         req.logout  = req.endSession = endSession;
+        req.requireLogin = requireLogin;
+        response = res;
+        request = req;
         
         var sessionId = req.cookies && req.cookies.sid;
         

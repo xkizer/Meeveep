@@ -49,6 +49,7 @@ var lang = {
     txtMoreInformation: 'More information',
     txtInformation: 'Information',
     txtFound: 'found',
+    txtFor: 'For',
     
 };
 

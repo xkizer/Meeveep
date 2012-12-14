@@ -29,7 +29,7 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'html');
   app.use(express.favicon());
-  app.use(express.cookieParser());
+  app.use(express.cookieParser({secret: 'sdfg'}));
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(session.middleware);
@@ -49,7 +49,8 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.post('/auth/login', routes.login);
 app.get('/auth/logout', routes.logout);
-app.get('/star/:starId', stars.starInfo);
+app.get('/star/:starId([0-9]+)', stars.starInfo);
+app.get('/star/:starId([0-9]+)/book', stars.book);
 
 http.createServer(app).listen(3000, function(){
   console.log("Express server listening on port " + app.get('port'));

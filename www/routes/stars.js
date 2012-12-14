@@ -22,8 +22,24 @@ module.exports = {
             
             console.log(require('cli-color').blue('STAR INFO'), star);
             view.star = star;
+            
             renderer.render({page: 'main/star', vars: view}, req, res, next);
         });
-    }
+    },
     
+    book: function (req, res, next) {
+        var cli = require('cli-color');
+        var starId = req.params.starId;
+
+        // User needs to be logged in first
+        req.requireLogin(function (currentUser) {
+            // Book...
+            var str = require('../controllers/stars.js');
+            res.send('Something').end();
+                console.log(req);
+            str.book(currentUser, starId, function (err, booked) {
+                console.log(req);
+            });
+        });
+    }
 };

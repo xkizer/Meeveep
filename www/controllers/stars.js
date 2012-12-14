@@ -7,7 +7,8 @@ sortFields = ['price','name'];
 
 module.exports = {
     getStars: getStars,
-    getStar: getStar
+    getStar: getStar,
+    book: book
 }
 
 
@@ -140,14 +141,14 @@ function getStar (starId, callback) {
             return callback(error(0x9001));
         }
         
-        collection.findOne({starId: String(starId)}, function (err, star) {
+        collection.findOne({starId: Number(starId)}, function (err, star) {
             if(err) {
                 console.log(err);
                 return callback(error(0x9001));
             }
             
             if(!star) {
-                console.log('Star not found');
+                
                 return callback(error(0x9002));
             }
             
@@ -156,7 +157,11 @@ function getStar (starId, callback) {
     });
 }
 
-
+/**
+ * Book a star
+ */
+function book (starId, callback) {
+}
 
 
 
