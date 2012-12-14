@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untitled Document</title>
+    <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" media="all" />
+    <!--[if lte IE 7]>
+    <link href="css/ie7.css" rel="stylesheet" media="all" />
+    <![endif]-->
+	<script type="text/javascript" src="js/lib/modernizr.js"></script>
+	<script type="text/javascript" src="js/lib/css3-mediaqueries.js"></script>
+</head>
+<body id="start-page">
+	<div id="wrapper">
+    	<div id="container">
+        	<header id="header-main">
+            	<div id="header-top">
+	                <div id="slogan">Digitale Autogramme deiner Stars!</div>
+	                <a href="#" id="star-alarm-link">Star-Alarm</a>
+                	<div id="logo"><a href="/"><img src="images/imgs/logo.png" alt="Meeveep" /></a></div>
+                </div>
+                <div id="header-bottom">
+                	<nav class="left">
+                    	<a href="#" id="icon-nav-home">Home</a>
+                    	<a href="#" id="icon-nav-settings">Settings</a>
+                    	<a href="#" id="icon-nav-profile">Profile</a>
+                    </nav>
+                    <div id="header-star-stat">Nächste Autogrammstunde mit <i>DJ Ötzi</i> in: <i>1 Tag, 3 Std. und 40 MIn.</i></div>
+                	<nav class="right">
+                        <a href="#" id="language-selector">German</a>
+                    	<a href="#" id="header-top-info">Wie funktioniert <i>Meveep?</i></a>
+                    </nav>
+                    <div id="user-info-box">
+                        <form id="login-form" method="post" action="/auth/login">
+                            <h2>Login</h2>
+                            <p>Um in deinen persönlichen Bereich zu gelangen, musst du dich zuerst einloggen.</p>
+                            <fieldset>
+                            	<input type="email" placeholder="E-Mail-Adresse" />
+                            	<input type="password" placeholder="Passwort" />
+                                <button type="submit">Absenden</button>
+                            </fieldset>
+                            <p class="register-link">Noch kein Konto? <a href="#">Registrieren &raquo;</a></p>
+                        </form>
+                    </div>
+                </div>
+            </header>
+            <section id="main">
+            	<section id="content">
+                	<div id="divide">
+                    	<section class="left">
+                        	<section id="live-autographs">
+                            	<div id="live-autograph-stream">
+                                	<h2>Live-Autogramme</h2>
+                                    <span id="live-autograph-found">12 TERMINE GEFUNDEN</span>
+                                    <div id="live-autograph-list" class="scrolling">
+                                    	<ul class="content">
+                                        	<li>
+                                            	<!-- empty -->
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="live-autograph-counter">23 VERFÜGBAR</div>
+                            </section>
+                            <div id="newsletter-subscription">
+                            	<h2>Bitte informiert mich!</h2>
+                                <p>Ja, ich möchte wöchentlich über neue Autogramme und Termine informiert werden.</p>
+                                <form method="post" action="nlt/subscribe">
+                                	<fieldset>
+                                        <input type="email" name="email" placeholder="E-Mail-Adresse hier eintragen" required="required" />
+                                        <button type="submit">Subscribe</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </section>
+                        <section class="right">
+                        	<div id="personal-autographs">
+	                            <h1>Persönliche Autogramme</h1>
+                                <p>Personalisierte Autogramme von Meeveep enthalten Video, Audio
+								oder einen persönlichen Gruß – zusätzlich zur digitalen Unterschrift.</p>
+                                <div class="rightbox">
+                                	<form id="personal-autographs-search" method="get" action="/search">
+                                    	<fieldset>
+                                        	<input type="search" name="q" placeholder="Suche" />
+                                            <button>Suche</button>
+                                        </fieldset>
+                                    	<fieldset>
+                                        	<input type="text" name="category" value="Musik / Schlager" />
+                                        </fieldset>
+                                    </form>
+                                </div>
+                                <section class="content scrolling">
+                                	<ul>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-7.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price sale">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-6.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-5.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-4.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-3.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-2.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-1.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-7.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-6.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-5.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-4.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-3.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    	<li>
+                                        	<span class="overlay">
+                                            	<a href="#" class="info" title="More information">Information</a>
+                                            	<span class="flag"></span>
+                                                <a class="text" href="#">Anfordern &raquo;</a>
+                                            </span>
+                                            <img src="images/imgs/starts-small/star-small-2.jpg" alt="Some star" />
+                                            <span class="name">Peter Wackel Peter Wackel </span>
+                                            <span class="price">10,00€</span>
+                                            <span class="mm-icons">
+                                            	<a href="#" class="video">Video</a>
+                                            	<a href="#" class="audio">Audio</a>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </section>
+                                <div id="personal-autographs-count">23 VERFÜGBAR</div>
+                            </div>
+                        </section>
+                        <span class="cl"></span>
+                    </div>
+                    <div id="random-bg-r26a4"><img src="images/imgs/hind-1.jpg" alt="" /></div>
+                </section>
+            </section>
+            <footer id="footer-main">
+            	<div>
+                    <section>
+                        <h2>Informationen für:</h2>
+                        <h3>Managements, Clubs</h3>
+                        <p>Sie möchten mit Ihren Stars ganz weit nach vorne? Starten Sie hier und bringen Sie Ihre Schützlinge den Fans ganz nahe.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                        <h3>Prominente</h3>
+                        <p>Sie wollen maximale Nähe zu den Fans aus aller Welt? Gleichzeitig? Starten Sie jetzt und geben Sie Ihrer Karriere den nächsten Schub.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                    </section>
+                    <section>
+                        <h2>Sie können uns vertrauen!</h2>
+                        <p>Nicht nur unsere Nutzer, sondern auch zahlreiche größere Unternehmen sprechen uns ihr Vertrauen aus. Aber sehen Sie selbst.</p>
+                        <section class="icons" id="footer-certified">
+                        	<a href="#" id="footer-certified-bkf"></a>
+                        	<a href="#" id="footer-certified-aaa"></a>
+                        	<a href="#" id="footer-certified-eee"></a>
+                        </section>
+                    </section>
+                    <section>
+                        <h2>Meeveep ist sicher!</h2>
+                        <p>Durch unsere zahlreichen Partner für Bezahlsysteme und Sicherheit bieten wir unseren Nutzern, den Managern und natürlich den teilnehmenden Prominenten maximale Sicherheit.</p>
+                        <section class="icons" id="footer-payment-options"></section>
+                        <section id="footer-service-links">
+                        	<strong>Service</strong>
+                            <a href="#">AGB</a> | <a href="#">Impressum</a> | <a href="#">Kontakt</a> | <a href="#">Datenschutz</a>
+                        </section>
+                    </section>
+                </div>
+            </footer>
+        </div>
+    </div>
+	<script src="js/lib/jquery-1.8.2.min.js"></script>
+    <script src="/js/lib/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mousewheel.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mCustomScrollbar.js"></script>
+	<script type="text/javascript" src="js/lib/util.js"></script>
+	<script type="text/javascript" src="js/core.js"></script>
+	<script type="text/javascript" src="js/home.js"></script>
+    <!--[if IE 8]>
+    <script src="js/lib/ie/ie8.js"></script>
+    <![endif]-->
+</body>
+</html>

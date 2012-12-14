@@ -1,0 +1,1597 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans/regular/OpenSans-Regular-webfont.eot');
+    src: url('../fonts/OpenSans/regular/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans/regular/OpenSans-Regular-webfont.woff') format('woff'),
+         url('../fonts/OpenSans/regular/OpenSans-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans/regular/OpenSans-Regular-webfont.svg#universlt59ultracondensed') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans/bold/OpenSans-Bold-webfont.eot');
+    src: url('../fonts/OpenSans/bold/OpenSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans/bold/OpenSans-Bold-webfont.woff') format('woff'),
+         url('../fonts/OpenSans/bold/OpenSans-Bold-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans/bold/OpenSans-Bold-webfont.svg#universlt59ultracondensed') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans/italic/OpenSans-Italic-webfont.eot');
+    src: url('../fonts/OpenSans/italic/OpenSans-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans/italic/OpenSans-Italic-webfont.woff') format('woff'),
+         url('../fonts/OpenSans/italic/OpenSans-Italic-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans/italic/OpenSans-Italic-webfont.svg#universlt59ultracondensed') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans/light/OpenSans-Light-webfont.eot');
+    src: url('../fonts/OpenSans/light/OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans/light/OpenSans-Light-webfont.woff') format('woff'),
+         url('../fonts/OpenSans/light/OpenSans-Light-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans/light/OpenSans-Light-webfont.svg#universlt59ultracondensed') format('svg');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans/semibolditalic/OpenSans-SemiboldItalic-webfont.eot');
+    src: url('../fonts/OpenSans/semibolditalic/OpenSans-SemiboldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans/semibolditalic/OpenSans-SemiboldItalic-webfont.woff') format('woff'),
+         url('../fonts/OpenSans/semibolditalic/OpenSans-SemiboldItalic-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans/semibolditalic/OpenSans-SemiboldItalic-webfont.svg#universlt59ultracondensed') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans/semibold/OpenSans-Semibold-webfont.eot');
+    src: url('../fonts/OpenSans/semibold/OpenSans-Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans/semibold/OpenSans-Semibold-webfont.woff') format('woff'),
+         url('../fonts/OpenSans/semibold/OpenSans-Semibold-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans/semibold/OpenSans-Semibold-webfont.svg#universlt59ultracondensed') format('svg');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/** NORMALIZE **/
+body {
+	font: 12px/1.5em OpenSans, sans-serif;
+	margin: 0;
+	background: #f5cba4 url(../images/bgs/bg.jpg);
+}
+
+p  {
+	margin: 0;
+}
+
+p + p {
+	margin-top: 1.5em;
+}
+
+h1, h2, h3, h4 {
+	font-weight: normal;
+	margin: 0;
+}
+
+img {
+	border: none;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+	outline: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+article, section, nav, header {
+	display: block;
+}
+
+address {
+	font-style: normal;
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+input[type="submit"], button, input[type="button"] {
+	cursor: pointer;
+	font: inherit;
+	padding: 0;
+}
+
+input[type="search"] {
+	-webkit-appearance: textfield;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* UTILITY CLASSES */
+.cl { /* Use after a float to clear */
+	clear: both !important;
+	min-height: 1px;
+	display: block !important;
+	float: none !important;
+}
+
+.right {    /* Use to float to the right */
+	float: right;
+}
+
+.left { /* Use to float to the left */
+	float: left;
+}
+
+.none {
+	display: none;
+}
+
+/* General */
+ol.list,
+ul.list {
+	list-style: disc outside;
+	margin: 20px 0;
+	padding-left: 30px;
+}
+
+ol.list {
+	list-style-type: decimal;
+}
+
+ol.list li,
+ul.list li {
+	margin: 5px 0;
+	padding-left: 10px;
+}
+
+.sbHolder,
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="tel"] {
+	font: inherit;
+	display: block;
+	float: left;
+	height: 21px;
+	line-height: 21px;
+	padding: 0 10px;
+	width: 224px;
+	border-radius: 6px;
+	border: none;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	background: url(../images/bgs/vgrads.png) 0 0 repeat-x;
+	background: -moz-linear-gradient(top, #fff, #eee);
+	background: -webkit-linear-gradient(top, #fff, #eee);
+	background: -o-linear-gradient(top, #fff, #eee);
+	background: linear-gradient(to bottom, #fff, #eee);
+	color: #303030;
+	font-weight: 500;
+}
+
+.datepicker:before {
+	width: 21px;
+	height: 21px;
+	background: url(../images/icons/icon-sprite.png) -322px -205px;
+	display: block;
+	float: left;
+	content: ' ';
+}
+
+
+/**
+ * jQuery Selectbox
+ */
+.sbHolder {
+	float: none;
+}
+
+.sbSelector {
+	display: block;
+	height: 21px;
+	text-decoration: none !important;
+	position: relative;
+	z-index: 1;
+}
+
+.sbToggle {
+	display: block;
+	float: right;
+	width: 14px;
+	height: 21px;
+	background: url(../images/icons/icon-sprite.png) -272px -167px;
+	position: relative;
+	z-index: 1;
+}
+
+.sbOptions {
+	background: #f3f3f3;
+	width: 100%;
+	padding: 15px 10px 0;
+	margin-left: -10px;
+	position: relative;
+	top: -10px !important;
+	z-index: 0;
+	border-radius: 0 0 4px 4px;
+	overflow: hidden;
+}
+
+.sbOptions a {
+	text-decoration: none;
+	display: block;
+	margin: 0 -10px;
+	padding: 2px 10px;
+}
+
+.sbOptions a:hover {
+	background: #ddd;
+}
+
+
+
+
+#container,
+#wrapper,
+body,
+html {
+	width: 100%;
+}
+
+#container{
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
+
+#header-main {
+	height: 89px;
+	background: rgba(49, 49, 49, 0.22);
+	border: 1px solid rgba(49, 49, 49, 0.22);
+}
+
+#header-top {
+	height: 59px;
+	background: url(../images/bgs/header-bg.png) bottom left;
+	background: url(../images/bgs/header-bg-alpha.png) 50% bottom no-repeat, url(../images/bgs/header-bg.png) bottom left;
+	position: relative;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: italic;
+	line-height: 55px;
+	color: #fff;
+}
+
+
+#logo {
+	width: 105px;
+	margin: 0 auto;
+	padding-top: 9px;
+	height: 46px;
+}
+
+
+#slogan {
+	float: left;
+	margin-left: 25px;
+}
+
+#star-alarm-link {
+	float: right;
+	margin-right: 21px;
+	padding-right: 21px;
+	display: block;
+	background: url(../images/icons/icon-sprite.png) no-repeat right 22px;
+}
+
+
+
+#header-bottom {
+	height: 33px;
+	margin-top: -3px;
+	line-height: 33px;
+	font-weight: 500;
+	color: #313131;
+}
+
+#header-bottom i {
+	color: #fff;
+	font-weight: 700;
+	font-style: normal;
+}
+
+#header-bottom > nav.left {
+	width: 120px;
+	border-left: 1px solid rgba(49, 49, 49, 0.22);
+	margin-left: 15px;
+	width: 120px;
+	height: 100%;
+	float: left;
+}
+
+#header-bottom > nav.left > a {
+	border-right: 1px solid rgba(49, 49, 49, 0.22);
+	display: block;
+	float: left;
+	height: 100%;
+	width: 39px;
+	background: url(../images/icons/icon-sprite.png) no-repeat 9px 8px;
+	overflow: hidden;
+	text-indent: -60000px;
+	-moz-transition: background 0.2s;
+	-webkit-transition: background 0.2s;
+	-o-transition: background 0.2s;
+	transition: background 0.2s;
+}
+
+#header-bottom > nav.left > a.active,
+#header-bottom > nav.left > a:hover {
+	background-color: rgba(247, 82, 9, 0.32);
+}
+
+#header-bottom > nav.left #icon-nav-settings {
+	background-position: -31px 8px;
+}
+
+#header-bottom > nav.left #icon-nav-profile {
+	background-position: -71px 8px;
+}
+
+
+#header-star-stat {
+	float: left;
+	padding-left: 10px;
+	display: none;
+}
+
+#header-bottom > nav.right {
+	margin-right: 17px;
+}
+
+#header-bottom > nav.right > a {
+	display: block;
+	float: left;
+	height: 100%;
+}
+
+#language-selector {
+	border: solid rgba(49, 49, 49, 0.22);
+	width: 39px;
+	border-width: 0 1px;
+	overflow: hidden;
+	text-indent: -6000px;
+	background: url(../images/icons/icon-sprite.png) no-repeat 10px -31px;
+}
+
+#header-top-info {
+	padding: 0 34px 0 13px;
+	border-right: 1px solid rgba(49, 49, 49, 0.22);
+	background: url(../images/icons/icon-sprite.png) no-repeat right -68px;
+}
+
+
+
+
+
+
+#content {
+	width: 1090px;
+	margin: 0 auto;
+	margin-top: 38px;
+}
+
+#divide{
+	position: relative;
+}
+
+#divide > .left {
+	width: 304px;
+}
+
+#live-autographs{
+	background: url(../images/bgs/leather.jpg);
+	padding: 6px;
+	box-shadow: 0 2px 3px rgba(0, 2, 6, 0.75);
+}
+
+#live-autograph-stream {
+	background: #fafafa url(../images/bgs/asdf.jpg) top no-repeat;
+	height: 352px;
+	width: 291px;
+	padding-top: 60px;
+	position: relative;
+}
+
+#live-autograph-stream h2 {
+	color: #303030;
+	font-weight: 200;
+	font-size: 24px;
+	line-height: 42px;
+	border-bottom: 1px solid #f75209;
+	text-indent: 16px;
+}
+
+#live-autograph-found {
+	display: block;
+	line-height: 23px;
+	text-align: right;
+	color: #b7b7b8;
+	font-weight: 500;
+	padding-right: 20px;
+	margin-bottom: 8px;
+}
+
+#live-autograph-list {
+	height: 258px;
+	overflow: hidden;
+}
+
+#live-autograph-list .content {
+	background: url(../images/bgs/live-autograph-bg.png);
+	min-height: 258px;
+	line-height: 15px;
+	padding: 0 21px 0 7px;
+}
+
+#live-autograph-list .content h3 {
+	color: #f75209;
+	font-weight: 500;
+}
+
+#live-autograph-list .content p {
+	font-weight: 500;
+	color: #303030;
+	line-height: 14px;
+}
+
+#live-autograph-list .mCSB_scrollTools {
+	width: 6px;
+	right: 7px;
+	height: 229px;
+	margin-top: 17px;
+}
+
+#wrapper .mCSB_draggerRail {
+	width: 6px;
+	background: #d3d2d2;
+}
+
+#wrapper .mCSB_dragger_bar {
+	width: 6px;
+	background: #303030;
+}
+
+#wrapper .mCSB_container {
+	margin: 0 !important;
+}
+
+
+#live-autograph-counter {
+	color: #fff;
+	font-weight: 500;
+	line-height: 29px;
+	height: 29px;
+}
+
+
+
+
+#order-back-to-previous {
+	height: 30px;
+	line-height: 30px;
+	background: url(../images/icons/icon-sprite.png) -468px -161px rgba(49, 49, 49, 0.22) no-repeat;
+	border: 1px solid rgba(49, 49, 49, 0.22);
+	margin-top: 21px;
+	padding: 8px 8px 8px 38px;
+	display: block;
+	color: #fff;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 24px;
+}
+
+#newsletter-subscription {
+	height: 84px;
+	background: rgba(49, 49, 49, 0.22);
+	border: 1px solid rgba(49, 49, 49, 0.22);
+	margin-top: 21px;
+	padding: 8px;
+}
+
+#newsletter-subscription h2 {
+	color: #fff;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 24px;
+	margin-bottom: 4px;
+}
+
+#newsletter-subscription p {
+	font-weight: 500;
+	-webkit-hyphens: auto;
+	   -moz-hyphens: auto;
+			hyphens: auto;
+	color: #313131;
+	line-height: 15px;
+}
+
+#newsletter-subscription form {
+	padding-top: 6px;
+}
+
+#newsletter-subscription button {
+	display: block;
+	width: 22px;
+	height: 22px;
+	float: left;
+	margin-left: 10px;
+	text-indent: -6000px;
+	overflow: hidden;
+	border: none;
+	background: url(../images/icons/icon-sprite.png) no-repeat -158px -3px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#divide > .right {
+	width: 704px;
+	padding: 17px 17px 10px;
+	background: url(../images/bgs/leather.jpg);
+	color: #fff;
+	position: relative;
+}
+
+
+#divide .right h1 {
+	font-size: 28px;
+	font-weight: 200;
+	line-height: 32px;
+}
+
+#divide .right h1 + p {
+	font-weight: 500;
+	line-height: 17px;
+	height: 38px;
+	width: 435px;
+}
+
+#divide .right .content {
+	border: #606060 solid;
+	border-width: 1px 0;
+	height: 425px;
+	margin: 0 -17px;
+	padding: 17px;
+	overflow: hidden;
+}
+
+#divide .right .rightbox {
+	position: absolute;
+	top: 17px;
+	right: 17px;
+}
+
+
+
+
+#personal-autographs-search input {
+	width: 125px;
+}
+
+#personal-autographs-search button {
+	background: url(../images/icons/icon-sprite.png) -415px -129px;
+	width: 23px;
+	height: 21px;
+	border: none;
+	display: block;
+	float: left;
+	overflow: hidden;
+	text-indent: -6000px;
+	margin-left: -23px;
+}
+
+#personal-autographs-search fieldset {
+	margin-bottom: 8px;
+}
+
+
+#personal-autographs .content li {
+	float: left;
+	width: 152px;
+	height: 211px;
+	margin: 0 18px 10px 0;
+	position: relative;
+}
+
+#personal-autographs .mCSB_draggerRail {
+	background: #636363;
+}
+
+#personal-autographs .mCSB_dragger_bar {
+	background: #f75209;
+}
+
+#personal-autographs li .overlay {
+	display: block;
+	width: 100%;
+	position: absolute;
+	top: 157px;
+	height: 0;
+	overflow: hidden;
+	-moz-transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+	background: url(../images/bgs/noise.png);
+}
+
+#personal-autographs li:hover .overlay {
+	height: 157px;
+	top: 0;
+}
+
+#personal-autographs .content .overlay .info {
+	width: 20px;
+	height: 27px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: url(../images/icons/icon-sprite.png) -252px -68px;
+	text-indent: -600px;
+	overflow: hidden;
+	display: block;
+}
+
+#personal-autographs .content .overlay .flag {
+	width: 54px;
+	height: 49px;
+	background: url(../images/icons/icon-sprite.png) -193px -68px;
+	display: block;
+	margin: 36px auto 0;
+}
+
+#personal-autographs .content .overlay .text {
+	display: block;
+	text-align: center;
+	color: #303030;
+	font-size: 18px;
+	margin-top: 5px;
+}
+
+#personal-autographs .content li > img {
+	width: 152px;
+	height: 157px;
+}
+
+#personal-autographs .name {
+	display: block;
+	font-weight: bold;
+	color: #f75209;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-right: 30px;
+}
+
+#personal-autographs .price {
+	color: #f75209;
+	font-size: 24px;
+	font-weight: 200;
+}
+
+#personal-autographs .sale {
+	text-decoration: line-through;
+}
+
+#personal-autographs .mm-icons {
+	display: block;
+	position: absolute;
+	top: 163px;
+	right: 0;
+	width: 40px;
+}
+
+#personal-autographs .mm-icons a {
+	display: block;
+	margin-left: 5px;
+	float: right;
+	width: 15px;
+	height: 15px;
+	overflow: hidden;
+	text-indent: -2000px;
+	background: url(../images/icons/icon-sprite.png) -441px -129px;
+}
+
+#personal-autographs .mm-icons a.video {
+	background-position: -460px -129px;
+}
+
+#personal-autographs-count {
+	font-weight: 500;
+	line-height: 20px;
+}
+
+
+
+
+
+
+
+
+#personal-autograph h2 {
+	font-size: 20px;
+	font-weight: 200;
+	padding-bottom: 10px;
+}
+
+#personal-autograph .left {
+	width: 340px;
+}
+
+#personal-autograph .right {
+	width: 352px;
+}
+
+#personal-autograph .image img {
+	display: block;
+	margin-bottom: 6px;
+}
+
+#personal-autograph #order-information strong {
+	color: #f75209;
+	display: block;
+}
+
+#personal-autograph #order-information span {
+	display: block;
+	font-weight: 500;
+}
+
+#personal-autograph #order-information .pen-color {
+	display: block;
+	width: 20px;
+	height: 20px;
+	border: 1px solid #fff;
+	border-radius: 7px;
+}
+
+#personal-autograph #order-information .mm-icons span {
+	float: left;
+	height: 15px;
+	line-height: 15px;
+	margin-right: 15px;
+	font-weight: bold;
+}
+
+#personal-autograph #order-information .mm-icons span:before {
+	margin-right: 5px;
+	display: block;
+	float: left;
+	content: ' ';
+	width: 15px;
+	height: 15px;
+	background: url("../images/icons/icon-sprite.png") -441px -129px;
+}
+
+#personal-autograph #order-information .mm-icons span.video:before {
+	background-position: -460px -129px;
+}
+
+#personal-autograph #order-information .mm-icons span.video strong {
+	display: inline;
+	color: inherit;
+	margin-left: 10px;
+}
+
+
+#personal-autograph .right > * {
+	background: rgba(247, 247, 247, 0.07);
+	display: block;
+	padding: 6px 10px;
+	margin-bottom: 8px;
+}
+
+#personal-autograph .right h3 {
+	color: #f75209;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#personal-autograph .right address {
+	height: 92px;
+	position: relative;
+}
+
+#personal-autograph .right address span {
+	display: block;
+	line-height: 15px;
+	font-weight: 500;
+}
+
+#personal-autograph .right address strong {
+	color: #f75209;
+}
+
+#personal-autograph .right address .edit {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	line-height: 16px;
+	display: block;
+}
+
+#personal-autograph .right address .edit:after {
+	float: right;
+	display: block;
+	height: 16px;
+	width: 16px;
+	margin-left: 5px;
+	content: ' ';
+	background: url(../images/icons/icon-sprite.png) -441px -176px;
+}
+
+#personal-autograph #payment-method {
+	display: block;
+	height: 36px;
+	background: rgba(247, 247, 247, 0.07);
+	padding: 10px;
+}
+
+#personal-autograph #payment-method .sbHolder {
+	width: 306px;
+}
+
+#personal-autograph #payment-method2 {
+}
+
+#personal-autograph #payment-method2 > span {
+	display: block;
+	padding-bottom: 10px;
+	font-weight: 500;
+	clear: both;
+}
+
+#personal-autograph #payment-method2 label .text {
+	float: left;
+	display: block;
+	max-width: 290px;
+}
+
+#personal-autograph #payment-method2 label .checker {
+	float: left;
+}
+
+#personal-autograph #total-price span {
+	display: block;
+	font-size: 24px;
+	color: #f75209;
+	font-weight: 200;
+}
+
+#personal-autograph #total-price span i {
+	color: #fff;
+	font-size: 12px;
+	font-weight: 500;
+	font-style: normal;
+}
+
+
+#personal-autograph #order-checkout {
+	display: block;
+	background: #f75209;
+	height: 36px;
+	line-height: 36px;
+	font-size: 24px;
+	font-weight: bold;
+	font-style: italic;
+	text-align: center;
+	margin: 0;
+}
+
+#personal-autograph #tiny-print {
+	background: none;
+	padding: 0;
+	margin: 0;
+	font-weight: 500;
+}
+
+#live-autograph-stream #map-man {
+	display: block;
+	width: 17px;
+	height: 23px;
+	position: absolute;
+	top: 71px;
+	right: 10px;
+	background: url(../images/icons/icon-sprite.png) -415px -167px;
+}
+
+#live-autograph-stream #video-preview video {
+	display: block;
+	width: 277px;
+}
+
+#live-autograph-stream #video-preview .controls {
+	height: 22px;
+	line-height: 22px;
+	color: #fff;
+	font-weight: 500;
+	padding: 0 4px;
+	background: url(../images/bgs/prof-bg.png);
+}
+
+#preview-page #live-autograph-list .content {
+	padding-right: 7px;
+}
+
+#preview-page #live-autograph-list .video-container {
+	margin-bottom: 3px;
+	position: relative;
+}
+
+#preview-page #live-autograph-list .controls .play-pause {
+	width: 20px;
+	background: url(../images/icons/icon-sprite.png) 0 -205px;
+	display: block;
+	float: left;
+	height: 100%;
+	margin-right: 4px;
+}
+
+#preview-page #live-autograph-list .controls .volume-icon {
+	display: block;
+	float: right;
+	width: 23px;
+	height: 100%;
+	background: url(../images/icons/icon-sprite.png) -26px -205px;
+}
+
+#preview-page #live-autograph-list #recording {
+	position: absolute;
+	top: 7px;
+	right: 7px;
+	color: #ce0606;
+	display: block;
+	font: 10px/10px Arial, Helvetica, sans-serif;
+}
+
+#preview-page #live-autograph-list #recording:after {
+	background: #ce0606;
+	display: block;
+	content: ' ';
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	float: right;
+	margin-left: 5px;
+}
+
+
+
+
+#personal-autograph-preview .rightbox a {
+	display: block;
+	position: absolute;
+}
+
+#personal-autograph-preview .rightbox .accept {
+	width: 32px;
+	height: 32px;
+	background: url(../images/icons/icon-sprite.png) -65px -205px;
+	right: 22px;
+	top: 13px;
+}
+
+#personal-autograph-preview .rightbox .reject {
+	width: 20px;
+	height: 20px;
+	background: url(../images/icons/icon-sprite.png) -112px -205px;
+	right: 2px;
+	top: 2px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#personal-autograph-preview #personal-autographs-bottom {
+	padding-top: 6px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .left {
+	font-weight: 500;
+	text-transform: uppercase;
+	line-height: 25px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right {
+	font-weight: 500;
+	text-transform: uppercase;
+	line-height: 25px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right span {
+	float: left;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a {
+	display: block;
+	height: 22px;
+	float: left;
+	width: 23px;
+	background: url(../images/icons/icon-sprite.png) -155px -205px;
+	margin-left: 13px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a.video {
+	background-position: -190px -205px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a.audio {
+	background-position: -223px -205px;
+}
+
+
+
+#preview-slideshow {
+	margin: 0 auto;
+	width: 633px;
+	position: relative;
+}
+
+#preview-slideshow .viewport {
+	width: 633px;
+	overflow: hidden;
+	height: 420px;
+}
+
+#preview-slideshow .nav {
+	height: 19px;
+	position: absolute;
+	width: 708px;
+	top: 189px;
+	left: -38px;
+}
+
+#preview-slideshow .nav a {
+	display: block;
+	background: url(../images/icons/icon-sprite.png) -252px -205px;
+	height: 19px;
+	width: 25px;
+	float: left;
+}
+
+#preview-slideshow .nav a[rel="next"] {
+	float: right;
+	background-position: -287px -205px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#service-page #live-autograph-list li,
+#dashboard-page #live-autograph-list li {
+	line-height: 35px;
+	height: 35px;
+}
+
+#service-page #live-autograph-list li a,
+#dashboard-page #live-autograph-list li a {
+	color: #f75209;
+	display: block;
+	height: 100%;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: bold;
+	text-indent: 10px;
+}
+
+#service-page #live-autograph-list li.active a,
+#service-page #live-autograph-list li a:hover,
+#dashboard-page #live-autograph-list li.active a,
+#dashboard-page #live-autograph-list li a:hover {
+	color: #fff;
+	background: url(../images/bgs/prof-bg.png);
+}
+
+#personal-autograph-dashboard .right,
+#personal-autograph-dashboard .left {
+	width: 342px;
+}
+
+#personal-autograph-dashboard .right > div,
+#personal-autograph-dashboard .left > div {
+	background: rgba(247, 247, 247, 0.07);
+	display: block;
+	padding: 6px 10px;
+	margin-bottom: 8px;
+}
+
+#personal-autograph-dashboard h3 {
+	color: #F75209;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#personal-autograph-dashboard h3 i {
+	color: #fff;
+	font-weight: 500;
+	font-style: normal;
+}
+
+#personal-autograph-dashboard .sbHolder {
+	width: 300px;
+}
+
+#dashboard-02oa7d label {
+	margin-right: 23px;
+}
+
+#dashboard-02oa7d > div + div {
+	margin-top: 10px;
+}
+
+#personal-autograph-dashboard .datepicker {
+	float: left;
+}
+
+#personal-autograph-dashboard .datepicker input {
+	width: 115px;
+}
+
+#personal-autograph-dashboard .datepicker + .datepicker {
+	margin-left: 10px;
+}
+
+#dashboard-pricing {
+	line-height: 21px;
+}
+#dashboard-pricing .left, #dashboard-pricing .right {
+	width: 158px;
+}
+
+#dashboard-pricing input {
+	width: 108px;
+}
+
+#dashboard-pricing span {
+	float: left;
+	display: block;
+	margin-right: 4px;
+}
+
+#dashboard-star-thumbnail > div {
+	width: 152px;
+	margin: 12px auto 3px;
+}
+
+#dashboard-star-thumbnail img {
+	display: block;
+	margin-bottom: 3px;
+	box-shadow: 1px 1px 5px rgba(0, 2, 6, 0.45);
+}
+
+#dashboard-star-thumbnail .price {
+	font-weight: 200;
+	font-size: 24px;
+	color: #f75209;
+}
+
+#dashboard-star-thumbnail .mm-icons {
+	float: right;
+}
+
+#dashboard-star-thumbnail .mm-icons span {
+	float: right;
+	height: 15px;
+	display: block;
+	line-height: 15px;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 13px;
+}
+
+#dashboard-star-thumbnail .mm-icons span:after {
+	width: 15px;
+	height: 15px;
+	float: right;
+	margin-left: 4px;
+	content: ' ';
+	background: url("../images/icons/icon-sprite.png") -441px -129px;
+}
+
+#dashboard-rand9ps1l > div + div {
+	margin-top: 5px;
+	clear: both;
+	margin-top: 27px;
+}
+
+#dashboard-rand9ps1l .checker {
+	float: left;
+}
+
+#dashboard-rand9ps1l label > span {
+	float: left;
+	display: inline-block;
+	width: 295px;
+}
+
+#personal-autograph-dashboard button {
+	display: block;
+	width: 100%;
+	line-height: 48px;
+	background: #f75209;
+	text-align: center;
+	border: none;
+	font-size: 24px;
+	color: #fff;
+	font-weight: bold;
+	font-style: italic;
+}
+
+
+
+
+
+
+
+
+#personal-autograph-service h3 {
+	margin-top: 10px;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 16px;
+}
+
+#personal-autograph-service .content p {
+	font-weight: 500;
+}
+
+#personal-autograph-service .content p + p {
+	margin-top: 3px;
+}
+
+#service-page #personal-autograph-service .content {
+	height: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+.pen-color-black {
+	background: -moz-linear-gradient(top, #434343, #323232);
+	background: -webkit-linear-gradient(top, #434343, #323232);
+	background: -o-linear-gradient(top, #434343, #323232);
+	background: linear-gradient(to bottom, #434343, #323232);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#random-bg-r26a4{
+	position: absolute;
+	right: 0;
+	top: 369px;
+	width: 225px;
+	height: 319px;
+	z-index: -1;
+	-moz-transform: rotate(-7deg) translate(23px, -10px);
+	-webkit-transform: rotate(-7deg) translate(23px, -10px);
+	-o-transform: rotate(-7deg) translate(23px, -10px);
+	-ms-transform: rotate(-7deg) translate(23px, -10px);
+}
+
+.no-csstransforms #random-bg-r26a4{
+	display: none;
+}
+
+
+
+
+
+
+
+
+
+#user-info-box {
+	width: 194px;
+	padding: 12px;
+	height: 222px;
+	position: absolute;
+	top: 100px;
+	left: 83px;
+	z-index: 3;
+	background: url(../images/bgs/prof-bg.png) darkorange;
+	box-shadow: 1px 2px 3px rgba(0, 2, 6, 0.59);
+	color: #fff;
+	line-height: 1.5em;
+	font-weight: 500;
+
+
+	display: none;
+}
+
+#user-info-box:before {
+	position: absolute;
+	content: ' ';
+	display: block;
+	width: 12px;
+	height: 8px;
+	background: url(../images/icons/icon-sprite.png) -129px 0 no-repeat;
+	top: -8px;
+	left: 27px;
+}
+
+#user-info-box h2 {
+	font-weight: 200;
+	font-size: 20px;
+	line-height: 30px;
+}
+
+#user-info-box p {
+	line-height: 15px;
+}
+
+
+#login-form input {
+	width: 174px;
+	margin-top: 7px;
+}
+
+#login-form button {
+	float: right;
+	margin-top: 10px;
+	background: url(../images/icons/icon-sprite.png) no-repeat -158px -3px;
+	border: none;
+	text-indent: 18px;
+	color: #fff;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 16px;
+	margin-bottom: 12px;
+}
+
+
+#user-info-box .register-link a {
+	font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#costs-order {
+	display: block;
+	height: 46px;
+	line-height: 46px;
+	border: 1px solid #c76434;
+	font-size: 24px;
+	font-weight: bold;
+	font-style: italic;
+	color: #fff;
+	text-align: center;
+	margin-bottom: 22px;
+	background: rgba(247, 82, 9, 0.68);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#footer-main {
+	height: 277px;
+	width: 100%;
+	background: url(../images/bgs/footer-alpha.png) top center no-repeat, url(../images/bgs/footer-bg.png) repeat-x top left;
+	font-weight: 500;
+	position: relative;
+	margin-top: 42px;
+}
+
+#footer-main > div {
+	width: 1090px;
+	margin: 0 auto;
+	padding-top: 22px;
+	color: #aeaeae;
+}
+
+#footer-main > div > section {
+	float: left;
+	width: 358px;
+	margin-left: 21px;
+}
+
+#footer-main > div > section:first-child {
+	width: 304px;
+	margin: 0 27px 0 0;
+}
+
+#footer-main h2 {
+	line-height: 38px;
+	border-bottom: 1px solid #686868;
+	font-weight: 200;
+	font-size: 20px;
+	margin-bottom: 9px;
+}
+
+#footer-main h3 {
+	color: #fff;
+	font-size: 14px;
+}
+
+#footer-main p {
+	line-height: 14px;
+}
+
+#footer-main a.more {
+	display: block;
+	text-align: right;
+	margin-top: 5px;
+}
+
+#footer-main .icons {
+	margin-top: 12px;
+}
+
+#footer-certified a {
+	width: 53px;
+	height: 53px;
+	display: block;
+	float: left;
+	background-image: url(../images/icons/icon-sprite.png);
+	margin-right: 12px;
+}
+
+#footer-certified-bkf {
+	background-position: 0 -68px;
+}
+
+#footer-certified-aaa {
+	background-position: -65px -68px;
+}
+
+#footer-certified-eee {
+	background-position: -129px -68px;
+}
+
+#footer-payment-options {
+	height: 38px;
+	border-bottom: 1px solid #7b7b7b;
+	background: url(../images/icons/icon-sprite.png) no-repeat 0 -129px;
+	margin-top: 10px;
+}
+
+#footer-service-links {
+	text-align: right;
+	line-height: 33px;
+}
+
+#footer-service-links strong {
+	display: block;
+	float: left;
+	font-size: 14px;
+	font-weight: 500;
+	color: #fff;
+}
+
+
+
+
+
+

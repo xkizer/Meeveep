@@ -1,0 +1,19 @@
+<section id="live-autographs">
+	<div id="live-autograph-stream">
+    	<h2>{{sidebar_title}}</h2>
+        <span id="live-autograph-found">{{sidebar_found}}</span>
+        <div id="live-autograph-list" class="scrolling">
+        	{{sidebar_content}}
+        </div>
+    </div>
+    {{#sidebar_counter}}
+    <div id="live-autograph-counter">{{sidebar_counter}}</div>
+    {{/sidebar_counter}}
+</section>
+{{#newsletter}}
+<div id="newsletter-subscription">
+    {{#newsletter}}
+    {{>newsletter}}
+    {{/newsletter}}
+</div>
+{{/newsletter}}
