@@ -52,6 +52,6 @@ app.get('/auth/logout', routes.logout);
 app.get('/star/:starId([0-9]+)', stars.starInfo);
 app.get('/star/:starId([0-9]+)/book', stars.book);
 
-http.createServer(app).listen(3000, function(){
+http.createServer(app).listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port " + app.get('port'));
 });
