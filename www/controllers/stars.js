@@ -33,8 +33,7 @@ function getStars (filter, callback) {
             sort = {},
             skip = false,
             limit = false,
-            opt = {
-            };
+            opt = {};
         
         // filter.sort sorts by key
         // filter.dir tells the sort direction

@@ -46,11 +46,15 @@ var lang = {
     txtNextStep: 'Next step',
     txtAudio: 'Audio',
     txtVideo: 'Video',
+    txtHQVideo: 'High quality video',
     txtMoreInformation: 'More information',
     txtInformation: 'Information',
     txtFound: 'found',
     txtFor: 'For',
-    
+    txtSummary: 'Summary',
+    txtMsgTo: 'Message to',
+    txtPencilColor: 'Pencil color',
+    txtAutographIncludes: 'Autograph includes'
 };
 
 module.exports = lang;

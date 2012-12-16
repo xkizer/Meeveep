@@ -583,6 +583,16 @@ html {
 	position: relative;
 }
 
+#order-information > textarea,
+#order-information > input {
+  background: transparent;
+  border: medium none;
+  color: inherit;
+  display: block;
+  font: inherit;
+  padding: 0;
+  width: 100%;
+}
 
 #divide .right h1 {
 	font-size: 28px;
@@ -788,12 +798,13 @@ html {
 	font-weight: 500;
 }
 
-#personal-autograph #order-information .pen-color {
+.pen-color {
 	display: block;
 	width: 20px;
 	height: 20px;
 	border: 1px solid #fff;
 	border-radius: 7px;
+    float: left;
 }
 
 #personal-autograph #order-information .mm-icons span {

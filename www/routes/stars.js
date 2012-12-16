@@ -1,9 +1,7 @@
-
-
+var renderer = require('../util/pageBuilder.js')();
 
 module.exports = {
     starInfo: function(req, res, next){
-        var renderer = require('../util/pageBuilder.js')();
         //res.render('index', { title: 'Express', sidebar_counter: 'Some content' });
         var view = {};
         
@@ -20,9 +18,7 @@ module.exports = {
                 return;
             }
             
-            console.log(require('cli-color').blue('STAR INFO'), star);
             view.star = star;
-            
             renderer.render({page: 'main/star', vars: view}, req, res, next);
         });
     },
@@ -34,11 +30,42 @@ module.exports = {
         // User needs to be logged in first
         req.requireLogin(function (currentUser) {
             // Book...
-            var str = require('../controllers/stars.js');
-            res.send('Something').end();
-                console.log(req);
-            str.book(currentUser, starId, function (err, booked) {
-                console.log(req);
+            var star = require('../controllers/stars.js');
+            
+            // Get star info
+            star.getStar(starId, function (err, star) {
+                if(err) {
+                    console.error(err);
+                    res.send('Something went wrong', 500).end();
+                    return;
+                }
+            
+                if(!star) {
+                    console.log('Star not found');
+                    return res.send('Star not found', 404).end();
+                }
+                
+                // Star found, render the star booking form
+                var view = {
+                    star: star,
+                    user: currentUser.userData,
+                    txt_for: 'txtFor',
+                    txt_summary: 'txtSummary',
+                    autograph: {
+                        for: 'Jennifer-Jaqueline Schmitz',
+                        messageToStar: 'Some stupid message',
+                        penColor: 'black'
+                    },
+                    txt_message_to: 'txtMsgTo',
+                    txt_pencil_color: 'txtPencilColor',
+                    txt_autograph_includes: 'txtAutographIncludes',
+                    audio: 'txtAudio',
+                    video: 'txtVideo',
+                    hq_video: 'txtHQVideo',
+                    
+                };
+                
+                renderer.render({page: 'main/book', vars: view}, req, res, next);
             });
         });
     }

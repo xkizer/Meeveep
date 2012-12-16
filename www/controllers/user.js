@@ -21,7 +21,6 @@ module.exports = {
 userCache = {};
 
 function User (userId, callback) {
-    console.log(24, userId);
     var me = this;
     
     if(userCache[userId]) {
