@@ -471,6 +471,10 @@ String.prototype.extendIfNotExists({
 
 // Some functions are better the way we implement them
 String.prototype.extend({
+    toLower: String.prototype.toLowerCase,
+    
+    toUpper: String.prototype.toUpperCase,
+    
     /**
      * Formats the string, replacing placeholders with specified values
      * @param ..args The arguments to use in formatting the string. The first argument will be

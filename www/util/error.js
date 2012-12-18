@@ -62,5 +62,8 @@ var errorCodes = {
     0x9001: 'Database error while retrieving star info',
     0x9002: 'Star not found',                                                   // Self explanatory
     
+    0x9104: 'Card not found',
+    0x9105: 'Error retieving card',                                             // Error querying
+    0x9106: 'Error connecting to card store',                                   // Error connecting to Mongo
     
-}
+};

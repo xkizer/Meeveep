@@ -1124,7 +1124,13 @@ html {
 	background-position: -287px -205px;
 }
 
+#preview-slideshow ul {
+    position: relative;
+}
 
+#preview-slideshow li {
+    float: left;
+}
 
 
 
@@ -1476,7 +1482,7 @@ html {
 
 
 
-#costs-order {
+.btn.next {
 	display: block;
 	height: 46px;
 	line-height: 46px;
@@ -1488,12 +1494,35 @@ html {
 	text-align: center;
 	margin-bottom: 22px;
 	background: rgba(247, 82, 9, 0.68);
+    width: 100%;
+    text-align: left;
 }
 
+.btn.arrow {
+    background: rgba(247, 82, 9, 0.68) url("../images/icons/icon-sprite.png") no-repeat right -276px;
+}
 
+#book-select-star-img .left img {
+    width: 67px;
+    display: block;
+}
 
+#book-select-star-img .right {
+    width: 196px;
+}
 
+#book-select-star-img li {
+    color: #F75209;
+    font-weight: bold;
+    padding: 4px;
+    line-height: 17px;
+    cursor: pointer;
+}
 
+#book-select-star-img li.current {
+    background: url("../images/bgs/prof-bg.png") darkorange;
+    color: #fff;
+}
 
 
 

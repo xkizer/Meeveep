@@ -8,7 +8,11 @@ sortFields = ['price','name'];
 module.exports = {
     getStars: getStars,
     getStar: getStar,
-    book: book
+    book: book,
+    getCard: getCard,
+    toString: function () {
+        return '[controller#Stars:controllers/stars.js]';
+    }
 }
 
 
@@ -136,13 +140,11 @@ function getStars (filter, callback) {
 function getStar (starId, callback) {
     db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection) {
         if(err) {
-                console.log(err);
             return callback(error(0x9001));
         }
         
         collection.findOne({starId: Number(starId)}, function (err, star) {
             if(err) {
-                console.log(err);
                 return callback(error(0x9001));
             }
             
@@ -151,7 +153,35 @@ function getStar (starId, callback) {
                 return callback(error(0x9002));
             }
             
-            return callback(null, star);
+            return callback(null, star.extend(starProto));
+        });
+    });
+}
+
+/**
+ * Retrieve a card from the database
+ * @param {string|number} cardId The ID of the card
+ * @param {Function} callback Callback receives an error object and the card information
+ */
+function getCard (cardId, callback) {
+    db.mongoConnect({db: 'meeveep', collection: 'cards'}, function (err, collection) {
+        if(err) {
+            console.error('Error connecting to database');
+            return callback(error(0x9106, err));
+        }
+    
+        collection.findOne({cardId: Number(cardId)}, function (err, card) {
+            if(err) {
+                console.error('error querying card');
+                return callback(error(0x9105, err));
+            }
+        
+            if(!card) {
+                // Card not found
+                return callback(error(0x9104));
+            }
+        
+            return callback(null, card);
         });
     });
 }
@@ -162,5 +192,21 @@ function getStar (starId, callback) {
 function book (starId, callback) {
 }
 
-
+var starProto = {
+    getCards: function (callback) {
+        var star = this;
+        
+        if(!star.cards) {
+            return callback(null, []);
+        }
+        
+        // Get a list of all cards associated with the star
+        db.mongoConnect({db: 'meeveep', collection: 'cards'}, function (err, collection) {
+            // Query the star's cards
+            collection.find({cardId: {$in: star.cards}}, function (err, cursor) {
+                cursor.toArray(callback);
+            });
+        });
+    }
+};
 

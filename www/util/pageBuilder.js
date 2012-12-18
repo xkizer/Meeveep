@@ -148,8 +148,6 @@ function render (opts, req, res, next) {
                                 }
                             });
                         }
-                        
-                        console.log(txt);
                     } else {
                         txt = langFile[variable];
                     }

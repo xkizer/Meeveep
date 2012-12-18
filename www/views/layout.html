@@ -13,10 +13,11 @@
     <![endif]-->
 	<script type="text/javascript" src="/js/lib/modernizr.js"></script>
 	<script type="text/javascript" src="/js/lib/css3-mediaqueries.js"></script>
-    {{{pre_scripts}}}
-    {{{headers}}}
+    {{#pre_scripts}}
+    <script type="text/javascript" src="{{src}}{{#defered}}" defer="defer{{/defered}}"></script>
+    {{/pre_scripts}}
 </head>
-<body id="start-page">
+<body id="{{body.id}}{{^body.id}}start-page{{/body.id}}">
 	<div id="wrapper">
     	<div id="container">
         	<header id="header-main">
@@ -61,7 +62,9 @@
             	<section id="content">
                 	<div id="divide">
                     	<section class="left">
+                            {{sidebar_top}}
                     	    {{>sidebar}}
+                            {{sidebar_bottom}}
                         </section>
                         <section class="right">
                             {{{ yield }}}
@@ -116,6 +119,8 @@
     <!--[if IE 8]>
     <script src="/js/lib/ie/ie8.js"></script>
     <![endif]-->
-    {{{post_scripts}}}
+    {{#post_scripts}}
+    <script type="text/javascript" src="{{src}}{{#defered}}" defer="defer{{/defered}}"></script>
+    {{/post_scripts}}
 </body>
 </html>

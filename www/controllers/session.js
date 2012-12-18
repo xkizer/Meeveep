@@ -68,7 +68,6 @@ module.exports = {
      * @param callback Callback receives an error object
      */
     updateSession: function (token, data, options, callback) {
-        //console.log('will update session...');
         if(arguments.length < 4) {
             callback = options;
             options = {touch: true};

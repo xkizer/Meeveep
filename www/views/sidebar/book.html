@@ -1,0 +1,32 @@
+<button id="book1-next" class="next btn arrow">2. next step</button>
+<section id="live-autographs">
+	<div id="live-autograph-stream">
+    	<h2>{{sidebar_title}}</h2>
+        <span id="live-autograph-found">{{txt_step}} 1 {{txt_of}} 3</span>
+        <div id="live-autograph-list" class="scrolling">
+        	<ul class="content" id="book-select-star-img">
+            {{#cards}}
+                <li>
+                    <div class="img left">
+                        <img src="{{tiny}}" alt="{{description}}" />
+                    </div>
+                    <div class="right">
+                        {{description}}
+                    </div>
+                    <span class="cl"></span>
+                </li>
+            {{/cards}}
+            </ul>
+        </div>
+    </div>
+    {{#sidebar_counter}}
+    <div id="live-autograph-counter">{{sidebar_counter}}</div>
+    {{/sidebar_counter}}
+</section>
+{{#newsletter}}
+<div id="newsletter-subscription">
+    {{#newsletter}}
+    {{>newsletter}}
+    {{/newsletter}}
+</div>
+{{/newsletter}}

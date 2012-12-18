@@ -19,7 +19,7 @@ function saveSession() {
         
         db.redisConnect(function (err, client) {
             if(!err) {
-                session.updateSession (req.sessionId, sessInfo, console.log)
+                session.updateSession (req.sessionId, sessInfo, function () {/* Nothing */});
             }
         });
     }

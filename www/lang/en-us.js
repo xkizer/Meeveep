@@ -51,10 +51,15 @@ var lang = {
     txtInformation: 'Information',
     txtFound: 'found',
     txtFor: 'For',
+    txtOf: 'Of',
+    txtStep: 'Step',
     txtSummary: 'Summary',
     txtMsgTo: 'Message to',
     txtPencilColor: 'Pencil color',
-    txtAutographIncludes: 'Autograph includes'
+    txtAutographIncludes: 'Autograph includes',
+    txtCard: 'Card',
+    txtAutographCardOptions: 'Autograph card options',
+    txtAddComment: 'Add comment'
 };
 
 module.exports = lang;

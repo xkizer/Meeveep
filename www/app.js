@@ -50,7 +50,8 @@ app.get('/', routes.index);
 app.post('/auth/login', routes.login);
 app.get('/auth/logout', routes.logout);
 app.get('/star/:starId([0-9]+)', stars.starInfo);
-app.get('/star/:starId([0-9]+)/book', stars.book);
+app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
+app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
 
 http.createServer(app).listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port " + app.get('port'));
