@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untitled Document</title>
+    <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" media="all" />
+    <link rel="stylesheet" href="css/uniform.default.css" media="all" />
+    <!--[if lte IE 7]>
+    <link href="css/ie7.css" rel="stylesheet" media="all" />
+    <![endif]-->
+    <script type="text/javascript" src="js/lib/modernizr.js"></script>
+    <script type="text/javascript" src="js/lib/css3-mediaqueries.js"></script>
+</head>
+<body id="preview-page">
+    <div id="wrapper">
+        <div id="container">
+            <header id="header-main">
+                <div id="header-top">
+                    <div id="slogan">Digitale Autogramme deiner Stars!</div>
+                    <a href="#" id="star-alarm-link">Star-Alarm</a>
+                    <div id="logo"><a href="/"><img src="images/imgs/logo.png" alt="Meeveep" /></a></div>
+                </div>
+                <div id="header-bottom">
+                    <nav class="left">
+                        <a href="#" id="icon-nav-home">Home</a>
+                        <a href="#" id="icon-nav-settings">Settings</a>
+                        <a href="#" id="icon-nav-profile">Profile</a>
+                    </nav>
+                    <div id="header-star-stat">Nächste Autogrammstunde mit <i>DJ Ötzi</i> in: <i>1 Tag, 3 Std. und 40 MIn.</i></div>
+                    <nav class="right">
+                        <a href="#" id="language-selector">German</a>
+                        <a href="#" id="header-top-info">Wie funktioniert <i>Meveep?</i></a>
+                    </nav>
+                    <div id="user-info-box">
+                        <form id="login-form" method="post" action="/auth/login">
+                            <h2>Login</h2>
+                            <p>Um in deinen persönlichen Bereich zu gelangen, musst du dich zuerst einloggen.</p>
+                            <fieldset>
+                                <input type="email" placeholder="E-Mail-Adresse" />
+                                <input type="password" placeholder="Passwort" />
+                                <button type="submit">Absenden</button>
+                            </fieldset>
+                            <p class="register-link">Noch kein Konto? <a href="#">Registrieren &raquo;</a></p>
+                        </form>
+                    </div>
+                </div>
+            </header>
+            <section id="main">
+                <section id="content">
+                    <div id="divide">
+                        <section class="left">
+                            <button class="next btn arrow" id="book2-next">3. next step</button>
+                            <section id="live-autographs">
+                                <div id="live-autograph-stream">
+                                    <h2>Add comment</h2>
+                                    <span id="live-autograph-found">Step 2 of 3</span>
+                                    <div id="book2-side-form" class="scrolling">
+                                        <div class="content">
+                                            <p class="intro">What should "The Wendler" write for your your autograph? Type the name of the recipient and special wishes in the appropriate fields. </p>
+                                            <h3>This card is for:*</h3>
+                                            <input id="book2-name" type="text" name="name" value="{{autograph.name}}" />
+                                            <h3>What should the message include?*</h3>
+                                            <textarea name="msg" id="book2-msg">Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!</textarea>
+                                            <h3>Pen Color</h3>
+                                            <ul>
+                                                <li data-color="red" class="pen-color pen-color-red"></li>
+                                                <li data-color="orange" class="pen-color pen-color-orange"></li>
+                                                <li data-color="yellow" class="pen-color pen-color-yellow"></li>
+                                                <li data-color="green" class="pen-color pen-color-green"></li>
+                                                <li data-color="cyan" class="pen-color pen-color-cyan"></li>
+                                                <li data-color="blue" class="pen-color pen-color-blue"></li>
+                                                <li data-color="purple" class="pen-color pen-color-purple"></li>
+                                                <li data-color="pink" class="pen-color pen-color-pink active"></li>
+                                                <li data-color="black" class="pen-color pen-color-black"></li>
+                                                <li data-color="white" class="pen-color pen-color-white"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <a href="#" id="order-back-to-previous">Back to home</a>
+                        </section>
+                        <section class="right">
+                            <div id="personal-autograph-preview">
+                                <h1>Der Wendler</h1>
+                                <p>Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!</p>
+                                <section class="content">
+                                    <div id="preview-slideshow">
+                                        <div class="nav">
+                                            <a href="#" rel="prev"></a>
+                                            <a href="#" rel="next"></a>
+                                        </div>
+                                        <div class="viewport">
+                                            <ul>
+                                                <li data-id="299302483782738372"><img src="images/imgs/stars-big/pix-9.jpg" alt="Star name" /></li>
+                                                <li data-id="298329779864962435"><img src="images/imgs/stars-big/pix-9.jpg" alt="Star name" /></li>
+                                                <li data-id="019928091902990302"><img src="images/imgs/stars-big/pix-9.jpg" alt="Star name" /></li>
+                                                <li data-id="100928300128091192"><img src="images/imgs/stars-big/pix-9.jpg" alt="Star name" /></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div id="personal-autographs-bottom">
+                                    <div id="card-count" class="left">Card <span id="book1-card-number">1</span> of 4</div>
+                                    <span class="cl"></span>
+                                </div>
+                            </div>
+                        </section>
+                        <span class="cl"></span>
+                    </div>
+                    <div id="random-bg-r26a4"><img src="images/imgs/hind-1.jpg" alt="" /></div>
+                </section>
+            </section>
+            <footer id="footer-main">
+                <div>
+                    <section>
+                        <h2>Informationen für:</h2>
+                        <h3>Managements, Clubs</h3>
+                        <p>Sie möchten mit Ihren Stars ganz weit nach vorne? Starten Sie hier und bringen Sie Ihre Schützlinge den Fans ganz nahe.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                        <h3>Prominente</h3>
+                        <p>Sie wollen maximale Nähe zu den Fans aus aller Welt? Gleichzeitig? Starten Sie jetzt und geben Sie Ihrer Karriere den nächsten Schub.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                    </section>
+                    <section>
+                        <h2>Sie können uns vertrauen!</h2>
+                        <p>Nicht nur unsere Nutzer, sondern auch zahlreiche größere Unternehmen sprechen uns ihr Vertrauen aus. Aber sehen Sie selbst.</p>
+                        <section class="icons" id="footer-certified">
+                            <a href="#" id="footer-certified-bkf"></a>
+                            <a href="#" id="footer-certified-aaa"></a>
+                            <a href="#" id="footer-certified-eee"></a>
+                        </section>
+                    </section>
+                    <section>
+                        <h2>Meeveep ist sicher!</h2>
+                        <p>Durch unsere zahlreichen Partner für Bezahlsysteme und Sicherheit bieten wir unseren Nutzern, den Managern und natürlich den teilnehmenden Prominenten maximale Sicherheit.</p>
+                        <section class="icons" id="footer-payment-options"></section>
+                        <section id="footer-service-links">
+                            <strong>Service</strong>
+                            <a href="#">AGB</a> | <a href="#">Impressum</a> | <a href="#">Kontakt</a> | <a href="#">Datenschutz</a>
+                        </section>
+                    </section>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="js/lib/jquery-1.8.2.min.js"></script>
+    <script src="/js/lib/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mousewheel.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mCustomScrollbar.js"></script>
+    <script src="js/lib/jquery.selectbox/jquery.selectbox-0.2.min.js"></script>
+    <script src="js/lib/uniform/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="js/lib/util.js"></script>
+    <script type="text/javascript" src="js/core.js"></script>
+    <script type="text/javascript" src="js/book.js"></script>
+    <!--[if IE 8]>
+    <script src="js/lib/ie/ie8.js"></script>
+    <![endif]-->
+</body>
+</html>

@@ -67,4 +67,42 @@ jQuery(function ($) {
     
     book1BigUl.width(book1BigLiWidth * book1BigLi.length);
     switchTo(currentIndex);
+    
+    // Pen color switching
+    var penColors = $('#book2-side-form .pen-color');
+    
+    penColors.click(function (e) {
+        var target = $(e.target);
+        penColors.removeClass('active');
+        target.addClass('active');
+    });
+
+    // Page 2 submit
+    $('#book2-next').click(function () {
+        var name = $('#book2-name').val(),
+            msg = $('#book2-msg').val(),
+            penColor = $('#book2-side-form .pen-color.active').attr('data-color'),
+            queryString = location.search.substr(1),
+            urlObj = {};
+        
+        queryString.split('&').forEach(function (pair) {
+            pair = pair.split('=');
+            urlObj[pair[0]] = pair[1] || '';
+        });
+        
+        urlObj['name'] = encodeURIComponent(name);
+        urlObj['msg'] = encodeURIComponent(msg);
+        urlObj['pen-color'] = encodeURIComponent(penColor);
+        
+        // Build url
+        var search = [];
+        
+        for(var i in urlObj) {
+            if(urlObj.hasOwnProperty(i)) {
+                search.push(i + '=' + urlObj[i]);
+            }
+        }
+    
+        location.href = 'book-3?' + search.join('&');
+    });
 });

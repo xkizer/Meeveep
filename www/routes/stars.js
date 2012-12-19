@@ -150,6 +150,7 @@ var starBooking = {
                         hq_video: 'txtHQVideo',
                         sidebar_title: 'txtAddComment',
                         card: card,
+                        txt_side_intro: {text: 'txtBook2SideIntro', variables: ['The Wendler']},
                         partials: {
                             sidebar: 'sidebar/book-2'
                         }

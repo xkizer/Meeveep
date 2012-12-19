@@ -128,7 +128,7 @@ function render (opts, req, res, next) {
                         
                         if(variable.variables instanceof Array) {
                             // An array of variables provided
-                            txt = txt.format.apply(txt, variable);
+                            txt = txt.format.apply(txt, variable.variables);
                         }
                         
                         if(variable.filter) {

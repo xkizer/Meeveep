@@ -59,7 +59,9 @@ var lang = {
     txtAutographIncludes: 'Autograph includes',
     txtCard: 'Card',
     txtAutographCardOptions: 'Autograph card options',
-    txtAddComment: 'Add comment'
+    txtAddComment: 'Add comment',
+    txtBook2SideIntro: 'What should "{0}" write for your your autograph? Type the name of the recipient and special wishes in the appropriate fields.',
+    
 };
 
 module.exports = lang;

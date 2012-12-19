@@ -174,6 +174,7 @@ ul.list li {
 }
 
 .sbHolder,
+textarea,
 input[type="text"],
 input[type="email"],
 input[type="url"],
@@ -197,6 +198,11 @@ input[type="tel"] {
 	background: linear-gradient(to bottom, #fff, #eee);
 	color: #303030;
 	font-weight: 500;
+}
+
+textarea {
+    height: auto;
+    line-height: 17px;
 }
 
 .datepicker:before {
@@ -455,7 +461,7 @@ html {
 	overflow: hidden;
 }
 
-#live-autograph-list .content {
+#live-autographs .content {
 	background: url(../images/bgs/live-autograph-bg.png);
 	min-height: 258px;
 	line-height: 15px;
@@ -805,6 +811,13 @@ html {
 	border: 1px solid #fff;
 	border-radius: 7px;
     float: left;
+    margin-right: 4px;
+}
+
+.pen-color.active {
+    width: 14px;
+    height: 14px;
+    border: 4px solid #F75209;
 }
 
 #personal-autograph #order-information .mm-icons span {
@@ -1132,10 +1145,27 @@ html {
     float: left;
 }
 
+#book2-side-form input,
+#book2-side-form textarea {
+    float: none;
+    width: 95%;
+}
 
+#book2-side-form textarea {
+    height: 90px;
+    resize: none;
+}
 
+#book2-side-form h3 {
+    color: #F75209;
+    font-weight: bold;
+    margin: 10px 0 6px;
+    font-size: inherit;
+}
 
-
+#book2-side-form .pen-color {
+    cursor: pointer;
+}
 
 
 
@@ -1350,14 +1380,68 @@ html {
 	background: linear-gradient(to bottom, #434343, #323232);
 }
 
+.pen-color-red {
+	background: -moz-linear-gradient(top, #de0510, #a40815);
+	background: -webkit-linear-gradient(top, #de0510, #a40815);
+	background: -o-linear-gradient(top, #de0510, #a40815);
+	background: linear-gradient(to bottom, #de0510, #a40815);
+}
 
+.pen-color-orange {
+	background: -moz-linear-gradient(top, #de7605, #9a560f);
+	background: -webkit-linear-gradient(top, #de7605, #9a560f);
+	background: -o-linear-gradient(top, #de7605, #9a560f);
+	background: linear-gradient(to bottom, #de7605, #9a560f);
+}
 
+.pen-color-yellow {
+	background: -moz-linear-gradient(top, #efe10e, #aaa30c);
+	background: -webkit-linear-gradient(top, #efe10e, #aaa30c);
+	background: -o-linear-gradient(top, #efe10e, #aaa30c);
+	background: linear-gradient(to bottom, #efe10e, #aaa30c);
+}
 
+.pen-color-green {
+	background: -moz-linear-gradient(top, #15d818, #139e07);
+	background: -webkit-linear-gradient(top, #15d818, #139e07);
+	background: -o-linear-gradient(top, #15d818, #139e07);
+	background: linear-gradient(to bottom, #15d818, #139e07);
+}
 
+.pen-color-cyan {
+	background: -moz-linear-gradient(top, #0acbdd, #079aa1);
+	background: -webkit-linear-gradient(top, #0acbdd, #079aa1);
+	background: -o-linear-gradient(top, #0acbdd, #079aa1);
+	background: linear-gradient(to bottom, #0acbdd, #079aa1);
+}
 
+.pen-color-blue {
+	background: -moz-linear-gradient(top, #0d2ae0, #0c1ca5);
+	background: -webkit-linear-gradient(top, #0d2ae0, #0c1ca5);
+	background: -o-linear-gradient(top, #0d2ae0, #0c1ca5);
+	background: linear-gradient(to bottom, #0d2ae0, #0c1ca5);
+}
 
+.pen-color-purple {
+	background: -moz-linear-gradient(top, #882695, #69146f);
+	background: -webkit-linear-gradient(top, #882695, #69146f);
+	background: -o-linear-gradient(top, #882695, #69146f);
+	background: linear-gradient(to bottom, #882695, #69146f);
+}
 
+.pen-color-pink {
+	background: -moz-linear-gradient(top, #f01e83, #af125f);
+	background: -webkit-linear-gradient(top, #f01e83, #af125f);
+	background: -o-linear-gradient(top, #f01e83, #af125f);
+	background: linear-gradient(to bottom, #f01e83, #af125f);
+}
 
+.pen-color-white {
+	background: -moz-linear-gradient(top, #ffffff, #bababa);
+	background: -webkit-linear-gradient(top, #ffffff, #bababa);
+	background: -o-linear-gradient(top, #ffffff, #bababa);
+	background: linear-gradient(to bottom, #ffffff, #bababa);
+}
 
 
 
