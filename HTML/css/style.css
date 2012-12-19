@@ -437,6 +437,10 @@ html {
 	position: relative;
 }
 
+#live-autograph-stream.taller {
+    height: 382px;
+}
+
 #live-autograph-stream h2 {
 	color: #303030;
 	font-weight: 200;

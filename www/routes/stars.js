@@ -67,6 +67,7 @@ var starBooking = {
                     // Star found, render the star booking form
                     var view = {
                         star: star,
+                        txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
                         user: currentUser.userData,
                         txt_summary: 'txtSummary',
                         post_scripts: {
@@ -137,11 +138,7 @@ var starBooking = {
                         txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
                         txt_step: 'txtStep',
                         txt_summary: 'txtSummary',
-                        autograph: {
-                            for: 'Jennifer-Jaqueline Schmitz',
-                            messageToStar: 'Some stupid message',
-                            penColor: 'black'
-                        },
+                        autograph: req.query,
                         txt_message_to: 'txtMsgTo',
                         txt_pencil_color: 'txtPencilColor',
                         txt_autograph_includes: 'txtAutographIncludes',
@@ -150,7 +147,15 @@ var starBooking = {
                         hq_video: 'txtHQVideo',
                         sidebar_title: 'txtAddComment',
                         card: card,
-                        txt_side_intro: {text: 'txtBook2SideIntro', variables: ['The Wendler']},
+                        txt_card_for: 'txtCardFor',
+                        txt_what_should_msg_include: 'txtWhatShouldMsgIncl',
+                        txt_side_intro: {text: 'txtBook2SideIntro', variables: [star.name]},
+                        body: {
+                            id: 'preview-page'
+                        },
+                        post_scripts: {
+                            src: '/js/book.js'
+                        },
                         partials: {
                             sidebar: 'sidebar/book-2'
                         }

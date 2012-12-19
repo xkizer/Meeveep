@@ -61,6 +61,8 @@ var lang = {
     txtAutographCardOptions: 'Autograph card options',
     txtAddComment: 'Add comment',
     txtBook2SideIntro: 'What should "{0}" write for your your autograph? Type the name of the recipient and special wishes in the appropriate fields.',
+    txtCardFor: 'This card is for',
+    txtWhatShouldMsgIncl: 'What should the message include',
     
 };
 

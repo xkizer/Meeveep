@@ -102,7 +102,7 @@ jQuery(function ($) {
                 search.push(i + '=' + urlObj[i]);
             }
         }
-    
-        location.href = 'book-3?' + search.join('&');
+        
+        location.href = 'step-3?' + search.join('&');
     });
 });
