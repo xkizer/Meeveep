@@ -1,23 +1,30 @@
-<button id="book1-next" class="next btn arrow">3. next step</button>
+<button data-next="step-3" id="book2-next" class="next btn arrow">3. next step</button>
 <section id="live-autographs">
-	<div id="live-autograph-stream">
-    	<h2>{{sidebar_title}}</h2>
+    <div id="live-autograph-stream" class="taller">
+        <h2>{{sidebar_title}}</h2>
         <span id="live-autograph-found">{{txt_step}} 2 {{txt_of}} 3</span>
-        <div id="live-autograph-list" class="scrolling">
+        <div id="book2-side-form" class="scrolling">
             <div class="content">
-                {{txt_side_intro}}
-                {{sidebar}}
+                <p class="intro">{{txt_side_intro}}</p>
+                <h3>{{txt_card_for}}:*</h3>
+                <input id="book2-name" type="text" name="name" value="{{autograph.name}}" />
+                <h3>{{txt_what_should_msg_include}}?*</h3>
+                <textarea name="msg" id="book2-msg">{{autograph.msg}}</textarea>
+                <h3>Pen Color</h3>
+                <ul>
+                    <li data-color="red" class="pen-color pen-color-red"></li>
+                    <li data-color="orange" class="pen-color pen-color-orange"></li>
+                    <li data-color="yellow" class="pen-color pen-color-yellow"></li>
+                    <li data-color="green" class="pen-color pen-color-green"></li>
+                    <li data-color="cyan" class="pen-color pen-color-cyan"></li>
+                    <li data-color="blue" class="pen-color pen-color-blue"></li>
+                    <li data-color="purple" class="pen-color pen-color-purple"></li>
+                    <li data-color="pink" class="pen-color pen-color-pink active"></li>
+                    <li data-color="black" class="pen-color pen-color-black"></li>
+                    <li data-color="white" class="pen-color pen-color-white"></li>
+                </ul>
             </div>
         </div>
     </div>
-    {{#sidebar_counter}}
-    <div id="live-autograph-counter">{{sidebar_counter}}</div>
-    {{/sidebar_counter}}
 </section>
-{{#newsletter}}
-<div id="newsletter-subscription">
-    {{#newsletter}}
-    {{>newsletter}}
-    {{/newsletter}}
-</div>
-{{/newsletter}}
+<a href="#" data-next="step-1" class="prev btn" id="book2-prev">zurück zu 1.</a>

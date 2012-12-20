@@ -305,8 +305,8 @@ $(function () {
                 // Apply precision
                 if(precision) {
                     // Make sure the floated number is up to the precision digits
-                    floatedNumber = floatedNumber.toString().pad(precision, 0, 'right');
-                    floatedNumber = floatedNumber * Math.pow(10, floatedNumber.toString().length - 2);
+                    floatedNumber = floatedNumber.toString().pad(precision, '0', 'right');
+                    floatedNumber = String(floatedNumber * Math.pow(10, floatedNumber.length - 2)).pad(precision, '0', 'right');
                     
                     divisor = Math.pow(10, floatedNumber.toString().length - precision);
                     divided = floatedNumber / divisor;
@@ -317,7 +317,7 @@ $(function () {
                         integer += 1;
                     }
                     
-                    value = integer.toString() + '.' + normalized.toString().truncate(precision);
+                    value = integer.toString() + '.' + normalized.toString().truncate(precision).pad(precision, '0', 'right');
                 }
                 
                 // Add padding

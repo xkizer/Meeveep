@@ -38,6 +38,7 @@ var lang = {
     txtContact: 'Contact',
     txtLegal: 'Legal',
     txtTerms: 'Terms & Conditions',
+    txtYourOrder: 'Your order',
     txtService: 'Service',
     txtPersonalAutographs: 'Personal Autographs',
     txtPersonalAutographDescription: 'Personalised autographs provided by Meeveep may include video, audio or even a personal greeting - in addition to the digital signature.',
@@ -61,7 +62,17 @@ var lang = {
     txtAutographCardOptions: 'Autograph card options',
     txtAddComment: 'Add comment',
     txtBook2SideIntro: 'What should "{0}" write for your your autograph? Type the name of the recipient and special wishes in the appropriate fields.',
-    
+    txtCardFor: 'This card is for',
+    txtWhatShouldMsgIncl: 'What should the message include',
+    txtBillingAddress: 'Billing Address',
+    txtEdit: 'Edit',
+    txtPlaceOrder: 'Order Now',
+    txtPaymentMethod: 'Payment method',
+    txtAcceptCondTTL: 'I accept the terms and conditions (to the left)',
+    txtWishToRecNlt: 'Yes, i wish to receive the Meeveep newsletter',
+    txtTotalPrice: 'Total Price',
+    txtInclVAT: 'incl. VAT',
+    txtOrderWaitWarning: 'The next step will automatically take you to the order transaction, please don\'t close the window before being prompted to.'
 };
 
 module.exports = lang;

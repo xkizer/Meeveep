@@ -12,5 +12,5 @@ logs
 results
 
 npm-debug.log
-/node_modules/
+/www/node_modules/
 /www/nbproject/private/

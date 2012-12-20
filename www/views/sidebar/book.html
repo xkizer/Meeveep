@@ -1,4 +1,4 @@
-<button id="book1-next" class="next btn arrow">2. next step</button>
+<button data-next="step-2" id="book1-next" class="next btn arrow">2. next step</button>
 <section id="live-autographs">
 	<div id="live-autograph-stream">
     	<h2>{{sidebar_title}}</h2>
@@ -23,10 +23,4 @@
     <div id="live-autograph-counter">{{sidebar_counter}}</div>
     {{/sidebar_counter}}
 </section>
-{{#newsletter}}
-<div id="newsletter-subscription">
-    {{#newsletter}}
-    {{>newsletter}}
-    {{/newsletter}}
-</div>
-{{/newsletter}}
+<a href="#" data-next="/" class="prev btn" id="book1-prev">Back to home page.</a>

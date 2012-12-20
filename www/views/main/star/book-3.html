@@ -1,0 +1,59 @@
+<div id="personal-autograph">
+    <h1>{{star.name}}</h1>
+    <p>{{star.description}}</p>
+    <section class="content">
+        <div class="left">
+            <h2>{{txt_summary}}</h2>
+            <div class="image"><img src="{{card.medium}}" alt="Der Wendler" /></div>
+            <div id="order-information">
+                <strong>{{txt_for}}</strong>
+                <span>{{autograph.name}}</span>
+                <strong>{{txt_message_to}} "{{star.name}}":</strong>
+                <span>{{autograph.msg}}</span>
+                <strong>{{txt_pencil_color}}</strong>
+                <span class="pen-color pen-color-{{autograph.pen-color}}"></span>
+                <span class="cl"></span>
+                <strong>{{txt_autograph_includes}}:</strong>
+                <div class="mm-icons">
+                    <span class="audio">{{audio}}</span>
+                    <span class="video">{{video}}</span>
+                    <span class="hq-video"><b><em>HQ</em> {{hq_video}}</b></span>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <address>
+                <h3>{{txt_billing_address}}</h3>
+                <span>{{user.billing.name}}</span>
+                <span>{{user.billing.address1}}</span>
+                {{#user.billing.address2}}
+                <span>{{user.billing.address2}}</span>
+                {{/user.billing.address2}}
+                <span>{{user.billing.city}}</span>
+                <span>{{user.billing.zip}} {{user.billing.state}}</span>
+                <span><strong>E-Mail:</strong> {{user.billing.email}}</span>
+                <span><strong>Tel.:</strong> {{user.billing.phone}}</span>
+                <a href="#" class="edit">{{txt_edit}}</a>
+            </address>
+            <div id="payment-method">
+                <h3>{{txt_payment_method}}</h3>
+                <select>
+                    <option>Kreditkarte (über PayPal)</option>
+                </select>
+            </div>
+            <div id="payment-method2">
+                <h3>{{txt_payment_method}}</h3>
+                <span><label><input type="checkbox" name="terms_agree" /> <span class="text">{{txt_accept_cond_left}}.</span></label><i class="cl"></i></span>
+                <span><label><input type="checkbox" name="recieve_newsletter" /> <span class="text">{{txt_receive_newsletter}}.</span></label><i class="cl"></i></span>
+                <i class="cl"></i>
+            </div>
+            <div id="total-price">
+                <h3>{{txt_total_price}}</h3>
+                <span>{{price}} <i>({{txt_incl_vat}})</i></span>
+            </div>
+            <a href="#" data-next="step-4" id="order-checkout">{{txt_place_order}} »</a>
+            <div id="tiny-print">* {{txt_next_step_wait}}</div>
+        </div>
+    </section>
+    <div id="personal-autographs-count">&nbsp;</div>
+</div>

@@ -55,10 +55,35 @@ jQuery(function ($) {
         switchTo(currentIndex + direction);
     });
     
-    $('#book1-next').click(function () {
-        // Get the picture ID of the selected picture
-        var selectedId = $(book1BigLi[currentIndex]).attr('data-id');
-        window.location = 'step-2?cardId=' + selectedId;
+    $('#book1-next, #book1-prev').click(function (e) {
+        e.preventDefault();
+        
+        var selectedId = $(book1BigLi[currentIndex]).attr('data-id'),
+            queryString = location.search.substr(1),
+            urlObj = {},
+            next = $(this).attr('data-next') || 'step-2';
+        
+        queryString.split('&').forEach(function (pair) {
+            if(!pair) {
+                return;
+            }
+            
+            pair = pair.split('=');
+            urlObj[pair[0]] = pair[1] || '';
+        });
+        
+        urlObj['cardId'] = selectedId;
+        
+        // Build url
+        var search = [];
+        
+        for(var i in urlObj) {
+            if(urlObj.hasOwnProperty(i)) {
+                search.push(i + '=' + urlObj[i]);
+            }
+        }
+        
+        location.href = next + '?' + search.join('&');
     });
 
     $(window).resize(function () {
@@ -78,14 +103,21 @@ jQuery(function ($) {
     });
 
     // Page 2 submit
-    $('#book2-next').click(function () {
+    $('#book2-next,#book2-prev').click(function (e) {
+        e.preventDefault();
+        
         var name = $('#book2-name').val(),
             msg = $('#book2-msg').val(),
             penColor = $('#book2-side-form .pen-color.active').attr('data-color'),
             queryString = location.search.substr(1),
-            urlObj = {};
+            urlObj = {},
+            next = $(this).attr('data-next') || 'step-3';
         
         queryString.split('&').forEach(function (pair) {
+            if(!pair) {
+                return;
+            }
+            
             pair = pair.split('=');
             urlObj[pair[0]] = pair[1] || '';
         });
@@ -102,7 +134,7 @@ jQuery(function ($) {
                 search.push(i + '=' + urlObj[i]);
             }
         }
-    
-        location.href = 'book-3?' + search.join('&');
+        
+        location.href = next + '?' + search.join('&');
     });
 });

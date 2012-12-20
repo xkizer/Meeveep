@@ -55,9 +55,9 @@ function mergeInto(from, to) {
         if(from.hasOwnProperty(i)) {
             var val = from[i];
             
-            if('[object Object]' === String(val)) {
+            if('[object Object]' === String(val) && !(val instanceof Array)) {
                 // Object
-                to[i] = (to[i] instanceof Object ? to[i] : {}) || {};
+                to[i] = ((to[i] instanceof Object) ? to[i] : {}) || {};
                 
                 mergeInto(from[i], to[i]);
                 continue;

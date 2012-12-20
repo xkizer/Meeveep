@@ -67,11 +67,12 @@ var starBooking = {
                     // Star found, render the star booking form
                     var view = {
                         star: star,
+                        txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
                         user: currentUser.userData,
                         txt_summary: 'txtSummary',
-                        post_scripts: {
+                        post_scripts: [{
                             src: '/js/book.js'
-                        },
+                        }],
                         cards: cards,
                         txt_message_to: 'txtMsgTo',
                         txt_pencil_color: 'txtPencilColor',
@@ -102,7 +103,7 @@ var starBooking = {
         
         if(!cardId) {
             // Error, 401
-            console.error('Card ID not supplied')
+            console.error('Card ID not supplied');
             return res.send('Where is the card ID?', 401);
         }
         
@@ -137,11 +138,7 @@ var starBooking = {
                         txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
                         txt_step: 'txtStep',
                         txt_summary: 'txtSummary',
-                        autograph: {
-                            for: 'Jennifer-Jaqueline Schmitz',
-                            messageToStar: 'Some stupid message',
-                            penColor: 'black'
-                        },
+                        autograph: req.query,
                         txt_message_to: 'txtMsgTo',
                         txt_pencil_color: 'txtPencilColor',
                         txt_autograph_includes: 'txtAutographIncludes',
@@ -150,7 +147,15 @@ var starBooking = {
                         hq_video: 'txtHQVideo',
                         sidebar_title: 'txtAddComment',
                         card: card,
-                        txt_side_intro: {text: 'txtBook2SideIntro', variables: ['The Wendler']},
+                        txt_card_for: 'txtCardFor',
+                        txt_what_should_msg_include: 'txtWhatShouldMsgIncl',
+                        txt_side_intro: {text: 'txtBook2SideIntro', variables: [star.name]},
+                        body: {
+                            id: 'preview-page'
+                        },
+                        post_scripts: [{
+                            src: '/js/book.js'
+                        }],
                         partials: {
                             sidebar: 'sidebar/book-2'
                         }
@@ -163,6 +168,89 @@ var starBooking = {
     },
 
     3: function (req, res, next) {
+        var starId = req.params.starId,
+            ctrlStar = star,
+            cardId = req.query.cardId || false;
         
+        if(!cardId) {
+            // Error, 401
+            console.error('Card ID not supplied');
+            return res.send('Where is the card ID?', 401);
+        }
+        
+        // User needs to be logged in first
+        req.requireLogin(function (currentUser) {
+            // Get star info
+            star.getStar(starId, function (err, star) {
+                if(err) {
+                    console.error(err);
+                    res.send('Something went wrong', 500).end();
+                    return;
+                }
+            
+                if(!star) {
+                    console.error('Star not found');
+                    return res.send('Star not found', 404).end();
+                }
+                
+                // Verify the user has a valid card
+                ctrlStar.getCard(cardId, function (err, card) {
+                    if(err) {
+                        // Something went wrong...
+                        console.error(err);
+                        return res.send(500, 'Something went wrong');
+                    }
+                    
+                    // Star found, render the star booking confirmation page
+                    var view = {
+                        star: star,
+                        user: currentUser,
+                        txt_for: 'txtFor',
+                        txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
+                        txt_step: 'txtStep',
+                        txt_summary: 'txtSummary',
+                        autograph: req.query,
+                        txt_message_to: 'txtMsgTo',
+                        txt_payment_method: 'txtPaymentMethod',
+                        txt_pencil_color: 'txtPencilColor',
+                        txt_autograph_includes: 'txtAutographIncludes',
+                        audio: 'txtAudio',
+                        video: 'txtVideo',
+                        hq_video: 'txtHQVideo',
+                        txt_terms: 'txtTerms',
+                        sidebar_title: 'txtYourOrder',
+                        card: card,
+                        txt_card_for: 'txtCardFor',
+                        txt_accept_cond_left: 'txtAcceptCondTTL',
+                        txt_receive_newsletter: 'txtWishToRecNlt',
+                        txt_total_price: 'txtTotalPrice',
+                        price: {text: star.price, filter: function () {
+                                var number = this;
+                                var formatted = Number.prototype.format.call(number, currentUser.numberFormat[0], currentUser.numberFormat[1]);
+                                return currentUser.currencyFormat.printf(formatted);
+                        }},
+                        txt_what_should_msg_include: 'txtWhatShouldMsgIncl',
+                        txt_billing_address: 'txtBillingAddress',
+                        txt_incl_vat: 'txtInclVAT',
+                        txt_edit: {text: 'txtEdit', filter: String.prototype.toLowerCase},
+                        txt_place_order: 'txtPlaceOrder',
+                        txt_next_step_wait: 'txtOrderWaitWarning',
+                        txt_side_intro: {text: 'txtBook2SideIntro', variables: [star.name]},
+                        css_files: [{
+                            href: '/css/uniform.default.css'
+                        }],
+                        post_scripts: [{
+                            src: '/js/book.js'
+                        }],
+                        partials: {
+                            sidebar: 'sidebar/book-3',
+                            terms: 'trans/en-us/terms'
+                        }
+                    };
+
+                    renderer.render({page: 'main/star/book-3', vars: view}, req, res, next);
+                });
+            });
+        });
     }
 };

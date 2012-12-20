@@ -348,44 +348,44 @@ var printfMap = {
     /**
      * Formats input as float. <code>width</code> is the minimum length of the final output, including any decimal points.
      */
-    f: function (arg) {
-        var value = parseFloat(arg.value) || 0,
-            sign = ((value >= 0 && arg.sign) ? '+' : ''),
-            precision = arg.precision,
-            
-            // Get the floated part of the number...
-            integer = (value < 0 ? Math.ceil(value) : Math.floor(value)),
-            floatedNumber = Math.abs(value - integer),
-            
-            // Furure variables...
-            divisor, divided, normalized;
-        
-        // Apply precision
-        if(precision) {
-            // Make sure the floated number is up to the precision digits
-            floatedNumber = floatedNumber.toString().pad(precision, 0, 'right');
-            floatedNumber = floatedNumber * Math.pow(10, floatedNumber.toString().length - 2);
-            
-            divisor = Math.pow(10, floatedNumber.toString().length - precision);
-            divided = floatedNumber / divisor;
-            normalized = Math.round(divided);
-            
-            if(normalized >= Math.pow(10, precision)) {
-                // A number was carried
-                integer += 1;
-            }
-            
-            value = integer.toString() + '.' + normalized.toString().truncate(precision);
-        }
-        
-        // Add padding
-        if(arg.width) {
-            value = value.toString().pad(arg.width, arg.padString || 0);
-        }
-        
-        // Add sign and return
-        return sign + value.toString();
-    },
+            f: function (arg) {
+                var value = parseFloat(arg.value) || 0,
+                    sign = ((value >= 0 && arg.sign) ? '+' : ''),
+                    precision = arg.precision,
+                    
+                    // Get the floated part of the number...
+                    integer = (value < 0 ? Math.ceil(value) : Math.floor(value)),
+                    floatedNumber = Math.abs(value - integer),
+                    
+                    // Furure variables...
+                    divisor, divided, normalized;
+                
+                // Apply precision
+                if(precision) {
+                    // Make sure the floated number is up to the precision digits
+                    floatedNumber = floatedNumber.toString().pad(precision, '0', 'right');
+                    floatedNumber = String(floatedNumber * Math.pow(10, floatedNumber.length - 2)).pad(precision, '0', 'right');
+                    
+                    divisor = Math.pow(10, floatedNumber.toString().length - precision);
+                    divided = floatedNumber / divisor;
+                    normalized = Math.round(divided);
+                    
+                    if(normalized >= Math.pow(10, precision)) {
+                        // A number was carried
+                        integer += 1;
+                    }
+                    
+                    value = integer.toString() + '.' + normalized.toString().truncate(precision).pad(precision, '0', 'right');
+                }
+                
+                // Add padding
+                if(arg.width) {
+                    value = value.toString().pad(arg.width, arg.padString || 0);
+                }
+                
+                // Add sign and return
+                return sign + value.toString();
+            },
     
     /**
      * Treats input as integer, but returns the ASCII character with that character code.
@@ -635,3 +635,30 @@ String.prototype.extend({
         return this;
     }
 });
+
+Number.prototype.extendIfNotExists({
+    format: function (decimals, dec_point, thousands_sep) {
+        var number = this;
+        
+        number = (number + '').replace(/[^0-9+-Ee.]/g, '');
+        var n = !isFinite(+number) ? 0 : +number,
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+            s = '',
+            toFixedFix = function (n, prec) {
+                var k = Math.pow(10, prec);
+                return '' + Math.round(n * k) / k;
+            };
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/B(?=(?:d{3})+(?!d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        
+        return s.join(dec);
+    }});

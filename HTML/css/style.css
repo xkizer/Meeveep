@@ -437,6 +437,10 @@ html {
 	position: relative;
 }
 
+#live-autograph-stream.taller {
+    height: 382px;
+}
+
 #live-autograph-stream h2 {
 	color: #303030;
 	font-weight: 200;
@@ -511,7 +515,7 @@ html {
 
 
 
-#order-back-to-previous {
+.btn.prev {
 	height: 30px;
 	line-height: 30px;
 	background: url(../images/icons/icon-sprite.png) -468px -161px rgba(49, 49, 49, 0.22) no-repeat;
@@ -587,17 +591,6 @@ html {
 	background: url(../images/bgs/leather.jpg);
 	color: #fff;
 	position: relative;
-}
-
-#order-information > textarea,
-#order-information > input {
-  background: transparent;
-  border: medium none;
-  color: inherit;
-  display: block;
-  font: inherit;
-  padding: 0;
-  width: 100%;
 }
 
 #divide .right h1 {
@@ -840,6 +833,10 @@ html {
 
 #personal-autograph #order-information .mm-icons span.video:before {
 	background-position: -460px -129px;
+}
+
+#personal-autograph #order-information .mm-icons span.hq-video:before {
+	display: none;
 }
 
 #personal-autograph #order-information .mm-icons span.video strong {
@@ -1580,6 +1577,10 @@ html {
 	background: rgba(247, 82, 9, 0.68);
     width: 100%;
     text-align: left;
+}
+
+#book2-next {
+    text-align: center;
 }
 
 .btn.arrow {
