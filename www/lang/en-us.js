@@ -1,5 +1,5 @@
 var lang = {
-    'txtTitle': 'Title',
+    txtTitle: 'Title',
     txtDefaultTitle: 'Welcome',
     txtSidebarFound: '{0} autographs found',
     txtHeaderSlogan: 'Digital autographs by your favourite stars!',
@@ -64,7 +64,6 @@ var lang = {
     txtBook2SideIntro: 'What should "{0}" write for your your autograph? Type the name of the recipient and special wishes in the appropriate fields.',
     txtCardFor: 'This card is for',
     txtWhatShouldMsgIncl: 'What should the message include',
-<<<<<<< HEAD
     txtBillingAddress: 'Billing Address',
     txtEdit: 'Edit',
     txtPlaceOrder: 'Order Now',
@@ -74,9 +73,6 @@ var lang = {
     txtTotalPrice: 'Total Price',
     txtInclVAT: 'incl. VAT',
     txtOrderWaitWarning: 'The next step will automatically take you to the order transaction, please don\'t close the window before being prompted to.'
-=======
-    
->>>>>>> 028e30819b5b160292a0592aea864dc66eeb6806
 };
 
 module.exports = lang;
