@@ -2,6 +2,9 @@
  * Utilities, polyfills and fallbacks
  */
 
+// Escaped RegExp characters
+var regExpEscapedChars = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+
 /**
  * Copy properties from an object to this object. Existing properties are overwritten.
  */
@@ -582,6 +585,8 @@ String.prototype.extend({
     rtrim: function (char) {
         if('string' !== typeof char) {
             char = '\\s';
+        } else {
+            char = char.regexpEscape();
         }
         
         return this.replace(new RegExp('{0}*$'.format(char)), '');
@@ -590,6 +595,8 @@ String.prototype.extend({
     ltrim: function (char) {
         if('string' !== typeof char) {
             char = '\\s';
+        } else {
+            char = char.regexpEscape();
         }
         
         return this.replace(new RegExp('^{0}*'.format(char)), '');
@@ -598,7 +605,9 @@ String.prototype.extend({
     itrim: function (char) {
         if('string' !== typeof char) {
             char = '\\s';
-        }
+        } else {
+            char = char.regexpEscape();
+        }        
         
         return this.replace(new RegExp('^{0}*'.format(char)), '')
                     .replace(new RegExp('{0}*$'.format(char)), '')
@@ -612,6 +621,8 @@ String.prototype.extend({
     trim: function (char) {
         if('string' !== typeof char) {
             char = '\\s';
+        } else {
+            char = char.regexpEscape();
         }
         
         return this.replace(new RegExp('^{0}*'.format(char)), '').replace(new RegExp('{0}*$'.format(char)), '');
@@ -633,32 +644,54 @@ String.prototype.extend({
         }
         
         return this;
+    },
+    
+    /**
+     * Reverse the string
+     * @return Returns a new string which is the reverse of the current string
+     */
+    reverse: function () {
+        var length = this.length,
+            newString = [];
+        
+        for(var i = 0; i < length; i++) {
+            newString[length - i - 1] = this[i];
+        }
+        
+        return newString.join('');
+    },
+    
+    /**
+     * Escape the string for use in regular expression
+     * @return Returns a new string with special characters escaped
+     */
+    regexpEscape: function () {
+        return this.replace(regExpEscapedChars, '\\$&');
     }
 });
 
 Number.prototype.extendIfNotExists({
-    format: function (decimals, dec_point, thousands_sep) {
-        var number = this;
+    format: function (dec_point, thousands_sep) {
+        var number = String(this);
+        console.log(thousands_sep);
+        thousands_sep = thousands_sep || ',';
+        dec_point = dec_point || '.';
         
-        number = (number + '').replace(/[^0-9+-Ee.]/g, '');
-        var n = !isFinite(+number) ? 0 : +number,
-            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-            s = '',
-            toFixedFix = function (n, prec) {
-                var k = Math.pow(10, prec);
-                return '' + Math.round(n * k) / k;
-            };
-        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-        if (s[0].length > 3) {
-            s[0] = s[0].replace(/B(?=(?:d{3})+(?!d))/g, sep);
-        }
-        if ((s[1] || '').length < prec) {
-            s[1] = s[1] || '';
-            s[1] += new Array(prec - s[1].length + 1).join('0');
-        }
+        console.log(thousands_sep);
         
-        return s.join(dec);
-    }});
+        var n = !isFinite(number) ? 0 : number,
+            parts = number.split('.'),
+            decimal = parts[0] || 0,
+            floated = typeof parts[1] !== 'undefined' ? parts[1] : '',
+            formatted;
+        
+        // Deal with the decimal part... break it into groups of three
+        formatted = decimal.reverse().replace(/.{3}/g,'$&'+thousands_sep).reverse().ltrim(thousands_sep);
+        
+        if(floated.length) {
+            formatted += dec_point + floated;
+        }
+    
+        return formatted;
+    }
+});

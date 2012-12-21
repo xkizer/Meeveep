@@ -1,5 +1,6 @@
 var db = require('../util/db.js'),
-    error = require('../util/error.js');
+    error = require('../util/error.js'),
+    util = require('../util/util.js');
 
 // Fields we are allowed to sort by
 sortFields = ['price','name'];
@@ -8,7 +9,7 @@ sortFields = ['price','name'];
 module.exports = {
     getStars: getStars,
     getStar: getStar,
-    book: book,
+    placeOrder: placeOrder,
     getCard: getCard,
     toString: function () {
         return '[controller#Stars:controllers/stars.js]';
@@ -187,9 +188,36 @@ function getCard (cardId, callback) {
 }
 
 /**
- * Book a star
+ * Place an order
+ * @param orderInfo The information about the order
+ * @param callback The callback function
+ * @todo This method currently implements no verification. Implement basic
+ * verification.
  */
-function book (starId, callback) {
+function placeOrder (orderInfo, callback) {
+    orderInfo.userId = orderInfo.user.userId; // Indexing purpose
+    orderInfo.starId = orderInfo.star.starId; // Indexing purpose
+    orderInfo.pending = true;
+    var orderId = util.generateKey(28);
+    orderInfo.orderId = orderId;
+    
+    db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection) {
+        if(err) {
+            // Something went wrong...
+            // TODO: Handle errors correctly
+            return callback(err);
+        }
+    
+        collection.insert(orderInfo, function (err) {
+            if(err) {
+                // Something went wrong...
+                // TODO: Handle errors correctly
+                return callback(err);
+            }
+            
+            callback(null, orderId);
+        });
+    });
 }
 
 var starProto = {

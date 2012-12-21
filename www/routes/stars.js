@@ -129,10 +129,30 @@ var starBooking = {
                         console.error(err);
                         return res.send(500, 'Something went wrong');
                     }
+                
+                    var colors = ['red','orange','yellow','green','cyan','blue','purple','pink','black','white'];
+                    var penColors = [];
+                    var colorSelected = false;
+                    
+                    colors.forEach(function (e) {
+                        var t = {color: e};
+                        
+                        if(req.query['pen-color'] === e) {
+                            t.selectedColor = colorSelected = true;
+                        }
+                        
+                        penColors.push(t);
+                    });
+                    
+                    if(!colorSelected) {
+                        // No color selected, default to black
+                        penColors[penColors.length - 2].selectedColor = true;
+                    }
                     
                     // Star found, render the star booking form
                     var view = {
                         star: star,
+                        pen_colors: penColors,
                         user: currentUser.userData,
                         txt_for: 'txtFor',
                         txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
@@ -249,6 +269,63 @@ var starBooking = {
                     };
 
                     renderer.render({page: 'main/star/book-3', vars: view}, req, res, next);
+                });
+            });
+        });
+    },
+    
+    4: function (req, res, next) {
+        // The fourth step saves the autograph and redirects to home page
+        // TODO: Verification
+        var autograph = req.query,
+            starId = req.params.starId,
+            ctrlStar = star,
+            cardId = req.query.cardId || false;
+        
+        if(!cardId) {
+            // Error, 401
+            console.error('Card ID not supplied');
+            return res.send('Where is the card ID?', 401);
+        }
+        
+        // User needs to be logged in first
+        req.requireLogin(function (currentUser) {
+            // Get star info
+            star.getStar(starId, function (err, star) {
+                if(err) {
+                    console.error(err);
+                    res.send('Something went wrong', 500).end();
+                    return;
+                }
+            
+                if(!star) {
+                    console.error('Star not found');
+                    return res.send('Star not found', 404).end();
+                }
+                
+                // Verify the user has a valid card
+                ctrlStar.getCard(cardId, function (err, card) {
+                    if(err) {
+                        // Something went wrong...
+                        console.error(err);
+                        return res.send(500, 'Something went wrong');
+                    }
+                    
+                    // Everything okay, save
+                    autograph.extend({
+                        star: star,
+                        user: currentUser,
+                        date: new Date()
+                    });
+                
+                    ctrlStar.placeOrder(autograph, function (err, orderNumber) {
+                        if(err) {
+                            console.error(cli.red('something went wrong'), err);
+                            return res.send(500, 'Something went wrong!').end();
+                        }
+                    
+                        res.redirect('/?orderComplete=' + orderNumber);
+                    });
                 });
             });
         });

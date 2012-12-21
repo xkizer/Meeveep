@@ -137,4 +137,40 @@ jQuery(function ($) {
         
         location.href = next + '?' + search.join('&');
     });
+
+    // Third and final step
+    $('#order-checkout, #book3-next').click(function(e) {
+        e.preventDefault();
+        
+        var paymentMethod = $('#payment-method select').val(),
+            termsAgreed = $('#payment-method2 [name="terms_agree"]')[0].checked,
+            receiveNlt = $('#payment-method2 [name="recieve_newsletter"]')[0].checked,
+            queryString = location.search.substr(1),
+            urlObj = {},
+            next = $(this).attr('data-next') || 'step-4';
+        
+        queryString.split('&').forEach(function (pair) {
+            if(!pair) {
+                return;
+            }
+            
+            pair = pair.split('=');
+            urlObj[pair[0]] = pair[1] || '';
+        });
+        
+        urlObj['payment-method'] = encodeURIComponent(paymentMethod);
+        urlObj['accepted-terms'] = encodeURIComponent(termsAgreed);
+        urlObj['newsletter'] = encodeURIComponent(receiveNlt);
+        
+        // Build url
+        var search = [];
+        
+        for(var i in urlObj) {
+            if(urlObj.hasOwnProperty(i)) {
+                search.push(i + '=' + urlObj[i]);
+            }
+        }
+        
+        location.href = next + '?' + search.join('&');
+    });
 });

@@ -567,6 +567,21 @@ $(function () {
                 return this.replace(new RegExp('^{0}*'.format(char)), '')
                             .replace(new RegExp('{0}*$'.format(char)), '')
                             .replace(new RegExp('{0}+'.format(char), 'g'), char);
+            },
+    
+            /**
+             * Reverse the string
+             * @return Returns a new string which is the reverse of the current string
+             */
+            reverse: function () {
+                var length = this.length,
+                    newString = [];
+
+                for(var i = 0; i < length; i++) {
+                    newString[length - i - 1] = this[i];
+                }
+
+                return newString.join('');
             }
         });
     }());
