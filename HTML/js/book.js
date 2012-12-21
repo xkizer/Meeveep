@@ -135,6 +135,10 @@ jQuery(function ($) {
             }
         }
         
+<<<<<<< HEAD
         location.href = next + '?' + search.join('&');
+=======
+        location.href = 'step-3?' + search.join('&');
+>>>>>>> 028e30819b5b160292a0592aea864dc66eeb6806
     });
 });

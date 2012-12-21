@@ -153,9 +153,15 @@ var starBooking = {
                         body: {
                             id: 'preview-page'
                         },
+<<<<<<< HEAD
                         post_scripts: [{
                             src: '/js/book.js'
                         }],
+=======
+                        post_scripts: {
+                            src: '/js/book.js'
+                        },
+>>>>>>> 028e30819b5b160292a0592aea864dc66eeb6806
                         partials: {
                             sidebar: 'sidebar/book-2'
                         }
