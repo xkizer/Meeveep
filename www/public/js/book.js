@@ -6,6 +6,20 @@ jQuery(function ($) {
         book1BigLiWidth = book1BigLi.width(),
         currentIndex = 0;
     
+    // Process query string
+    var queryString = location.search.substr(1),
+            urlObj = {};
+    
+    queryString.split('&').forEach(function (pair) {
+        if(!pair) {
+            return;
+        }
+
+        pair = pair.split('=');
+        urlObj[pair[0]] = pair[1] || '';
+    });
+    
+    // Card selection
     book1Li.each(function (i) {
         $(this).data('id', i);
     }).click(function () {
@@ -55,22 +69,28 @@ jQuery(function ($) {
         switchTo(currentIndex + direction);
     });
     
+    // Take card of the container's width
+    book1BigUl.width(book1BigLiWidth * book1BigLi.length);
+    
+    // Activate an initial card
+    var cardId = urlObj.cardId || null;
+    
+    if(cardId) {
+        var card = $('#preview-slideshow li[data-id="' + cardId + '"]');
+        
+        if(card.length === 1) {
+            currentIndex = card.data('id');
+        }
+    }
+    
+    switchTo(currentIndex);
+    
+    // Step 1 submission
     $('#book1-next, #book1-prev').click(function (e) {
         e.preventDefault();
         
         var selectedId = $(book1BigLi[currentIndex]).attr('data-id'),
-            queryString = location.search.substr(1),
-            urlObj = {},
             next = $(this).attr('data-next') || 'step-2';
-        
-        queryString.split('&').forEach(function (pair) {
-            if(!pair) {
-                return;
-            }
-            
-            pair = pair.split('=');
-            urlObj[pair[0]] = pair[1] || '';
-        });
         
         urlObj['cardId'] = selectedId;
         
@@ -90,8 +110,7 @@ jQuery(function ($) {
         book1BigLiWidth = book1BigLi.width();
     });
     
-    book1BigUl.width(book1BigLiWidth * book1BigLi.length);
-    switchTo(currentIndex);
+    // Setp 2
     
     // Pen color switching
     var penColors = $('#book2-side-form .pen-color');
@@ -101,7 +120,18 @@ jQuery(function ($) {
         penColors.removeClass('active');
         target.addClass('active');
     });
-
+    
+    function showError(element) {
+        var fn = function () {
+            // No check for validity. Once element is changed, remove error
+            element.removeClass('has-error');
+        };
+        
+        element = $(element);
+        element.addClass('has-error');
+        element.on('change', fn);
+    }
+    
     // Page 2 submit
     $('#book2-next,#book2-prev').click(function (e) {
         e.preventDefault();
@@ -109,19 +139,17 @@ jQuery(function ($) {
         var name = $('#book2-name').val(),
             msg = $('#book2-msg').val(),
             penColor = $('#book2-side-form .pen-color.active').attr('data-color'),
-            queryString = location.search.substr(1),
-            urlObj = {},
             next = $(this).attr('data-next') || 'step-3';
         
-        queryString.split('&').forEach(function (pair) {
-            if(!pair) {
-                return;
-            }
-            
-            pair = pair.split('=');
-            urlObj[pair[0]] = pair[1] || '';
-        });
-        
+        // A little validation
+        if(!name.trim()) {
+            return showError('#book2-name');
+        }
+    
+        if(msg.itrim().length < 10) {
+            return showError('#book2-msg');
+        }
+    
         urlObj['name'] = encodeURIComponent(name);
         urlObj['msg'] = encodeURIComponent(msg);
         urlObj['pen-color'] = encodeURIComponent(penColor);
@@ -139,24 +167,18 @@ jQuery(function ($) {
     });
 
     // Third and final step
-    $('#order-checkout, #book3-next').click(function(e) {
+    $('#order-checkout, #book3-next, #book3-prev').click(function(e) {
         e.preventDefault();
         
         var paymentMethod = $('#payment-method select').val(),
             termsAgreed = $('#payment-method2 [name="terms_agree"]')[0].checked,
             receiveNlt = $('#payment-method2 [name="recieve_newsletter"]')[0].checked,
-            queryString = location.search.substr(1),
-            urlObj = {},
             next = $(this).attr('data-next') || 'step-4';
         
-        queryString.split('&').forEach(function (pair) {
-            if(!pair) {
-                return;
-            }
-            
-            pair = pair.split('=');
-            urlObj[pair[0]] = pair[1] || '';
-        });
+        if(!termsAgreed && next === 'step-4') {
+            showError($('#payment-method2 [name="terms_agree"]').closest('label').closest('span'));
+            return;
+        }
         
         urlObj['payment-method'] = encodeURIComponent(paymentMethod);
         urlObj['accepted-terms'] = encodeURIComponent(termsAgreed);

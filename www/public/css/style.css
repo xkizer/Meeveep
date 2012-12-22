@@ -205,6 +205,16 @@ textarea {
     line-height: 17px;
 }
 
+.has-error {
+    box-shadow: 0 0 4px #FF1209 !important;
+}
+
+#payment-method2 .has-error {
+    box-shadow: none !important;
+    color: #fff;
+    text-shadow: 1px 1px #f00;
+}
+
 .datepicker:before {
 	width: 21px;
 	height: 21px;

@@ -602,16 +602,19 @@ String.prototype.extend({
         return this.replace(new RegExp('^{0}*'.format(char)), '');
     },
     
-    itrim: function (char) {
-        if('string' !== typeof char) {
+    itrim: function (origChar) {
+        var char;
+        
+        if('string' !== typeof origChar) {
+            origChar = ' ';
             char = '\\s';
         } else {
-            char = char.regexpEscape();
-        }        
-        
+            char = origChar.regexpEscape();
+        }
+                
         return this.replace(new RegExp('^{0}*'.format(char)), '')
-                    .replace(new RegExp('{0}*$'.format(char)), '')
-                    .replace(new RegExp('{0}+'.format(char), 'g'), char);
+                .replace(new RegExp('{0}*$'.format(char)), '')
+                .replace(new RegExp('{0}+'.format(char), 'g'), origChar);
     },
     
     /**
@@ -673,11 +676,8 @@ String.prototype.extend({
 Number.prototype.extendIfNotExists({
     format: function (dec_point, thousands_sep) {
         var number = String(this);
-        console.log(thousands_sep);
         thousands_sep = thousands_sep || ',';
         dec_point = dec_point || '.';
-        
-        console.log(thousands_sep);
         
         var n = !isFinite(number) ? 0 : number,
             parts = number.split('.'),

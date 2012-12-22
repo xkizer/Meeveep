@@ -41,11 +41,11 @@ var standardVariables = {
     footer_trust_text:  'txtFtTrustText',
     meeveep_secure:     'txtMeeveepSecure',
     meeveep_secure_txt: 'txtFtMeeveepSecureTxt',
-    txtHelp:            {text:'txtHelp',filter:String.prototype.toLowerCase},
-    txtPrivacy:         {text:'txtPrivacy',filter:String.prototype.toLowerCase},
-    txtContact:         {text:'txtContact',filter:String.prototype.toLowerCase},
-    txtLegal:           {text:'txtLegal',filter:String.prototype.toLowerCase},
-    txtTerms:           {text:'txtTerms',filter:String.prototype.toLowerCase},
+    txtHelp:            {text:'txtHelp',filter:'toLowerCase'},
+    txtPrivacy:         {text:'txtPrivacy',filter:'toLowerCase'},
+    txtContact:         {text:'txtContact',filter:'toLowerCase'},
+    txtLegal:           {text:'txtLegal',filter:'toLowerCase'},
+    txtTerms:           {text:'txtTerms',filter:'toLowerCase'},
     txtService:         'txtService',
     
 }
@@ -103,9 +103,7 @@ function render (opts, req, res, next) {
             // Go over the whole variables and convert them to languages
             if(langFile) {
                 var variable,
-                    txtId,
-                    txt,
-                    content;
+                    txt;
                 
                 for(var i in vars) {
                     variable = vars[i];
@@ -139,12 +137,12 @@ function render (opts, req, res, next) {
                             }
                             
                             filter.forEach(function (filter) {
-                                if(typeof filter == 'string' && 'function' === typeof txt[filter]) {
+                                if(typeof filter === 'string' && 'function' === typeof txt[filter]) {
                                     // A method of the string
-                                    txt = txt[filter];
+                                    txt = txt[filter]();
                                 } else if('function' === typeof filter) {
                                     // An absolute function
-                                    txt = filter.call(txt);
+                                    txt = filter(txt);
                                 }
                             });
                         }

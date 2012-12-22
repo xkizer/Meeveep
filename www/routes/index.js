@@ -10,20 +10,15 @@ module.exports = {
             /*sidebar_counter:    ['txtNumAvailable', 12],*/
             page_title: 'txtPersonalAutographs',
             page_title_description: 'txtPersonalAutographDescription',
-            placeholder_search: {text: 'txtSearch', filter: String.prototype.toLowerCase},
-            search_music: {text: 'txtMusic', filter: String.prototype.toLowerCase},
+            placeholder_search: {text: 'txtSearch', filter: 'toLowerCase'},
+            search_music: {text: 'txtMusic', filter: 'toLowerCase'},
             next_step: 'txtNextStep',
             currency: '€',
             txt_video: 'txtVideo',
             txt_audio: 'txtAudio',
             more_information: 'txtMoreInformation',
             txt_information: 'txtInformation',
-            stars: [
-                {id: 19029932, name: 'Kizer', sale: true, price: '8,00', video: true, audio: true, image: '/images/imgs/starts-small/star-small-6.jpg'},
-                {id: 19223422, name: 'Mizer', sale: false, price: '20,00', video: false, audio: true, image: '/images/imgs/starts-small/star-small-4.jpg'},
-                {id: 19092032, name: 'Pizza', sale: false, price: '15,00', video: true, audio: false, image: '/images/imgs/starts-small/star-small-1.jpg'}
-            ],
-            txt_found: {text: 'txtFound', filter: String.prototype.toUpperCase}
+            txt_found: {text: 'txtFound', filter: 'toUpperCase'}
         };
         
         // Get the list of stars

@@ -2,6 +2,9 @@
  * Utilities, polyfills and fallbacks
  */
 
+// Escaped RegExp characters
+var regExpEscapedChars = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+
 /**
  * Array.forEach() polyfill
  * @param {Function} callback The function to call for each element of the array
@@ -70,7 +73,6 @@ Array.prototype.difference = Array.prototype.difference || function(array) {
 
     for ( i = 0; i < intersect.length; i++ ) {
         el = intersect[i];
-        
         delete combined[combined.indexOf(el)];
     }
 
@@ -505,23 +507,6 @@ $(function () {
             },
             
             /**
-             * Truncate the string to a minimum width and append <code>appendString</code>
-             * if anything was trincated.
-             * @param {Number} width The maximum width of the string
-             * @param {String} appendString (optional) The string to append, if and only if
-             *      some string was truncated. This string is not counted in the <code>width</code>
-             * @return {String} Returns a new string with a maximum width of <code>width</code>
-             */
-            truncate: function (width, appendString, rightJustify) {
-                if(this.length > width) {
-                    var start = rightJustify ? this.length - width : 0;
-                    return this.substr(start, width) + (typeof appendString === 'undefined' ? '' : appendString);
-                }
-                
-                return this;
-            },
-            
-            /**
              * Repeats this string multiple times
              * @param {Number} count The number of times to repeat the string
              * @return {String} Returns the string repeated <code>count</count> times
@@ -531,21 +516,11 @@ $(function () {
                 return new Array(count + 1).join(this.valueOf());
             },
             
-            /**
-             * Trim the specified string from both ends of this string
-             * @param {String} char The character to trim off the ends of this string. Defaults to space.
-             */
-            trim: function (char) {
-                if('string' !== typeof char) {
-                    char = '\\s';
-                }
-                
-                return this.replace(new RegExp('^{0}*'.format(char)), '').replace(new RegExp('{0}*$'.format(char)), '');
-            },
-            
             rtrim: function (char) {
                 if('string' !== typeof char) {
                     char = '\\s';
+        } else {
+            char = char.regexpEscape();
                 }
                 
                 return this.replace(new RegExp('{0}*$'.format(char)), '');
@@ -554,22 +529,61 @@ $(function () {
             ltrim: function (char) {
                 if('string' !== typeof char) {
                     char = '\\s';
+        } else {
+            char = char.regexpEscape();
                 }
                 
                 return this.replace(new RegExp('^{0}*'.format(char)), '');
             },
             
-            itrim: function (char) {
-                if('string' !== typeof char) {
-                    char = '\\s';
-                }
+    itrim: function (origChar) {
+        var char;
+        
+        if('string' !== typeof origChar) {
+            origChar = ' ';
+            char = '\\s';
+        } else {
+            char = origChar.regexpEscape();
+        }
                 
-                return this.replace(new RegExp('^{0}*'.format(char)), '')
-                            .replace(new RegExp('{0}*$'.format(char)), '')
-                            .replace(new RegExp('{0}+'.format(char), 'g'), char);
-            },
+        return this.replace(new RegExp('^{0}*'.format(char)), '')
+                .replace(new RegExp('{0}*$'.format(char)), '')
+                .replace(new RegExp('{0}+'.format(char), 'g'), origChar);
+    },
     
             /**
+     * Trim the specified string from both ends of this string
+     * @param {String} char The character to trim off the ends of this string. Defaults to space.
+     */
+    trim: function (char) {
+        if('string' !== typeof char) {
+            char = '\\s';
+        } else {
+            char = char.regexpEscape();
+        }
+        
+        return this.replace(new RegExp('^{0}*'.format(char)), '').replace(new RegExp('{0}*$'.format(char)), '');
+    },
+    
+    /**
+     * Truncate the string to a minimum width and append <code>appendString</code>
+     * if anything was trincated.
+     * @param {Number} width The maximum width of the string
+     * @param {String} appendString (optional) The string to append, if and only if
+     *      some string was truncated. This string is not counted in the <code>width</code>
+     * @param {Boolean} Setting this to TRUE makes the truncation to happen from the left hand side
+     * @return {String} Returns a new string with a maximum width of <code>width</code>
+     */
+    truncate: function (width, appendString, rightJustify) {
+        if(this.length > width) {
+            var start = rightJustify ? this.length - width : 0;
+            return this.substr(start, width) + (typeof appendString === 'undefined' ? '' : appendString);
+        }
+        
+        return this;
+    },
+    
+    /**
              * Reverse the string
              * @return Returns a new string which is the reverse of the current string
              */
@@ -582,6 +596,14 @@ $(function () {
                 }
 
                 return newString.join('');
+    },
+    
+    /**
+     * Escape the string for use in regular expression
+     * @return Returns a new string with special characters escaped
+     */
+    regexpEscape: function () {
+        return this.replace(regExpEscapedChars, '\\$&');
             }
         });
     }());

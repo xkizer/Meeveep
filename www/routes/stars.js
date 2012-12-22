@@ -67,7 +67,7 @@ var starBooking = {
                     // Star found, render the star booking form
                     var view = {
                         star: star,
-                        txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
+                        txt_of: {text: 'txtOf', filter: 'toLowerCase'},
                         user: currentUser.userData,
                         txt_summary: 'txtSummary',
                         post_scripts: [{
@@ -155,7 +155,7 @@ var starBooking = {
                         pen_colors: penColors,
                         user: currentUser.userData,
                         txt_for: 'txtFor',
-                        txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
+                        txt_of: {text: 'txtOf', filter: 'toLowerCase'},
                         txt_step: 'txtStep',
                         txt_summary: 'txtSummary',
                         autograph: req.query,
@@ -226,7 +226,7 @@ var starBooking = {
                         star: star,
                         user: currentUser,
                         txt_for: 'txtFor',
-                        txt_of: {text: 'txtOf', filter: String.prototype.toLowerCase},
+                        txt_of: {text: 'txtOf', filter: 'toLowerCase'},
                         txt_step: 'txtStep',
                         txt_summary: 'txtSummary',
                         autograph: req.query,
@@ -244,15 +244,14 @@ var starBooking = {
                         txt_accept_cond_left: 'txtAcceptCondTTL',
                         txt_receive_newsletter: 'txtWishToRecNlt',
                         txt_total_price: 'txtTotalPrice',
-                        price: {text: star.price, filter: function () {
-                                var number = this;
+                        price: {text: star.price, filter: function (number) {
                                 var formatted = Number.prototype.format.call(number, currentUser.numberFormat[0], currentUser.numberFormat[1]);
-                                return currentUser.currencyFormat.printf(formatted);
+                                return currentUser.currencyFormat.format(formatted, '€');
                         }},
                         txt_what_should_msg_include: 'txtWhatShouldMsgIncl',
                         txt_billing_address: 'txtBillingAddress',
                         txt_incl_vat: 'txtInclVAT',
-                        txt_edit: {text: 'txtEdit', filter: String.prototype.toLowerCase},
+                        txt_edit: {text: 'txtEdit', filter: 'toLowerCase'},
                         txt_place_order: 'txtPlaceOrder',
                         txt_next_step_wait: 'txtOrderWaitWarning',
                         txt_side_intro: {text: 'txtBook2SideIntro', variables: [star.name]},

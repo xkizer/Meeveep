@@ -12,7 +12,7 @@ var lang = {
     txtMinute: 'minute',
     txtMinutes: 'minutes',
     txtHowMeeveepWorks: 'How does <i>Meeveep</i> work?',
-    txt‌Login: 'Login',
+    txtLogin: 'Login',
     txtLoginIntro: 'In order to get to your personal profile, please log in first.',
     txtEmailAddress: 'E-Mail address',
     txtPassword: 'Password',
@@ -72,7 +72,8 @@ var lang = {
     txtWishToRecNlt: 'Yes, i wish to receive the Meeveep newsletter',
     txtTotalPrice: 'Total Price',
     txtInclVAT: 'incl. VAT',
-    txtOrderWaitWarning: 'The next step will automatically take you to the order transaction, please don\'t close the window before being prompted to.'
+    txtOrderWaitWarning: 'The next step will automatically take you to the order transaction, please don\'t close the window before being prompted to.',
+    txtCelebrities: 'Celebrities'
 };
 
 module.exports = lang;
