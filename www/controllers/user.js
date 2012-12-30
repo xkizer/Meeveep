@@ -17,46 +17,108 @@ module.exports = {
     }
 };
 
-// Cached users are saved here...
-userCache = {};
-
 function User (userId, callback) {
     var me = this;
     
-    if(userCache[userId]) {
-        return callback(null, userCache[userId]);
-    }
-    
-    db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
+    // Check in the redis store if user is cached
+    db.redisConnect(function (err, client) {
         if(err) {
-            return callback(err);
+            // Error connecting, falback to mongo
+            return getFromMongo();
         }
         
-        collection.findOne({userId: Number(userId)}, function (err, user) {
+        client.hgetall('auth:user:' + String(userId).toLowerCase(), function (err, user) {
+            if(err || !user) {
+                return getFromMongo(); // Could not do cache thing, resort to mongo
+            }
+            
+            // User was found
+            // Unserialize
+            for(var i in user) {
+                try {
+                    user[i] = JSON.parse(user[i]);
+                } catch(e) {
+                    // Retain value
+                }
+            }
+            
+            return createUserObject(user);
+        });
+    });
+
+    /**
+     * Helper function to create user objects
+     * @param {object} user User object returned from DB/cache query
+     * @returns {undefined}
+     */
+    function createUserObject(user) {
+        Object.defineProperty(me, "_data", {
+            enumerable: false,
+            value: user
+        });
+
+        callback(null, me);
+    }
+    
+    /**
+     * Helper function to get user information from mongo
+     * @returns {undefined}
+     */
+    function getFromMongo () {
+        db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
             if(err) {
                 return callback(err);
             }
-            
-            if(!user) {
-                return callback(error(0x4B01));
-            }
-            
-            Object.defineProperty(me, "_data", {
-                enumerable: false,
-                value: user
+
+            collection.findOne({$or: [{userId: Number(userId)}, {username: String(userId).toLowerCase()}]}, function (err, user) {
+                if(err) {
+                    return callback(error(0x4B02, err));
+                }
+
+                if(!user) {
+                    return callback(error(0x4B01));
+                }
+                
+                createUserObject(user);
+                
+                // Cache
+                db.redisConnect(function (err, client) {
+                    if(err) {
+                        // Could not connect. skip caching
+                        return;
+                    }
+                
+                    //console.log(client);
+                    
+                    // Delete from cache after 4 hours. This helps avoid users
+                    // being forgotten perpetually in the cache.
+                    // It also frees up space for other information to be stored in the cache
+                    var ttl = 60 * 60 * 4;
+                    
+                    // Serialize
+                    var username = user.username.toLowerCase(),
+                        userId = user.userId;
+                        
+                    for(var i in user) {
+                        if(typeof user[i] !== 'string') {
+                            user[i] = JSON.stringify(user[i]);
+                        }
+                    }
+                    
+                    var emptyFn = function () {
+                        console.log(arguments);
+                    };
+                    
+                    client.multi()
+                        .hmset('auth:user:' + username, user, emptyFn)
+                        .hmset('auth:user:' + userId, user, emptyFn)
+                        .expire('auth:user:' + username, ttl)
+                        .expire('auth:user:' + userId, ttl)
+                        .exec(emptyFn);
+                });
             });
-            
-            callback(null, me);
-            
-            // Cache
-            userCache[userId] = me;
-            
-            // Destroy cache after 30 mins
-            (function () {
-                delete userCache[userId];
-            }).defer(1800000);
         });
-    });
+    }
 }
 
 User.prototype = {
@@ -169,4 +231,12 @@ function usernameExists(username, callback) {
     });
 }
 
-
+/**
+ * Get information about a user, based on the username
+ * @param {string} username
+ * @param {type} callback
+ * @returns {undefined}
+ */
+function findByUserName(username, callback) {
+    
+}

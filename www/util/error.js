@@ -39,6 +39,8 @@ var errorCodes = {
     0x2900: 'Server error while logging in',                                    // Redis server fail during login
     0x2901: 'Username and password did not match',
     0x2902: 'Account is inactive. Please make sure you have verified account and that account is not blocked.',
+    0x2903: 'Server error while loging in',                                     // MongoDB connection error
+    0x2904: 'Serever error while login in',                                     // MongoDB query failure
     
     0x2A00: 'Server error while retrieving session information',                // Redis pooped on the pants
     0x2A01: 'Session information not found',                                    // Occurs when we cannot find the session identified by the given key
@@ -51,6 +53,7 @@ var errorCodes = {
     0x3405: 'Text not found in language file',                                  // Text translation could not find the specified text in language file
     
     0x4B01: 'User not found',                                                   // User with ID {userId} not found
+    0x4B02: 'Server error: could not get user information',                     // Database error trying to get user's information
     0x4B03: 'Could not check availability of username',                         // Redis failed us while checking if username is free
     0x4B04: 'Username is already taken',                                        // Please choose another username!
     0x4B08: 'Database connection error while creating account',                 // MongoDB!!!

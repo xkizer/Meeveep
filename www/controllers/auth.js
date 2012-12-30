@@ -1,6 +1,7 @@
 var db = require('../util/db.js');
 var error = require('../util/error.js');
 var util = require('../util/util.js');
+var user = require('./user.js');
 
 module.exports = {
     /**
@@ -13,13 +14,14 @@ module.exports = {
                 return callback(err);
             }
             
-            client.hgetall('auth:user:' + String(username).toLowerCase(), function (err, userInfo) {
+            // Get the user's information
+            user.getUser(username, function (err, userInfo) {
                 if(err) {
                     return error(0x2900, err);
                 }
                 
                 // Check password
-                if(!userInfo || userInfo.password !== util.hash(password, username)) {
+                if(userInfo.password !== util.hash(password, username)) {
                     return callback(error(0x2901, err));
                 }
                 
