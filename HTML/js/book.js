@@ -41,6 +41,11 @@ jQuery(function ($) {
         var me = $(this);
         me.animate({left: i * book1BigLiWidth * -1}, {duration: 400})
         $('#book1-card-number').text(i+1);
+		
+		// Shoot out an event
+		book1BigUl.trigger($.Event('scrolled', {position: i}));
+		
+		return true;
     };
     
     book1Ul.activate = function (i) {
@@ -83,7 +88,7 @@ jQuery(function ($) {
         }
     }
     
-    switchTo(currentIndex);
+    (function () {switchTo(currentIndex);}).defer(100)
     
     // Step 1 submission
     $('#book1-next, #book1-prev').click(function (e) {

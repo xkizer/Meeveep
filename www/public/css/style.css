@@ -525,7 +525,7 @@ html {
 
 
 
-.prev.btn {
+.btn.prev {
 	height: 30px;
 	line-height: 30px;
 	background: url(../images/icons/icon-sprite.png) -468px -161px rgba(49, 49, 49, 0.22) no-repeat;
@@ -1053,6 +1053,10 @@ html {
 	top: 13px;
 }
 
+#personal-autograph-preview .rightbox .accept.ready {
+	background-position: -111px -242px;
+}
+
 #personal-autograph-preview .rightbox .reject {
 	width: 20px;
 	height: 20px;
@@ -1062,9 +1066,37 @@ html {
 }
 
 
+.signage .viewport {
+	cursor: url(../images/icons/mouse-pointer.png), default;
+	position: relative;
+}
 
+.signage .viewport .cursor-tip {
+	display: none;
+	height: 29px;
+	line-height: 29px;
+	padding: 0 10px;
+	background: url(../images/bgs/prof-bg.png);
+	position: absolute;
+	z-index: 9999;
+	white-space: nowrap;
+	color: #fff;
+}
 
+.signage .viewport:hover .cursor-tip {
+	display: block;
+}
 
+.signage .viewport .cursor-tip:after {
+	display: block;
+	content: ' ';
+	position: absolute;
+	left: -8px;
+	top: 9px;
+	height: 12px;
+	width: 8px;
+	background: url(../images/icons/icon-sprite.png) -111px -28px;
+}
 
 
 
@@ -1099,6 +1131,40 @@ html {
 	width: 23px;
 	background: url(../images/icons/icon-sprite.png) -155px -205px;
 	margin-left: 13px;
+	position: relative;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a > div {
+	position: absolute;
+	bottom: 32px;
+	right: -22px;
+	background: url(../images/bgs/prof-bg.png);
+	width: 200px;
+	padding: 9px;
+	text-transform: none;
+	display: none;
+	line-height: 15px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a:hover > div {
+	display: block;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a h3 {
+	font-weight: 200;
+	font-size: 20px;
+	margin-bottom: 6px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a > div:after {
+	display: block;
+	content: ' ';
+	width: 12px;
+	position: absolute;
+	bottom: -8px;
+	height: 8px;
+	background: url(../images/icons/icon-sprite.png) -111px 0;
+	right: 27px;
 }
 
 #personal-autograph-preview #personal-autographs-bottom .right a.video {
@@ -1107,6 +1173,18 @@ html {
 
 #personal-autograph-preview #personal-autographs-bottom .right a.audio {
 	background-position: -223px -205px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a.done.note {
+	background-position: -155px -229px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a.done.video {
+	background-position: -190px -229px;
+}
+
+#personal-autograph-preview #personal-autographs-bottom .right a.done.audio {
+	background-position: -223px -229px;
 }
 
 
@@ -1726,7 +1804,109 @@ html {
 }
 
 
+#sign-overlay {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	z-index: 999;
+	background: rgba(255,255,255,0.93);
+	top: 0;
+	left: 0;
+	display: none;
+}
 
+#sign-overlay .content {
+	width: 1082px;
+	margin: 20px auto;
+	position: relative;
+}
 
+#sign-overlay header {
+	width: 400px;
+	line-height: 15px;
+	margin-bottom: 12px;
+}
 
+#sign-overlay h1 {
+	font-size: 28px;
+	font-weight: 200;
+	line-height: 32px;
+	white-space: nowrap;
+}
 
+#sign-overlay .img img {
+	display: block;
+	height: 100%;
+}
+
+#sign-overlay .img canvas {
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 4;
+	top: 0;
+	left: 0;
+}
+
+#sign-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+#sign-actions a {
+	display: block;
+	height: 32px;
+	width: 32px;
+	float: left;
+	margin-left: 6px;
+	background: url(../images/icons/icon-sprite.png);
+	position: relative;
+}
+
+#sign-actions #sign-action-undo {
+	background-position: 0 -242px;
+}
+
+#sign-actions #sign-action-cancel {
+	background-position: -37px -242px;
+}
+
+#sign-actions #sign-action-accept {
+	background-position: -75px -242px;
+}
+
+#sign-actions a span {
+	display: none;
+	position: absolute;
+	height: 39px;
+	line-height: 39px;
+	right: -17px;
+	color: #fff;
+	padding: 0 13px;
+	background: url(../images/bgs/prof-bg.png);
+	bottom: -53px;
+	z-index: 99999;
+	text-align: center;
+	min-width: 60px;
+}
+
+#sign-actions a:hover span {
+	display: block;
+}
+
+#sign-actions a span:after {
+	position: absolute;
+	content: ' ';
+	display: block;
+	width: 12px;
+	height: 8px;
+	background: url(../images/icons/icon-sprite.png) -129px 0 no-repeat;
+	top: -8px;
+	right: 27px;
+}
+
+.no-scroll {
+	overflow: hidden;
+}
