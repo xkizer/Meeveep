@@ -3,6 +3,8 @@ var defaultMongoOptions = {
     safe: true
 };
 
+var mongoCache = {};
+
 /**
  * Connect to a mongodb server and collection
  */
@@ -10,6 +12,18 @@ exports.mongoConnect = function(data, callback) {
     var dbname = data.db || 'meeveep',
         collection = data.collection || null,
         options  = data.options || {};
+    
+    // Check the cache
+    // Please note that the order of the arguments is important in caching
+    var cacheStr = JSON.stringify(data);
+    
+    if(mongoCache[cacheStr]) {
+        if(data.collection) {
+            return callback(null, mongoCache[cacheStr].collection, mongoCache[cacheStr].db);
+        } else {
+            return callback(null, mongoCache[cacheStr].db);
+        }
+    }
     
     // Set options
     options = {}.extend(defaultMongoOptions).extend(options);
@@ -34,19 +48,26 @@ exports.mongoConnect = function(data, callback) {
 
     connector.open(function(err, db) {
         if(err) {
-            callback(err);
+            return callback(err);
         }
         
+        // When the connection closes, remove from cache
+        db.on('close', function () {
+            delete mongoCache[cacheStr];
+        });
+        
         if(!collection) {
+            mongoCache[cacheStr] = {db: db};
             return callback(null, db);
         }
         
         db.collection(collection, function(err, collection) {
             if(err) {
-                callback(err);
+                return callback(err);
             }
             
-            callback(null, collection, db);
+            mongoCache[cacheStr] = {db: db, collection: collection};
+            return callback(null, collection, db);
         });
     });
 };
@@ -64,7 +85,7 @@ var redisQueue = {},
  */
 function redisDispatch(cacheString, err, client) {
     redisQueue[cacheString].forEach(function (callback) {
-        callback(err, client);
+        return callback(err, client);
     });
     
     redisQueue[cacheString] = [];

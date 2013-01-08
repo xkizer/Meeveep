@@ -25,7 +25,7 @@ module.exports = {
         require('../controllers/stars.js').getStars({limit: 10}, function (err, stars) {
             if(err) {
                 // Something bad
-                res.send('Server error', 500);
+                return res.send('Server error', 500);
             }
             
             view.stars = stars;

@@ -12,6 +12,8 @@
     "mongodb": "*",
     "consolidate": "*",
     "hogan-express": "*",
-    "cli-color": "*"
+    "cli-color": "*",
+    "webrtc.io": "*",
+    "webrtc.io-client": "*"
   }
 }

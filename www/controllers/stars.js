@@ -30,7 +30,7 @@ function getStars (filter, callback) {
     
     db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection) {
         if(err) {
-            return callback(error(0x9000));
+            return callback(error(0x9000, err));
         }
         
         // Inspect the filter...
@@ -125,7 +125,7 @@ function getStars (filter, callback) {
         // Done
         cursor.toArray(function (err, stars) {
             if(err) {
-                return callback(error(0x9000));
+                return callback(error(0x9000, err));
             }
             
             callback(null, stars);

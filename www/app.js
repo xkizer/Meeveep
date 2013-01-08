@@ -53,6 +53,44 @@ app.get('/star/:starId([0-9]+)', stars.starInfo);
 app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
 app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
 
-http.createServer(app).listen(process.env.PORT || 3000, function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+
+
+// Take advantage of multi-core systems
+
+var cluster = require('cluster');
+var numCPUs = require('os').cpus().length;
+var cli = require('cli-color');
+
+if (cluster.isMaster) {
+    console.log(cli.yellow('CPU_COUNT', numCPUs));
+    console.log(cli.cyan('Forking ', numCPUs, 'child processes'));
+    
+    // Fork workers.
+    var clusters = [];
+    
+    for (var i = 0; i < numCPUs; i++) {
+        clusters.push(cluster.fork());
+    }
+
+    // Recycle a worker every 6 hours (all workers once per day on a 4-processor system)
+    setInterval(function () {
+        clusters.pop().destroy();
+    }, 21600000);
+
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('worker ' + worker.process.pid + ' died');
+        clusters.push(cluster.fork());
+    });
+} else {
+    // Workers can share any TCP connection
+    // In this case its a HTTP server
+    http.createServer(app).listen(process.env.PORT || 3000, function(){
+        console.log("Express server listening on port " + app.get('port'));
+    }).on('connection', function (connect) {
+        try {
+            console.log(cli.green(connect.server.connections), 'connections');
+        } catch(e) {
+            console.log(cli.red(e));
+        }
+    });
+}
