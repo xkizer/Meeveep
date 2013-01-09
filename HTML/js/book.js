@@ -74,8 +74,14 @@ jQuery(function ($) {
         switchTo(currentIndex + direction);
     });
     
-    // Take card of the container's width
-    book1BigUl.width(book1BigLiWidth * book1BigLi.length);
+    book1BigUl[0].recalculate = function () {
+        // Take care of the container's width
+        var numLis = book1BigUl.find('li').length;
+        book1BigUl.width(book1BigLiWidth * numLis);
+        $('#book1-card-total').text(numLis);
+    };
+
+    book1BigUl[0].recalculate();
     
     // Activate an initial card
     var cardId = queryString.cardId || null;

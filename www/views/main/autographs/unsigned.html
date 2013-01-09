@@ -1,0 +1,56 @@
+<div id="personal-autograph-preview" class="signage">
+    <h1>{{txtFor}} <span class="name">{{cards.0.name}}</span></h1>
+    <p>{{cards.0.msg}}</p>
+    <div class="rightbox">
+        <a href="#" class="accept"></a>
+        <a href="#" class="reject"></a>
+    </div>
+    <section class="content">
+        <div id="preview-slideshow">
+            <div class="nav">
+                <a href="#" rel="prev"></a>
+                <a href="#" rel="next"></a>
+            </div>
+            <div class="viewport">
+                <span class="cursor-tip">{{star.name}}</span>
+                <ul>
+{{#cards}}
+                    <li data-id="{{cardId}}"><img src="{{card.big}}" alt="{{star.name}}" /></li>
+{{/cards}}
+                </ul>
+            </div>
+        </div>
+    </section>
+    <div id="personal-autographs-bottom">
+        <div id="card-count" class="left">{{txtCard}} <span id="book1-card-number">1</span> {{txtOf}} <span id="book1-card-total">{{cards.length}}</span></div>
+        <div class="right">
+            <span>{{txtAddCard}}</span>
+            <a href="#" class="note">
+                <div>
+                    <h3>{{txtRecordVideo}}</h3>
+                    <p>{{txtRecordVideoDescr}}</p>
+                </div>
+            </a>
+            <a href="#" class="video active">
+                <div>
+                    <h3>{{txtRecordAudio}}</h3>
+                    <p>{{txtRecordAudioDescr}}</p>
+            </div>
+            </a>
+            <a href="#" class="audio">
+                <div>
+                    <h3>{{txtAddSignature}}</h3>
+                    <p>{{txtAddSignatureDescr}}</p>
+                </div>
+            </a>
+        </div>
+        <span class="cl"></span>
+    </div>
+</div>
+<script>
+    window.cardInfo = [
+{{#cards}}
+        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.large}}', penColor: '{{pen-color}}', includes: ['signature']{{#signature}}, signature: {{{signature}}}{{/signature}}},
+{{/cards}}
+    ];
+</script>

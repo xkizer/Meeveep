@@ -65,8 +65,25 @@ var errorCodes = {
     0x9001: 'Database error while retrieving star info',
     0x9002: 'Star not found',                                                   // Self explanatory
     
+    0x9010: 'Connection error while retrieving list',                           // Database!!!
+    0x9011: 'Database error while retrieving list',                             // Could not retrieve unsigned autographs
+    0x9012: 'Database error while retrieving list',                             // Could not convert cursor to array (unsigned autographs)
+    
     0x9104: 'Card not found',
     0x9105: 'Error retieving card',                                             // Error querying
     0x9106: 'Error connecting to card store',                                   // Error connecting to Mongo
+    
+    
+    0x9343: 'You need to be a star to access this page',                        // User is not a star
+    
+    0x9A01: 'Server error while retrieving order',                              // Database error while getting order information
+    0x9A02: 'Order not found',
+    
+    0x9A03: 'Server error while retrieving order',                              // Query failed
+    0x9013: 'Connection error while updating card',                             // Database connect, while trying to update orders
+    0x9014: 'Database error while updating card',                               // Database query, while trying to update orders
+    0x9015: 'Could not place order: server failure',                            // Database conn fail
+    0x1916: 'Could not place order: server failure',                            // Database query fail
+    
     
 };

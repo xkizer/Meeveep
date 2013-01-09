@@ -40,7 +40,7 @@ jQuery(function ($) {
 		lastEvent = e;
 		
 		if(card) {
-			$('#personal-autograph-preview h1').text(card.name);
+			$('#personal-autograph-preview h1 .name').text(card.name);
 			$('#personal-autograph-preview > p').text(card.msg);
 			
 			// Check if card is ready to submit
@@ -415,6 +415,7 @@ jQuery(function ($) {
 				$(this).remove();
 				// Update...
 				bigUl.trigger(lastEvent);
+                bigUl[0].recalculate();
 			}});
 		}
 		

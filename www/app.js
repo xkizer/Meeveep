@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , stars = require('./routes/stars.js')
+  , autographs = require('./routes/autograph.js')
   , http = require('http')
   , path = require('path')
   , cons = require('consolidate')
@@ -52,9 +53,19 @@ app.get('/auth/logout', routes.logout);
 app.get('/star/:starId([0-9]+)', stars.starInfo);
 app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
 app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
+app.get('/autographs/unsigned', autographs.unsigned);
+app.post('/card/:orderId/update/signature', autographs.updateSignature);
+app.post('/card/:orderId/accept', autographs.acceptOrder);
+app.get('/card/:orderId/reject', autographs.rejectOrder);
 
 
+// <<<<<<<<<<<<<<<<<
+http.createServer(app).listen(process.env.PORT || 3000, function(){
+    console.log("Express server listening on port " + app.get('port'));
+});
+// >>>>>>>>>>>>>>>>
 
+/*
 // Take advantage of multi-core systems
 
 var cluster = require('cluster');
@@ -74,7 +85,8 @@ if (cluster.isMaster) {
 
     // Recycle a worker every 6 hours (all workers once per day on a 4-processor system)
     setInterval(function () {
-        clusters.pop().destroy();
+        clusters.pop().kill('SIGTERM');
+		clusters.push(cluster.fork());
     }, 21600000);
 
     cluster.on('exit', function(worker, code, signal) {
@@ -82,6 +94,7 @@ if (cluster.isMaster) {
         clusters.push(cluster.fork());
     });
 } else {
+    console.log('created child with PID ' + process.pid);
     // Workers can share any TCP connection
     // In this case its a HTTP server
     http.createServer(app).listen(process.env.PORT || 3000, function(){
@@ -94,3 +107,5 @@ if (cluster.isMaster) {
         }
     });
 }
+
+*/

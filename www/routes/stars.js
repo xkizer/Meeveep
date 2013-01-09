@@ -1,6 +1,7 @@
 var renderer = require('../util/pageBuilder.js')();
 var star = require('../controllers/stars.js');
 var cli = require('cli-color');
+var orders = require('../controllers/orders.js');
 
 module.exports = {
     starInfo: function(req, res, next){
@@ -302,28 +303,38 @@ var starBooking = {
                     return res.send('Star not found', 404).end();
                 }
                 
-                // Verify the user has a valid card
-                ctrlStar.getCard(cardId, function (err, card) {
+                // Attach card
+                star.getCard(cardId, function () {
                     if(err) {
-                        // Something went wrong...
                         console.error(err);
-                        return res.send(500, 'Something went wrong');
+                        res.send('Something went wrong', 500).end();
+                        return;
                     }
                     
-                    // Everything okay, save
-                    autograph.extend({
-                        star: star,
-                        user: currentUser,
-                        date: new Date()
-                    });
-                
-                    ctrlStar.placeOrder(autograph, function (err, orderNumber) {
+                    // Verify the user has a valid card
+                    ctrlStar.getCard(cardId, function (err, card) {
                         if(err) {
-                            console.error(cli.red('something went wrong'), err);
-                            return res.send(500, 'Something went wrong!').end();
+                            // Something went wrong...
+                            console.error(err);
+                            return res.send(500, 'Something went wrong');
                         }
-                    
-                        res.redirect('/?orderComplete=' + orderNumber);
+
+                        // Everything okay, save
+                        autograph.extend({
+                            star: star,
+                            user: currentUser,
+                            date: new Date(),
+                            card: card
+                        });
+
+                        orders.placeOrder(autograph, function (err, orderNumber) {
+                            if(err) {
+                                console.error(cli.red('something went wrong'), err);
+                                return res.send(500, 'Something went wrong!').end();
+                            }
+
+                            res.redirect('/?orderComplete=' + orderNumber);
+                        });
                     });
                 });
             });

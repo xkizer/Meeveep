@@ -20,6 +20,8 @@ module.exports = {
                     return error(0x2900, err);
                 }
                 
+                userInfo = userInfo.userData;
+                
                 // Check password
                 if(userInfo.password !== util.hash(password, username)) {
                     return callback(error(0x2901, err));

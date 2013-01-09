@@ -9,12 +9,12 @@ sortFields = ['price','name'];
 module.exports = {
     getStars: getStars,
     getStar: getStar,
-    placeOrder: placeOrder,
     getCard: getCard,
+    getUnsignedAutographs: getUnsignedAutographs,
     toString: function () {
         return '[controller#Stars:controllers/stars.js]';
     }
-}
+};
 
 
 /**
@@ -170,7 +170,7 @@ function getCard (cardId, callback) {
             console.error('Error connecting to database');
             return callback(error(0x9106, err));
         }
-    
+        
         collection.findOne({cardId: Number(cardId)}, function (err, card) {
             if(err) {
                 console.error('error querying card');
@@ -183,39 +183,6 @@ function getCard (cardId, callback) {
             }
         
             return callback(null, card);
-        });
-    });
-}
-
-/**
- * Place an order
- * @param orderInfo The information about the order
- * @param callback The callback function
- * @todo This method currently implements no verification. Implement basic
- * verification.
- */
-function placeOrder (orderInfo, callback) {
-    orderInfo.userId = orderInfo.user.userId; // Indexing purpose
-    orderInfo.starId = orderInfo.star.starId; // Indexing purpose
-    orderInfo.pending = true;
-    var orderId = util.generateKey(28);
-    orderInfo.orderId = orderId;
-    
-    db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection) {
-        if(err) {
-            // Something went wrong...
-            // TODO: Handle errors correctly
-            return callback(err);
-        }
-    
-        collection.insert(orderInfo, function (err) {
-            if(err) {
-                // Something went wrong...
-                // TODO: Handle errors correctly
-                return callback(err);
-            }
-            
-            callback(null, orderId);
         });
     });
 }
@@ -237,4 +204,38 @@ var starProto = {
         });
     }
 };
+
+/**
+ * Gets all unsigned autographs that are for the specified star
+ * @param {number} starId The ID of the star
+ * @param {function} callback The callback function recieves an error object
+ *      and a list of all unsigned autographs for the star
+ */
+function getUnsignedAutographs(starId, callback) {
+    db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection, db) {
+        if(err) {
+            return callback(error(0x9010, err));
+        }
+        
+        collection.find({starId: starId, pending: true}, function (err, cursor) {
+            if(err) {
+                return callback(error(0x9011, err));
+            }
+            
+            cursor.sort({date: 1}, function () {
+                if(err) {
+                    return callback(error(0x9011, err));
+                }
+
+                cursor.toArray(function (err, autographs) {
+                    if(err) {
+                        return callback(error(0x9012, err));
+                    }
+
+                    return callback(null, autographs);
+                });
+            });
+        });
+    });
+}
 

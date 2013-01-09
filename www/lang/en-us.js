@@ -73,7 +73,14 @@ var lang = {
     txtTotalPrice: 'Total Price',
     txtInclVAT: 'incl. VAT',
     txtOrderWaitWarning: 'The next step will automatically take you to the order transaction, please don\'t close the window before being prompted to.',
-    txtCelebrities: 'Celebrities'
+    txtCelebrities: 'Celebrities',
+    txtAddCard: 'Add data',
+    txtRecordVideo: 'Record Video',
+    txtRecordAudio: 'Record Audio',
+    txtAddSignature: 'Add Signature',
+    txtRecordVideoDescr: 'Click here to record the running video broadcast. Click again to stop recording.',
+    txtRecordAudioDescr: 'Click here to record the running audio broadcast. Click again to stop recording.',
+    txtAddSignatureDescr: 'Click here to add a signature.',
 };
 
 module.exports = lang;
