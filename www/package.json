@@ -14,6 +14,7 @@
     "hogan-express": "*",
     "cli-color": "*",
     "webrtc.io": "*",
-    "webrtc.io-client": "*"
+    "webrtc.io-client": "*",
+    "socket.io": "*"
   }
 }

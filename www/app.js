@@ -8,6 +8,7 @@ var express = require('express')
   , user = require('./routes/user')
   , stars = require('./routes/stars.js')
   , autographs = require('./routes/autograph.js')
+  , media = require('./routes/media.js')
   , http = require('http')
   , path = require('path')
   , cons = require('consolidate')
@@ -57,6 +58,11 @@ app.get('/autographs/unsigned', autographs.unsigned);
 app.post('/card/:orderId/update/signature', autographs.updateSignature);
 app.post('/card/:orderId/accept', autographs.acceptOrder);
 app.get('/card/:orderId/reject', autographs.rejectOrder);
+app.get('/media/createSession', media.createSession);
+
+app.post('/upload', function (req) {
+    console.log(req);
+});
 
 
 // <<<<<<<<<<<<<<<<<

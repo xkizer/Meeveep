@@ -4,7 +4,8 @@ jQuery(function ($) {
 		lastEvent = null;
 	
 	var CARD_SIGNATURE_SAVE_URI = '/card/{0}/update/signature',
-		CARD_ACCEPT_URI = '/card/{0}/accept';
+		CARD_ACCEPT_URI = '/card/{0}/accept',
+        CREATE_RECORDING_SESSION_URI = '/card/record/createSession';
 	
 	var penColors = {
 		red: 'red',
@@ -381,7 +382,102 @@ jQuery(function ($) {
 		$(window).resize(doResize).resize();
 		image.on('load', doResize);
 	}
-	
+
+    navigator.getUserMedia = navigator.getUserMedia
+                    || navigator.webkitGetUserMedia 
+                    || navigator.mozGetUserMedia
+                    || navigator.oGetUserMedia
+                    || navigator.msGetUserMedia;
+
+    window.URL = window.webkitURL
+                  || window.mozURL
+                  || window.URL
+                  || {createObjectURL: function(obj){return obj;}};
+    
+    window.audioContext = window.audioContext || window.webkitAudioContext;
+    
+    var recorderConfig = {
+        workerPath: '/js/lib/recorderWorker.js',
+        type: 'audio/wav'
+    };
+    
+    /**
+     * Initialize a video recording session. Video is streamed live to the server,
+     * thus, a fast Internet connection is required. The video recording starts
+     * when a connection to the server has been negotiated. The connection
+     * negotiation includes generation of a session ID that is attached to the
+     * video.
+     * @param {obect} card The card that the video will be attached to
+     * @param {function} callback The callback function is called when the recording
+     * is complete (when the star clicks "done"). The function is passed the video
+     * object (video object contains the video ID, length, etc). The ID can be used
+     * to access the video stream from the server.
+     */
+    function initVideo (card, callback) {
+        // Get permission to record video
+        navigator.getUserMedia({audio: true}, function (stream) {
+            /*
+             * NOT SURE THIS IS NEEDED. MIGHT BE BLOATWARE
+             *//*
+            createRecordingSession (function (err, session) {
+                
+            });*/
+            var sessionId = stream.label;
+            var url = window.URL.createObjectURL(stream);
+            var vidElem = document.querySelector('#video-preview video');
+            vidElem.src = window.webkitURL.createObjectURL(stream);
+            
+            // Audio...
+            var context = new audioContext();
+            var mediaStreamSource = context.createMediaStreamSource(stream);
+            rec = new Recorder(mediaStreamSource, recorderConfig);
+            rec.record();
+            
+            window.setTimeout(function () {
+                console.log('done');
+                rec.exportWAV(function (wav) {
+                    console.log(wav);
+                    var fd = new FormData();
+                    fd.append("fileToUpload", wav);
+                    $.ajax({
+                        type: 'post',
+                        data: fd,
+                        processData: false,
+                        contentType: false,
+                        url: 'http://meeveep.dev:3000/upload'
+                    });
+                });
+                rec.stop();
+            }, 4000);
+            
+            console.log(mediaStreamSource);
+            
+        }, function (err) {
+            if(err) {
+                console.error('Something bad happened!');
+                console.log(err);
+            }
+        });
+    }
+
+    initVideo();
+    
+    /**
+    function createRecordingSession (callback) {
+        $.ajax({
+            type: 'get',
+            url: CREATE_RECORDING_SESSION_URI,
+            type: json,
+            error: function (error) {
+                callback(error);
+            },
+            success: function (data) {
+                callback(null, data);
+            }
+        });
+    }
+	*/
+    
 	/**
 	 * Complete signing a particular card. Submits card immediately, delete it from the queue and
 	 * move forward. The card is submitted along with all it's current appendages (video, audio, signature).
