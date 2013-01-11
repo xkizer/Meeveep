@@ -6,6 +6,7 @@ lib-cov
 *.out
 *.pid
 *.gz
+*.psd
 
 pids
 logs
@@ -17,3 +18,9 @@ npm-debug.log
 
 www/node_modules/
 www/nbproject/private/
+PSD
+Exports
+Mobile
+Shots
+Slices
+

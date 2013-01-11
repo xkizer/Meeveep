@@ -823,15 +823,17 @@ html {
     border: 4px solid #F75209;
 }
 
-#personal-autograph #order-information .mm-icons span {
+.mm-icons span {
 	float: left;
 	height: 15px;
 	line-height: 15px;
 	margin-right: 15px;
 	font-weight: bold;
+    font-style: italic;
+    color: #fff;
 }
 
-#personal-autograph #order-information .mm-icons span:before {
+.mm-icons span:before {
 	margin-right: 5px;
 	display: block;
 	float: left;
@@ -841,15 +843,15 @@ html {
 	background: url("../images/icons/icon-sprite.png") -441px -129px;
 }
 
-#personal-autograph #order-information .mm-icons span.video:before {
+.mm-icons span.video:before {
 	background-position: -460px -129px;
 }
 
-#personal-autograph #order-information .mm-icons span.hq-video:before {
+.mm-icons span.hq-video:before {
 	display: none;
 }
 
-#personal-autograph #order-information .mm-icons span.video strong {
+.mm-icons span.video strong {
 	display: inline;
 	color: inherit;
 	margin-left: 10px;
@@ -1262,14 +1264,12 @@ html {
 
 
 
-#service-page #live-autograph-list li,
-#dashboard-page #live-autograph-list li {
+#live-autograph-list nav.content li {
 	line-height: 35px;
 	height: 35px;
 }
 
-#service-page #live-autograph-list li a,
-#dashboard-page #live-autograph-list li a {
+#live-autograph-list nav.content li a {
 	color: #f75209;
 	display: block;
 	height: 100%;
@@ -1279,10 +1279,8 @@ html {
 	text-indent: 10px;
 }
 
-#service-page #live-autograph-list li.active a,
-#service-page #live-autograph-list li a:hover,
-#dashboard-page #live-autograph-list li.active a,
-#dashboard-page #live-autograph-list li a:hover {
+#live-autograph-list nav.content li.active a,
+#live-autograph-list nav.content li a:hover {
 	color: #fff;
 	background: url(../images/bgs/prof-bg.png);
 }
@@ -1910,3 +1908,125 @@ html {
 .no-scroll {
 	overflow: hidden;
 }
+
+#settings-page #personal-autograph-preview .mCSB_dragger_bar {
+    background: #f8500f;
+}
+
+#settings-page #personal-autograph-preview .mCSB_draggerRail {
+    background: #656565;
+}
+#settings-page #personal-autograph-preview .mCustomScrollBox {
+    padding-right: 15px;
+    width: 100%;
+}
+
+#settings-page #personal-autograph-preview .divide > section {
+    width: 341px;
+    
+}
+
+#settings-page #personal-autograph-preview h2 {
+    font-weight: 200;
+    line-height: 30px;
+    font-size: 20px;
+    border-bottom: solid 1px #5e5e5e;
+    padding-bottom:  8px;
+    margin: -7px 0 11px;
+}
+
+#settings-page #personal-autograph-preview a.btn {
+    display: block;
+    height: 48px;
+    margin-bottom: 2px;
+    background: #f65308;
+    text-align: center;
+    line-height: 48px;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#settings-page #personal-autograph-preview li {
+    height: 55px;
+    background: rgba(255, 255, 255, 0.06);
+    margin-bottom: 3px;
+    color: #f65308;
+}
+
+#settings-page #personal-autograph-preview .right li {
+    height: 69px;
+}
+
+#settings-page #personal-autograph-preview .right .left {
+    width: 166px;
+    padding-left: 8px;
+}
+
+#settings-page #personal-autograph-preview li .name {
+    float: left;
+    margin: 10px 0 0 8px;
+    width: 166px;
+    font-weight: bold;
+    color: #f65308;
+}
+
+#settings-page #personal-autograph-preview .right .name {
+    margin-left: 0;
+}
+
+#settings-page #personal-autograph-preview .right .gultig {
+    color: #fff
+}
+
+#settings-page #personal-autograph-preview li .date {
+    float: left;
+    margin: 4px 12px 0 4px;
+    width: 118px;
+    font-weight: 200;
+    font-size: 24px;
+    white-space: nowrap;
+    text-align: right;
+    line-height: 25px;
+}
+
+#settings-page #personal-autograph-preview li .time {
+    display: block;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+#settings-page #personal-autograph-preview li .buttons {
+    display: block;
+    float: right;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    width: 33px;
+}
+
+#settings-page #personal-autograph-preview li .buttons a {
+    display: block;
+    overflow: hidden;
+    text-indent: -200px;
+    background: url(../images/icons/icon-sprite.png) -175px -256px;
+    height: 17px;
+    width: 17px;
+    margin: 5px auto 0;
+}
+
+#settings-page #personal-autograph-preview li .buttons a:first-child {
+    margin-top: 9px;
+    background-position: -155px -256px;
+}
+
+#settings-page #personal-autograph-preview .mm-icons span {
+    margin-right: 0;
+}
+
+
+
+
+
+

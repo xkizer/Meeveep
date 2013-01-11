@@ -435,8 +435,9 @@ jQuery(function ($) {
             
             window.setTimeout(function () {
                 console.log('done');
-                rec.exportWAV(function (wav) {
-                    console.log(wav);
+                rec.getBuffer(function (wav) {
+                    console.log([].slice.call(wav[0], 0, 10));
+                    console.log([].slice.call(wav[1], 0, 10));
                     var fd = new FormData();
                     fd.append("fileToUpload", wav);
                     $.ajax({
