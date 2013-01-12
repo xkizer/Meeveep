@@ -13,8 +13,8 @@ logs
 results
 
 npm-debug.log
-/www/node_modules/
-/www/nbproject/private/
+www/node_modules/
+nbproject/private/
 
 www/node_modules/
 www/nbproject/private/
