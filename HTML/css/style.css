@@ -1926,7 +1926,6 @@ html {
     width: 100%;
 }
 
-#create-page #personal-autograph-preview .divide > section,
 #settings-page #personal-autograph-preview .divide > section {
     width: 341px;
 }
@@ -1952,29 +1951,11 @@ html {
     font-style: italic;
 }
 
-#create-page #personal-autograph-preview .divide .divided > div,
 #settings-page #personal-autograph-preview li {
     height: 55px;
     background: rgba(247, 247, 247, 0.07);
     margin-bottom: 3px;
     color: #f65308;
-}
-
-#create-page #container #personal-autograph-preview .divided > div {
-    color: #fff;
-    padding: 7px;
-    height: auto;
-    margin-bottom: 8px;
-}
-
-#create-page #personal-autograph-preview .divided b {
-    color: #f65308;
-}
-
-#create-page #personal-autograph-preview .divided b i {
-    font-weight: normal;
-    color: #fff;
-    font-style: normal;
 }
 
 #settings-page #personal-autograph-preview .right li {
@@ -2048,18 +2029,8 @@ html {
     margin-right: 0;
 }
 
-#create-page .right .sbHolder {
-    width: 307px;
-}
 
-#create-page .checkbox-list {
-    margin: 6px 0;
-}
 
-#create-page .fine-print {
-    background: none !important;
-    padding: 0 !important;
-}
 
 
 
