@@ -1,6 +1,6 @@
 jQuery(function ($) {
 	var bigUl = $('#preview-slideshow .viewport ul'),
-		currentCard = cardInfo[0],
+		currentCard = window.cardInfo && window.cardInfo[0],
 		lastEvent = null;
 	
 	var CARD_SIGNATURE_SAVE_URI = '/card/{0}/update/signature',
@@ -561,4 +561,27 @@ jQuery(function ($) {
 		// Submit card
 		doneSigning();
 	});
+
+    // Elsewhere... we deal with date picker
+    var date = new Date(),
+        fromContainer = $('.datepicker [name="from"]'),
+        toContainer = $('.datepicker [name="to"]');
+    
+    fromContainer.datepicker({
+        defaultDate: "+0d",
+        changeMonth: true,
+        numberOfMonths: 3,
+        onClose: function( selectedDate ) {
+            toContainer.datepicker( "option", "minDate", selectedDate );
+        }
+    });
+
+    toContainer.datepicker({
+        defaultDate: "+1m",
+        changeMonth: true,
+        numberOfMonths: 3,
+        onClose: function( selectedDate ) {
+            fromContainer.datepicker( "option", "maxDate", selectedDate );
+        }
+    });
 });
