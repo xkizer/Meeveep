@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untitled Document</title>
+    <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" media="all" />
+    <link rel="stylesheet" href="css/uniform.default.css" media="all" />
+    <!--[if lte IE 7]>
+    <link href="css/ie7.css" rel="stylesheet" media="all" />
+    <![endif]-->
+	<script type="text/javascript" src="js/lib/modernizr.js"></script>
+	<script type="text/javascript" src="js/lib/css3-mediaqueries.js"></script>
+</head>
+<body id="create-page">
+	<div id="wrapper">
+    	<div id="container">
+        	<header id="header-main">
+            	<div id="header-top">
+	                <div id="slogan">Digitale Autogramme deiner Stars!</div>
+	                <a href="#" id="star-alarm-link">Star-Alarm</a>
+                	<div id="logo"><a href="/"><img src="images/imgs/logo.png" alt="Meeveep" /></a></div>
+                </div>
+                <div id="header-bottom">
+                	<nav class="left">
+                    	<a href="#" id="icon-nav-home">Home</a>
+                    	<a href="#" id="icon-nav-settings">Settings</a>
+                    	<a href="#" id="icon-nav-profile">Profile</a>
+                    </nav>
+                    <div id="header-star-stat">Nächste Autogrammstunde mit <i>DJ Ötzi</i> in: <i>1 Tag, 3 Std. und 40 MIn.</i></div>
+                	<nav class="right">
+                        <a href="#" id="language-selector">German</a>
+                    	<a href="#" id="header-top-info">Wie funktioniert <i>Meveep?</i></a>
+                    </nav>
+                    <div id="user-info-box">
+                        <form id="login-form" method="post" action="/auth/login">
+                            <h2>Login</h2>
+                            <p>Um in deinen persönlichen Bereich zu gelangen, musst du dich zuerst einloggen.</p>
+                            <fieldset>
+                            	<input type="email" placeholder="E-Mail-Adresse" />
+                            	<input type="password" placeholder="Passwort" />
+                                <button type="submit">Absenden</button>
+                            </fieldset>
+                            <p class="register-link">Noch kein Konto? <a href="#">Registrieren &raquo;</a></p>
+                        </form>
+                    </div>
+                </div>
+            </header>
+            <section id="main">
+            	<section id="content">
+                	<div id="divide">
+                    	<section class="left">
+                        	<section id="live-autographs">
+                            	<div id="live-autograph-stream">
+                                	<h2>Service</h2>
+                                    <span id="live-autograph-found">WIE KÖNNEN WIR DIR HELFEN?</span>
+                                    <div id="live-autograph-list" class="scrolling">
+                                    	<nav class="content">
+                                        	<ul>
+                                            	<li><a href="#">Kontakt</a></li>
+                                            	<li><a href="#">Impressum</a></li>
+                                            	<li class="active"><a href="#">FAQ</a></li>
+                                            	<li><a href="#">Datenschutz</a></li>
+                                            	<li><a href="#">AGB</a></li>
+                                            	<li><a href="#">Sicherheit</a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                                <div id="live-autograph-counter"></div>
+                            </section>
+                            <div id="newsletter-subscription">
+                            	<h2>Bitte informiert mich!</h2>
+                                <p>Ja, ich möchte wöchentlich über neue Autogramme und Termine informiert werden.</p>
+                                <form method="post" action="nlt/subscribe">
+                                	<fieldset>
+                                        <input type="email" name="email" placeholder="E-Mail-Adresse hier eintragen" required />
+                                        <button type="submit">Subscribe</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </section>
+                        <section class="right">
+                        	<div id="personal-autograph-preview" class="signage">
+	                            <h1>Manage autographs</h1>
+                                <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                <section class="content">
+                                    <div class="divide">
+                                        <section class="left divided">
+                                            <div>
+                                                <b>Select celebrity name</b>
+                                                <select>
+                                                    <option>Der Wendler</option>
+                                                    <option>Kizer Onuegbu</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <b>Select language</b>
+                                                <select>
+                                                    <option>Deutsch</option>
+                                                    <option>English</option>
+                                                    <option>Français</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <b>This autograph includes the following options:</b>
+                                                <div class="checkbox-list">
+                                                    <label>
+                                                        <input type="checkbox" name="includes" value="video" /> Video
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" name="includes" value="hq" /> High Quality
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox-list">
+                                                    <label>
+                                                        <input type="checkbox" name="includes" value="audio" /> Audio
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" name="includes" value="user-image" /> User image *
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="fine-print">
+                                                * Our terms of use require the image to show an actual depiction of the chosen celebrity.
+                                                (<a href="#">click here for more details &raquo;</a>)
+                                            </div>
+                                            <div>
+                                                <b>Availability period <i>(no specification = indefinite)</i></b>
+                                                <div class="date range">
+                                                    <span class="datepicker"><input name="availability-from" type="text" /></span>
+                                                    <span class="datepicker"><input name="availability-from" type="text" /></span>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <section class="right divided">
+                                            <div>
+                                                Some text
+                                            </div>
+                                        </section>
+                                    </div>
+                                </section>
+                                <div id="personal-autographs-bottom">&nbsp;</div>
+                            </div>
+                        </section>
+                        <span class="cl"></span>
+                    </div>
+                    <div id="random-bg-r26a4"><img src="images/imgs/hind-1.jpg" alt="" /></div>
+                </section>
+            </section>
+            <footer id="footer-main">
+            	<div>
+                    <section>
+                        <h2>Informationen für:</h2>
+                        <h3>Managements, Clubs</h3>
+                        <p>Sie möchten mit Ihren Stars ganz weit nach vorne? Starten Sie hier und bringen Sie Ihre Schützlinge den Fans ganz nahe.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                        <h3>Prominente</h3>
+                        <p>Sie wollen maximale Nähe zu den Fans aus aller Welt? Gleichzeitig? Starten Sie jetzt und geben Sie Ihrer Karriere den nächsten Schub.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                    </section>
+                    <section>
+                        <h2>Sie können uns vertrauen!</h2>
+                        <p>Nicht nur unsere Nutzer, sondern auch zahlreiche größere Unternehmen sprechen uns ihr Vertrauen aus. Aber sehen Sie selbst.</p>
+                        <section class="icons" id="footer-certified">
+                        	<a href="#" id="footer-certified-bkf"></a>
+                        	<a href="#" id="footer-certified-aaa"></a>
+                        	<a href="#" id="footer-certified-eee"></a>
+                        </section>
+                    </section>
+                    <section>
+                        <h2>Meeveep ist sicher!</h2>
+                        <p>Durch unsere zahlreichen Partner für Bezahlsysteme und Sicherheit bieten wir unseren Nutzern, den Managern und natürlich den teilnehmenden Prominenten maximale Sicherheit.</p>
+                        <section class="icons" id="footer-payment-options"></section>
+                        <section id="footer-service-links">
+                        	<strong>Service</strong>
+                            <a href="#">AGB</a> | <a href="#">Impressum</a> | <a href="#">Kontakt</a> | <a href="#">Datenschutz</a>
+                        </section>
+                    </section>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="js/lib/jquery-1.8.2.min.js"></script>
+    <script src="/js/lib/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mousewheel.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mCustomScrollbar.js"></script>
+    <script src="js/lib/jquery.selectbox/jquery.selectbox-0.2.min.js"></script>
+    <script src="js/lib/uniform/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="js/lib/util.js"></script>
+    <script type="text/javascript" src="js/core.js"></script>
+    <!--[if IE 8]>
+    <script src="js/lib/ie/ie8.js"></script>
+    <![endif]-->
+</body>
+</html>

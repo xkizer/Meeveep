@@ -415,7 +415,7 @@ jQuery(function ($) {
      */
     function initVideo (card, callback) {
         // Get permission to record video
-        navigator.getUserMedia({audio: true}, function (stream) {
+        navigator.getUserMedia({audio: true, video: true}, function (stream) {
             /*
              * NOT SURE THIS IS NEEDED. MIGHT BE BLOATWARE
              *//*
