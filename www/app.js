@@ -60,9 +60,15 @@ app.post('/card/:orderId/accept', autographs.acceptOrder);
 app.get('/card/:orderId/reject', autographs.rejectOrder);
 app.get('/media/createSession', media.createSession);
 
+app.get('/cards/add', autographs.addCardPage);
+app.post('/cards/add', autographs.addCard);
+app.post('/cards/add', autographs.addCardPage);
+
+/*
 app.post('/upload', function (req) {
     console.log(req);
 });
+*/
 
 
 // <<<<<<<<<<<<<<<<<

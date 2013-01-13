@@ -74,15 +74,17 @@ jQuery(function ($) {
         switchTo(currentIndex + direction);
     });
     
-    book1BigUl[0].recalculate = function () {
-        // Take care of the container's width
-        book1BigLi = book1BigUl.find('li');
-        var numLis = book1BigLi.length;
-        book1BigUl.width(book1BigLiWidth * numLis);
-        $('#book1-card-total').text(numLis);
-    };
+    if(book1BigUl.length) {
+        book1BigUl[0].recalculate = function () {
+            // Take care of the container's width
+            book1BigLi = book1BigUl.find('li');
+            var numLis = book1BigLi.length;
+            book1BigUl.width(book1BigLiWidth * numLis);
+            $('#book1-card-total').text(numLis);
+        };
 
-    book1BigUl[0].recalculate();
+        book1BigUl[0].recalculate();
+    }
     
     // Activate an initial card
     var cardId = queryString.cardId || null;

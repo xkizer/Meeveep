@@ -564,8 +564,8 @@ jQuery(function ($) {
 
     // Elsewhere... we deal with date picker
     var date = new Date(),
-        fromContainer = $('.datepicker [name="from"]'),
-        toContainer = $('.datepicker [name="to"]');
+        fromContainer = $('.datepicker [name="validity.from"]'),
+        toContainer = $('.datepicker [name="validity.to"]');
     
     fromContainer.datepicker({
         defaultDate: "+0d",

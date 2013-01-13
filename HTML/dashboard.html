@@ -97,46 +97,46 @@
                                         <div class="left">
                                         	<div>
                                             	<h3>Künstler wählen</h3>
-                                                <select>
-                                                	<option>Guildo Horn</option>
+                                                <select name="star">
+                                                    <option value="289389283938">Guildo Horn</option>
                                                 </select>
                                             </div>
                                         	<div>
                                             	<h3>Sprache wählen</h3>
-                                                <select>
-                                                	<option>Deutsch</option>
+                                                <select name="lang">
+                                                    <option value="938921029002">Deutsch</option>
                                                 </select>
                                             </div>
                                         	<div id="dashboard-02oa7d">
                                             	<h3>Autogramm erlaubt folgende Optionen</h3>
                                                 <div>
-                                                    <label><input type="checkbox" checked /> Video</label>
-                                                    <label><input type="checkbox" checked /> Hohe Qualität</label>
+                                                    <label><input name="includes" value="video" type="checkbox" checked /> Video</label>
+                                                    <label><input name="includes" value="hq-video" type="checkbox" checked /> Hohe Qualität</label>
                                                 </div>
                                                 <div>
-                                                    <label><input type="checkbox" checked /> Audio</label>
-                                                    <label><input type="checkbox" /> Nutzerbilder*</label>
+                                                    <label><input name="includes" value="audio" type="checkbox" checked /> Audio</label>
+                                                    <label><input name="includes" value="user-image" type="checkbox" /> Nutzerbilder*</label>
                                                 </div>
                                             </div>
-                                            <p class="tinyprints">
+                                            <p class="fineprints">
                                             	* Die Nutzungsbedingungen sehen vor, dass ausschließlich
                                                 Bilder legitimiert werden, auf denen der Künstler selbst zu
                                                 sehen ist. (Weitere Bedingungen hier »)
                                             </p>
                                             <div>
                                             	<h3>Laufzeit wählen <i>(keine Änderung = unbegrenzt)</i></h3>
-                                                <div class="datepicker"><input type="text" name="from" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
-                                                <div class="datepicker"><input type="text" name="to" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
+                                                <div class="datepicker"><input type="text" name="validity.from" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
+                                                <div class="datepicker"><input type="text" name="validity.to" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
                                                 <span class="cl"></span>
                                             </div>
                                             <div id="dashboard-pricing">
                                             	<div class="left">
                                                 	<h3>Preis</h3>
-                                                    <label><span>EUR </span><input value="5,5" type="text" /></label>
+                                                    <label><span>EUR </span><input name="price" value="5,5" type="text" /></label>
                                                 </div>
                                                 <div class="right">
                                                 	<h3>Verfügbarkeit</h3>
-                                                    <label><span>Stk. </span><input value="100" type="text" /></label>
+                                                    <label><span>Stk. </span><input name="amount" value="100" type="text" /></label>
                                                 </div>
                                                 <span class="cl"></span>
                                             </div>
@@ -154,8 +154,8 @@
                                             </div>
                                             <div id="dashboard-rand9ps1l">
                                             	<h3>Bitte wählen</h3>
-                                                <div><label><input type="checkbox" /> <span>Ich akzeptiere die AGB. (linksstehend)</span></label></div>
-                                                <div><label><input type="checkbox" /> <span>Ja, ich möchte den Newsletter von Meeveep empfangen.</span></label></div>
+                                                <div><label><input name="terms-accepted" value="yes" type="checkbox" /> <span>Ich akzeptiere die AGB. (linksstehend)</span></label></div>
+                                                <div><label><input name="newsletter" value="yes" type="checkbox" /> <span>Ja, ich möchte den Newsletter von Meeveep empfangen.</span></label></div>
                                                 <span class="cl"></span>
                                             </div>
                                             <button type="submit">Jetzt einstellen »</button>

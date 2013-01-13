@@ -8,7 +8,7 @@
     <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" media="all" />
     {{#css_files}}
-    <link href="{{href}}" rel="stylesheet" />
+    <link href="{{#href}}{{href}}{{/href}}{{^href}}{{.}}{{/href}}" rel="stylesheet" />
     {{/css_files}}
     <!--[if lte IE 7]>
     <link href="/css/ie7.css" rel="stylesheet" media="all" />

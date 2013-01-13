@@ -41,7 +41,7 @@ module.exports = {
                     });
                     
                     // Render the page based on fetched information
-                    view = {
+                    var view = {
                         star: star,
                         cards: autographs,
                         txtFor: 'txtFor',
@@ -156,6 +156,9 @@ module.exports = {
         });
     },
     
+    /**
+     * Mark an order as rejected. A rejected order is not charged (assumed).
+     */
     rejectOrder: function (req, res, next) {
         req.requireLogin(function (currentUser) {
             var orderId = req.params.orderId;
@@ -189,5 +192,38 @@ module.exports = {
                 res.json({error: 'Unauthorised'}, 403).end();
             }
         });
+    },
+    
+    /**
+     * Displays the "add card" page. This page is called both with GET and POST,
+     * depending.
+     */
+    addCardPage: function (req, res, next) {
+        // TODO: This might change to req.requirePrivilege if the page is available to
+        // the admin instead of to the star.
+        req.requireLogin(function (currentUser) {
+            // TODO: if this page is available to the star instead of to the
+            // admin, we have to do a check to satisfy we are dealing with the star
+            var view = {
+                txt_generate_comm: 'txtGenerateComm',
+                txt_select_celeb_name: 'txtSelectCelebName',
+                txt_select_lang: 'txtSelectLang',
+                body: {
+                    id: 'create-page'
+                },
+                post_scripts: [
+                    { src: '/js/star.js' }
+                ],
+                css_files: [
+                    '/css/uniform.default.css'
+                ]
+            };
+
+            renderer.render({page: 'main/cards/add', vars: view}, req, res, next);
+        });
+    },
+    
+    addCard: function (req, res, next) {
+        
     }
 };

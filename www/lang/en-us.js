@@ -81,6 +81,10 @@ var lang = {
     txtRecordVideoDescr: 'Click here to record the running video broadcast. Click again to stop recording.',
     txtRecordAudioDescr: 'Click here to record the running audio broadcast. Click again to stop recording.',
     txtAddSignatureDescr: 'Click here to add a signature.',
+    txtGenerateComm: 'Generate new commercial autograph',
+    txtSelectCelebName: 'Select celebrity name',
+    txtSelectLang: 'Select language',
+    
 };
 
 module.exports = lang;
