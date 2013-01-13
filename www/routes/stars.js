@@ -303,38 +303,29 @@ var starBooking = {
                     return res.send('Star not found', 404).end();
                 }
                 
-                // Attach card
-                star.getCard(cardId, function () {
+                // Verify the user has a valid card
+                ctrlStar.getCard(cardId, function (err, card) {
                     if(err) {
+                        // Something went wrong...
                         console.error(err);
-                        res.send('Something went wrong', 500).end();
-                        return;
+                        return res.send(500, 'Something went wrong');
                     }
-                    
-                    // Verify the user has a valid card
-                    ctrlStar.getCard(cardId, function (err, card) {
+
+                    // Everything okay, save
+                    autograph.extend({
+                        star: star,
+                        user: currentUser,
+                        date: new Date(),
+                        card: card
+                    });
+
+                    orders.placeOrder(autograph, function (err, orderNumber) {
                         if(err) {
-                            // Something went wrong...
-                            console.error(err);
-                            return res.send(500, 'Something went wrong');
+                            console.error(cli.red('something went wrong'), err);
+                            return res.send(500, 'Something went wrong!').end();
                         }
 
-                        // Everything okay, save
-                        autograph.extend({
-                            star: star,
-                            user: currentUser,
-                            date: new Date(),
-                            card: card
-                        });
-
-                        orders.placeOrder(autograph, function (err, orderNumber) {
-                            if(err) {
-                                console.error(cli.red('something went wrong'), err);
-                                return res.send(500, 'Something went wrong!').end();
-                            }
-
-                            res.redirect('/?orderComplete=' + orderNumber);
-                        });
+                        res.redirect('/?orderComplete=' + orderNumber);
                     });
                 });
             });
