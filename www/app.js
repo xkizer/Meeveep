@@ -12,7 +12,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , cons = require('consolidate')
-  , session = require('./util/session.js');
+  , session = require('./util/session.js')
+  , io = require('socket.io');
 
 // Extend objects
 require('./util/extend.js');
@@ -72,10 +73,14 @@ app.post('/upload', function (req) {
 
 
 // <<<<<<<<<<<<<<<<<
-http.createServer(app).listen(process.env.PORT || 3000, function(){
+var server = http.createServer(app);
+
+server.listen(process.env.PORT || 3000, function(){
     console.log("Express server listening on port " + app.get('port'));
 });
 // >>>>>>>>>>>>>>>>
+
+io = io.listen(server);
 
 /*
 // Take advantage of multi-core systems

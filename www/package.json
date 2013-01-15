@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "meeveep",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -15,6 +15,9 @@
     "cli-color": "*",
     "webrtc.io": "*",
     "webrtc.io-client": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "socket.io-client": "*",
+    "webrtc-stream": "*",
+    "browserify-server": "*"
   }
 }

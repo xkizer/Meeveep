@@ -1,0 +1,16 @@
+{
+  "name": "meeveep-recording-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "redis": "*",
+    "mongodb": "*",
+    "cli-color": "*",
+    "socket.io": "*",
+    "gm": "*",
+    "fluent-ffmpeg": "*"
+  }
+}

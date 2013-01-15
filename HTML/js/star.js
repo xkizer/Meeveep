@@ -400,7 +400,14 @@ jQuery(function ($) {
         workerPath: '/js/lib/recorderWorker.js',
         type: 'audio/wav'
     };
+
+    // The video quality for normal videos (360p)
+    var VIDEO_QUALITY = 360;
+
+    // var PeerConnection = window.webkitPeerConnection00 || window.PeerConnection;
     
+    //var audioContext = new webkitAudioContext();
+
     /**
      * Initialize a video recording session. Video is streamed live to the server,
      * thus, a fast Internet connection is required. The video recording starts
@@ -415,17 +422,155 @@ jQuery(function ($) {
      */
     function initVideo (card, callback) {
         // Get permission to record video
-        navigator.getUserMedia({audio: true, video: true}, function (stream) {
-            /*
+        rtc.createStream({audio: true, video: true}, function (stream) {
+            /**
              * NOT SURE THIS IS NEEDED. MIGHT BE BLOATWARE
              *//*
             createRecordingSession (function (err, session) {
                 
             });*/
-            var sessionId = stream.label;
-            var url = window.URL.createObjectURL(stream);
-            var vidElem = document.querySelector('#video-preview video');
-            vidElem.src = window.webkitURL.createObjectURL(stream);
+            var sessionId = stream.label || (String(Math.random() * 1E12) + Math.random() * 1E8),
+                url = window.URL.createObjectURL(stream),
+                vidElem = document.querySelector('#video-preview video'),
+                audioElem = document.querySelector('#video-preview audio'),
+                scaleFactor;
+            
+            
+            vidElem.src = window.URL.createObjectURL(stream);
+            ///audioElem.src = window.URL.createObjectURL(stream);
+            vidElem.play();
+            
+            var socket = io.connect('http://localhost:9304'),
+                vid = $(vidElem),
+                
+                // Create a hidden canvas where we'll write our video data
+                canvas = $('<canvas>').appendTo('body'),
+                
+                // And a larger video element (from which we will stream)
+                largevid = $('<video>').appendTo('body'),
+                
+                metaLoaded = false,
+                socketReady = false;
+            
+            socket.on('error', function (error) {
+                console.error(error);
+            });
+            
+            function streamReady () {
+                var ctx = canvas[0].getContext('2d'),
+                   width, height,
+                   frame = 0;
+
+                socket.emit('identify', sessionId);
+
+                // Wait for "ready"
+                socket.on('ready', function () {
+                    // Calculate scaleFactor
+                    var p = VIDEO_QUALITY; // We intend recording at 360p
+                    scaleFactor = p / vid.height();
+                    console.log('Scale factor: ' + scaleFactor);
+
+                    width = vid.width() * scaleFactor,
+                    height = vid.height() * scaleFactor;
+
+                    canvas.attr({width: width, height: height})
+                                    //.css({display: 'none'});
+
+                    console.log('Server ready... streaming');
+                    socket.emit('start-stream', {rate: 25});
+                    window.setInterval(captureAndSend, 40);
+                    captureAndSend();
+                    
+                    // Audio
+                    rec.record();
+                });
+
+                function captureFrame () {
+                    var w = width,
+                        h = height;
+
+                    ctx.drawImage(vidElem, 0, 0, w, h);
+                    return getAsJPEGBlob(canvas[0]);
+                }
+
+                function captureAndSend () {
+                    var image = captureFrame();
+                    socket.emit('frame', {frame: frame++, data: image});
+                    
+                    /*
+                    rec.exportWAV(function (audio) {
+                        console.log(audio);
+                    });
+                    */
+                }
+            };
+            
+            // Audio...
+            var context = new audioContext();
+            var mediaStreamSource = context.createMediaStreamSource(stream);
+            var rec = new Recorder(mediaStreamSource, recorderConfig);
+            
+            // Event listeners
+            socket.on('connect', function () {
+                console.log('Connected to recording server');
+                
+                if(metaLoaded) {
+                    return streamReady();
+                }
+                
+                socketReady = true;
+            });
+            
+            vid.on('loadedmetadata', function () {
+                if(socketReady) {
+                    return streamReady();
+                }
+
+                metaLoaded = true;
+            });
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            return;
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            window.context = audioContext;
+            var videoSource = audioContext.createMediaElementSource(vidElem);
+            var filter = audioContext.createBiquadFilter();
+            var peer = audioContext.createMediaStreamDestination();
+            videoSource.connect(filter);
+            filter.connect(peer);
+            console.log(peer);
+            
+            
+            
+            
+            window.stream = stream;
+            console.log(sessionId);
+            return;
             
             // Audio...
             var context = new audioContext();
@@ -518,6 +663,53 @@ jQuery(function ($) {
 		
 		// TODO: implement a notification system to tell the user that the card is not ready for submission
 	}
+
+
+    /**
+     * Convert data URI to blob
+     * http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata/5100158
+     * @param {string} dataURI The data uri to convert to binary
+     * @param {function} callback Callback function
+     */
+    function dataURItoBlob(dataURI, callback) {
+        // convert base64 to raw binary data held in a string
+        // doesn't handle URLEncoded DataURIs
+
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+            //byteString = atob(dataURI.split(',')[1]);
+            byteString = dataURI.split(',')[1];
+        } else {
+            byteString = unescape(dataURI.split(',')[1]);
+        }
+        
+        return byteString;
+    }
+
+    /**
+     * Get image as binary
+     * http://stackoverflow.com/questions/10313992/upload-html5-canvas-as-a-blob
+     * @param {HTMLCanvasElement} canvas
+     */
+   function getAsJPEGBlob(canvas) {
+        /*if(canvas.mozGetAsFile) {
+            return canvas.mozGetAsFile("foo.jpg", "image/jpeg");
+        } else {*/
+            var data = canvas.toDataURL('image/jpeg', 0.5);
+            var blob = dataURItoBlob(data);
+            return blob;
+        //}
+    }
+
+    function byteValue(x) {
+        return x.charCodeAt(0) & 0xff;
+    }
+    
+    function toBlob (byteString) {
+        var ords = Array.prototype.map.call(byteString, byteValue);
+        var ui8a = new Uint8Array(ords);
+        return ui8a.buffer;
+    }
 	
 	$('#personal-autographs-bottom .note').click(function (e) {
 		e.preventDefault();
