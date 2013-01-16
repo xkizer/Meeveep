@@ -495,13 +495,11 @@ jQuery(function ($) {
 
                 function captureAndSend () {
                     var image = captureFrame();
-                    socket.emit('frame', {frame: frame++, data: image});
                     
-                    /*
-                    rec.exportWAV(function (audio) {
-                        console.log(audio);
+                    rec.getBuffer(function (audio) {
+                        audio1 = audio[0];
+                        socket.emit('frame', {frame: frame++, data: image, audio: deflate(String.fromCharCode.apply(null, (audio1)))});
                     });
-                    */
                 }
             };
             
@@ -710,7 +708,15 @@ jQuery(function ($) {
         var ui8a = new Uint8Array(ords);
         return ui8a.buffer;
     }
-	
+    
+    function deflate (data) {
+        return btoa(RawDeflate.deflate(unescape(encodeURIComponent(data))));
+    }
+
+    function inflate(data) {
+        return decodeURIComponent(escape(RawDeflate.inflate(atob(data))));
+    }
+    
 	$('#personal-autographs-bottom .note').click(function (e) {
 		e.preventDefault();
 		var card = getCurrentCard();

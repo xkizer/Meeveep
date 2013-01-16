@@ -55,7 +55,8 @@ io.sockets.on('connection', function (socket) {
                 }
 
                 lastFrame = expectedFrame;
-                var data = message.data;
+                var data = message.data
+                    audio = message.audio;
                 
                 // Create file for frame
                 fs.writeFile(dirname + expectedFrame + '.jpg', data, 'base64', function (err) {
@@ -65,8 +66,8 @@ io.sockets.on('connection', function (socket) {
                     }
                 });
                 
-                totalData += data.length;
-                console.log(cli.blue('received frame ' + message.frame, 'Size:', data.length, 'rate:', ((data.length * 25) >> 10) + 'KBps' ), 'total', (totalData >> 20) + 'MB');
+                totalData += data.length + audio.length;
+                console.log(cli.blue('received frame ' + message.frame, 'Image:', data.length, 'Audio:', audio.length, 'total:', data.length + audio.length, 'rate:', (((data.length + audio.length) * 25) >> 10) + 'KBps' ), 'total', (totalData >> 20) + 'MB');
             });
 
             // Start streaming
