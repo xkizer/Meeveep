@@ -74,17 +74,20 @@ jQuery(function ($) {
         switchTo(currentIndex + direction);
     });
     
-    book1BigUl[0].recalculate = function () {
-        // Take care of the container's width
-        var numLis = book1BigUl.find('li').length;
-        book1BigUl.width(book1BigLiWidth * numLis);
-        $('#book1-card-total').text(numLis);
-    };
+    if(book1BigUl.length) {
+        book1BigUl[0].recalculate = function () {
+            // Take care of the container's width
+            book1BigLi = book1BigUl.find('li');
+            var numLis = book1BigLi.length;
+            book1BigUl.width(book1BigLiWidth * numLis);
+            $('#book1-card-total').text(numLis);
+        };
 
-    book1BigUl[0].recalculate();
+        book1BigUl[0].recalculate();
+    }
     
     // Activate an initial card
-    var cardId = queryString.cardId || null;
+    var cardId = urlObj.cardId || null;
     
     if(cardId) {
         var card = $('#preview-slideshow li[data-id="' + cardId + '"]');
@@ -94,7 +97,7 @@ jQuery(function ($) {
         }
     }
     
-    (function () {switchTo(currentIndex);}).defer(100)
+    (function () {switchTo(currentIndex);}).defer(100);
     
     // Step 1 submission
     $('#book1-next, #book1-prev').click(function (e) {
@@ -121,6 +124,8 @@ jQuery(function ($) {
         book1BigLiWidth = book1BigLi.width();
     });
     
+    // Setp 2
+    
     // Pen color switching
     var penColors = $('#book2-side-form .pen-color');
     
@@ -130,6 +135,17 @@ jQuery(function ($) {
         target.addClass('active');
     });
 
+    function showError(element) {
+        var fn = function () {
+            // No check for validity. Once element is changed, remove error
+            element.removeClass('has-error');
+        };
+        
+        element = $(element);
+        element.addClass('has-error');
+        element.on('change', fn);
+    }
+    
     // Page 2 submit
     $('#book2-next,#book2-prev').click(function (e) {
         e.preventDefault();
@@ -139,6 +155,15 @@ jQuery(function ($) {
             penColor = $('#book2-side-form .pen-color.active').attr('data-color'),
             next = $(this).attr('data-next') || 'step-3';
         
+        // A little validation
+        if(!name.trim()) {
+            return showError('#book2-name');
+        }
+    
+        if(msg.itrim().length < 10) {
+            return showError('#book2-msg');
+        }
+    
         urlObj['name'] = encodeURIComponent(name);
         urlObj['msg'] = encodeURIComponent(msg);
         urlObj['pen-color'] = encodeURIComponent(penColor);
@@ -163,6 +188,11 @@ jQuery(function ($) {
             termsAgreed = $('#payment-method2 [name="terms_agree"]')[0].checked,
             receiveNlt = $('#payment-method2 [name="recieve_newsletter"]')[0].checked,
             next = $(this).attr('data-next') || 'step-4';
+        
+        if(!termsAgreed && next === 'step-4') {
+            showError($('#payment-method2 [name="terms_agree"]').closest('label').closest('span'));
+            return;
+        }
         
         urlObj['payment-method'] = encodeURIComponent(paymentMethod);
         urlObj['accepted-terms'] = encodeURIComponent(termsAgreed);
