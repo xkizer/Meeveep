@@ -85,5 +85,6 @@ var errorCodes = {
     0x9015: 'Could not place order: server failure',                            // Database conn fail
     0x1916: 'Could not place order: server failure',                            // Database query fail
     
-    
+    0xAF01: 'Error creating recording session',                                 // Redis did not agree we should continue creating media session.
+    0xAF02: 'Something weird',                                                  // Something really weird. Redis connection failed while creating media session
 };

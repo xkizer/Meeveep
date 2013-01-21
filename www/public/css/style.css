@@ -1012,13 +1012,31 @@ html {
 	position: relative;
 }
 
+#preview-page #live-autograph-list .controls {
+    display: none;
+}
+
+#preview-page #live-autograph-list .ready .controls {
+    display: block;
+}
+
 #preview-page #live-autograph-list .controls .play-pause {
-	width: 20px;
-	background: url(../images/icons/icon-sprite.png) 0 -205px;
+	width: 15px;
 	display: block;
 	float: left;
-	height: 100%;
 	margin-right: 4px;
+    background: #fff;
+    height: 15px;
+    border-radius: 10px;
+    margin-top: 4px;
+}
+
+#preview-page #live-autograph-list .recording .controls .play-pause {
+	background: url(../images/icons/icon-sprite.png) 0 -205px;
+    border-radius: 0;
+	height: 100%;
+	width: 20px;
+    margin-top: 0;
 }
 
 #preview-page #live-autograph-list .controls .volume-icon {

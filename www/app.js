@@ -25,6 +25,7 @@ var app = express();
 app.set('layout', 'layout');
 app.set('partials', {head: "head", sidebar: 'sidebar', newsletter: 'sidebar/newsletter'});
 app.engine('html', require('hogan-express'));
+app.set('json spaces', null);
 
 
 app.configure(function(){
@@ -59,8 +60,11 @@ app.get('/autographs/unsigned', autographs.unsigned);
 app.post('/card/:orderId/update/signature', autographs.updateSignature);
 app.post('/card/:orderId/accept', autographs.acceptOrder);
 app.get('/card/:orderId/reject', autographs.rejectOrder);
+
+// Create recording session
 app.get('/media/createSession', media.createSession);
 
+// Add an autograph card. 
 app.get('/cards/add', autographs.addCardPage);
 app.post('/cards/add', autographs.addCard);
 app.post('/cards/add', autographs.addCardPage);

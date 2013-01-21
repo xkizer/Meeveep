@@ -42,7 +42,7 @@ function getUser(callback) {
     var req = this;
     
     if(!req.isLoggedIn()) {
-        // No logged in...
+        // Not logged in...
         return callback(null, null);
     }
 

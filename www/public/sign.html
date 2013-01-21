@@ -60,12 +60,12 @@
                                     	<div class="content">
                                         	<div id="video-preview">
                                             	<div class="video-container">
-                                                	<video poster="images/imgs/posters/poster-1.jpg" autoplay></video>
+                                                	<video poster="images/imgs/posters/poster-1.jpg"></video>
                                                     <audio></audio>
                                                     <span id="recording">Aufnahme</span>
                                                     <div class="controls">
                                                     	<a href="#" class="play-pause"></a>
-                                                        <span class="time">12:45</span>
+                                                        <span class="time">00:00</span>
                                                         <a href="#" class="volume-icon"></a>
                                                     </div>
                                                 </div>
@@ -194,8 +194,6 @@
     <script src="js/lib/uniform/jquery.uniform.min.js"></script>
 	<script type="text/javascript" src="js/lib/util.js"></script>
 	<script type="text/javascript" src="js/lib/recorder.js"></script>
-	<script type="text/javascript" src="js/lib/deflate/rawdeflate.js"></script>
-	<script type="text/javascript" src="js/lib/deflate/rawinflate.js"></script>
 	<script type="text/javascript" src="js/core.js"></script>
 	<script type="text/javascript" src="js/book.js"></script>
 	<script type="text/javascript" src="js/lib/webrtc.io.js"></script>
@@ -206,9 +204,9 @@
     <![endif]-->
     <script>
 		window.cardInfo = [
-			{cardId: 'id-someid-1', name: 'Jessica-Jaqueline Schröder 1', msg: '1: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?1', penColor: 'cyan', includes: ['signature', 'audio']},
+			{cardId: 'id-someid-1', name: 'Jessica-Jaqueline Schröder 1', msg: '1: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?1', penColor: 'cyan', includes: ['signature', 'audio', 'video']},
 			{cardId: 'id-someid-2', name: 'Jessica-Jaqueline Schröder 2', msg: '2: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?2', penColor: 'purple', includes: ['signature', 'audio', 'video']},
-			{cardId: 'id-someid-3', name: 'Jessica-Jaqueline Schröder 3', msg: '3: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?3', penColor: 'pink', includes: ['signature']},
+			{cardId: 'id-someid-3', name: 'Jessica-Jaqueline Schröder 3', msg: '3: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?3', penColor: 'pink', includes: ['video', 'signature']},
 			{cardId: 'id-someid-4', name: 'Jessica-Jaqueline Schröder 4', msg: '4: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?4', penColor: 'red', includes: ['signature', 'video']},
 			{cardId: 'id-someid-5', name: 'Jessica-Jaqueline Schröder 5', msg: '5: Meine Freundin Jessi hat bald Geburstag, kannst du ihr dazu was draufschreiben? Dankeee!', large: '/images/imgs/star-large/big-picture.jpg?5', penColor: 'red', includes: ['signature', 'video', 'audio']}
 		];
