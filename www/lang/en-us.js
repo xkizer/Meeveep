@@ -84,6 +84,7 @@ var lang = {
     txtGenerateComm: 'Generate new commercial autograph',
     txtSelectCelebName: 'Select celebrity name',
     txtSelectLang: 'Select language',
+    txtRecording: 'Recording',
     
 };
 

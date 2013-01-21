@@ -235,44 +235,84 @@ module.exports = {
             // We assume it completed
             callback(null);
         });
+    },
+    
+    /**
+     * Express build. Builds everything at once.
+     * @param {string} path Location of files
+     * @param {function} callback Callback receives error object if any
+     */
+    express: function (dir, callback) {
+        if(!dir.match(/\/$/)) {
+            dir += '/';
+        }
+        
+        // Trackers
+        var videoComplete = false,
+            audioComplete = false;
+
+        // Join audio files
+        module.exports.joinWAV(dir, function (err) {
+            if(err) {
+                // There is error with audio... probably no audio was recorded
+                console.log(cli.red('Audio failed... ignoring audio'));
+                //callback(err);
+                
+                // Ignore error and do without audio
+                audioComplete = 'ignore';
+            } else {
+                console.log(cli.green('Audio joining'));
+                audioComplete = true;
+
+                if(videoComplete) {
+                    doJoin();
+                }
+            }
+        });
+
+        // Join video frames simultaneously
+        module.exports.jpegsToMP4(dir, function (err) {
+            if(err) {
+                callback(err);
+            } else {
+                console.log(cli.green('Video frames joining complete'));
+                videoComplete = true;
+
+                if(audioComplete) {
+                    doJoin();
+                }
+            }
+        });
+
+        // Join both into one video file. This is called when both of the above
+        // are complete.
+        function doJoin() {
+            if(audioComplete === 'ignore') {
+                // Instruction to ignore audio...
+                fs.readFile(dir + 'video.mp4', function (err, buffer) {
+                    if(err) {
+                        return callback(err);
+                    }
+                    
+                    fs.writeFile(dir + 'audio-video.mp4', buffer, function (err) {
+                        if(err) {
+                            return callback(err);
+                        }
+
+                        callback();
+                    });
+                });
+            }
+            
+            module.exports.combine(dir, function (err) {
+                if(err) {
+                    callback(err);
+                } else {
+                    console.log(cli.green('Video processing complete'));
+                    console.log(cli.green('Video encoding complete for directory'), cli.yellow(dir));
+                    callback();
+                }
+            });
+        }  
     }
 };
-
-var dir = '/tmp/stream-Pb3qmqglrvQGmPHiiN740ykQwh4Q4rSgff/',
-    videoComplete = false,
-    audioComplete = false;
-
-module.exports.joinWAV(dir, function (err) {
-    if(err) {
-        console.error(cli.red('error'), err);
-    } else {
-        audioComplete = true;
-        
-        if(videoComplete) {
-            doJoin();
-        }
-    }
-});
-
-module.exports.jpegsToMP4(dir, function (err) {
-    if(err) {
-        console.error(cli.red('error'), err);
-    } else {
-        videoComplete = true;
-        
-        if(audioComplete) {
-            doJoin();
-        }
-    }
-});
-
-function doJoin() {
-    module.exports.combine(dir, function (err) {
-        if(err) {
-            console.error(cli.red('error'), err);
-        } else {
-            console.log(cli.green('Complete'));
-            console.log(cli.green('Video encoding complete for directory'), dir);
-        }
-    });
-}

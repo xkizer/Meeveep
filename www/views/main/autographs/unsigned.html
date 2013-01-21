@@ -27,20 +27,20 @@
             <span>{{txtAddCard}}</span>
             <a href="#" class="note">
                 <div>
-                    <h3>{{txtRecordVideo}}</h3>
-                    <p>{{txtRecordVideoDescr}}</p>
+                    <h3>{{txtAddSignature}}</h3>
+                    <p>{{txtAddSignatureDescr}}</p>
                 </div>
             </a>
             <a href="#" class="video active">
                 <div>
-                    <h3>{{txtRecordAudio}}</h3>
-                    <p>{{txtRecordAudioDescr}}</p>
+                    <h3>{{txtRecordVideo}}</h3>
+                    <p>{{txtRecordVideoDescr}}</p>
             </div>
             </a>
             <a href="#" class="audio">
                 <div>
-                    <h3>{{txtAddSignature}}</h3>
-                    <p>{{txtAddSignatureDescr}}</p>
+                    <h3>{{txtRecordAudio}}</h3>
+                    <p>{{txtRecordAudioDescr}}</p>
                 </div>
             </a>
         </div>
@@ -50,7 +50,7 @@
 <script>
     window.cardInfo = [
 {{#cards}}
-        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.large}}', penColor: '{{pen-color}}', includes: ['signature']{{#signature}}, signature: {{{signature}}}{{/signature}}},
+        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.large}}', penColor: '{{pen-color}}', includes: {{{serializeIncludes}}} {{#signature}}, signature: {{{signature}}}{{/signature}} {{#video}}, video: '{{video}}'{{/video}} {{#audio}}, audio: '{{audio}}'{{/audio}}},
 {{/cards}}
     ];
 </script>

@@ -8,15 +8,15 @@ var session = require('../controllers/session.js'),
  */
 function saveSession() {
     var req = this;
-    
+
     if(req.session) {
         // Check necessary to ensure that session had not been ended
         var sessInfo = req.session;
-        
+
         if(!sessInfo) {
             return;
         }
-        
+
         db.redisConnect(function (err, client) {
             if(!err) {
                 session.updateSession (req.sessionId, sessInfo, function () {/* Nothing */});
@@ -40,7 +40,9 @@ function isLoggedIn () {
  */
 function getUser(callback) {
     var req = this;
-    
+
+    console.log('User', req.isLoggedIn());
+
     if(!req.isLoggedIn()) {
         // Not logged in...
         return callback(null, null);
@@ -50,13 +52,13 @@ function getUser(callback) {
     if(req.currentUser) {
         return callback(null, req.currentUser);
     }
-    
+
     var user = require('../controllers/user.js');
     user.getUser(req.session.userId, function (err, user) {
         if(err) {
             return callback(err);
         }
-        
+
         req.currentUser = user; // Cache
         return callback(null, user.userData);
     });
@@ -67,12 +69,12 @@ function getUser(callback) {
  */
 function endSession(callback) {
     var req = this;
-    
+
     if(!req.sessionId) {
         // Not really on any session
         return callback(null);
     }
-    
+
     session.endSession(req.sessionId, callback);
 }
 
@@ -86,16 +88,16 @@ function endSession(callback) {
  */
 function requireLogin(callback) {
     var req = this;
-    
+
     this.getUser(function (err, user) {
         if(err) {
             return response.redirect('/server/500?redir=' + encodeURIComponent(req.url));
         }
-        
+
         if(!user) {
             return response.redirect('/auth/login?next=' + encodeURIComponent(req.url));
         }
-        
+
         // User found
         return callback(user);
     });
@@ -109,14 +111,14 @@ module.exports = {
         req.requireLogin = requireLogin;
         response = res;
         request = req;
-        
+
         var sessionId = req.cookies && req.cookies.sid;
-        
+
         if(!sessionId) {
             // No session cookie
             return next();
         }
-        
+
         session.getSession(sessionId,
             {
                 ip: req.socket.remoteAddress,
@@ -130,13 +132,13 @@ module.exports = {
                     // TODO: examine the error and decide whether to ignore or throw an HTTP 500
                     return next();
                 }
-                
+
                 // Session found...
                 userInfo.active = Boolean(parseInt(userInfo.active));
                 userInfo.userId = parseInt(userInfo.userId);
                 req.session = userInfo;
                 req.sessionId = sessionId;
-                
+
                 res.on("finish", saveSession.callback(req))
                 next();
             }

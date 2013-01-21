@@ -5,7 +5,8 @@ jQuery(function ($) {
 
 	var CARD_SIGNATURE_SAVE_URI = '/card/{0}/update/signature',
 		CARD_ACCEPT_URI = '/card/{0}/accept',
-        CREATE_RECORDING_SESSION_URI = '/media/createSession';
+        CREATE_RECORDING_SESSION_URI = '/media/createSession',
+        CARD_VIDEO_SAVE_URI = '/card/{0}/update/video';
 
     var VIDEO_FREQUENCY = 25,                   // fps
         VIDEO_PERIOD = 1000/VIDEO_FREQUENCY,    // period of frames
@@ -388,7 +389,7 @@ jQuery(function ($) {
 		image.on('load', doResize);
 	}
 
-    navigator.getUserMedia = navigator.getUserMedia
+    window.getUserMedia = navigator.getUserMedia
                     || navigator.webkitGetUserMedia
                     || navigator.mozGetUserMedia
                     || navigator.oGetUserMedia
@@ -427,12 +428,8 @@ jQuery(function ($) {
      * negotiation includes generation of a session ID that is attached to the
      * video.
      * @param {obect} card The card that the video will be attached to
-     * @param {function} callback The callback function is called when the recording
-     * is complete (when the star clicks "done"). The function is passed the video
-     * object (video object contains the video ID, length, etc). The ID can be used
-     * to access the video stream from the server.
      */
-    function initVideo (card, callback) {
+    function initVideo (card) {
         var recorder = {
             /**
              * Ends the recording session before anything begins
@@ -468,11 +465,11 @@ jQuery(function ($) {
                     scaleFactor,
                     timer, timeElapsed = 0;
 
-                vidElem.src = window.URL.createObjectURL(stream);
+                vidElem.src = url;
                 ///audioElem.src = window.URL.createObjectURL(stream);
                 vidElem.play();
 
-                console.log(server);
+                console.log('Server', server);
                 var socket = io.connect(server, {'force new connection': true}),
                     vid = $(vidElem),
 
@@ -557,11 +554,13 @@ jQuery(function ($) {
 
                         // End recording session
                         recorder.end = function () {
-                            console.debug('end');
                             // Has anything been recorded?
                             if(recorder.started) {
-                                // Send current frames
-                                compileFrames();
+                                // Follow the pause procedure
+                                this.pause();
+
+                                // Attach video to card
+                                card.video = sessionId;
                             }
 
                             // Send "end" signal
@@ -744,7 +743,7 @@ jQuery(function ($) {
 			// submit card
 			var includes = card.includes,
 				data = {},
-				cardId = card.cardId;
+				orderId = card.orderId;
 
 			includes.forEach(function (r) {
 				data[r] = card[r];
@@ -752,7 +751,7 @@ jQuery(function ($) {
 
 			$.ajax({
 				error: function () {console.error('Something went wrong');}, // TODO: invent a way to notify user that an error occured
-				url: CARD_ACCEPT_URI.format(cardId),
+				url: CARD_ACCEPT_URI.format(orderId),
 				type: 'post',
 				dataType: 'json',
 				contentType: 'application/json',
@@ -836,12 +835,18 @@ jQuery(function ($) {
 				// ...and update server
 				count++;
 
+                if(signature !== card.signature) {
+                    // Video ID has changed
+                    console.warn('Signature has changed... aborting');
+                    return;
+                }
+
 				if(count > 4) {
 					return;
 				}
 
 				$.ajax({
-					url: CARD_SIGNATURE_SAVE_URI.format(card.cardId),
+					url: CARD_SIGNATURE_SAVE_URI.format(card.orderId),
 					type: 'post',
 					dataType: 'json',
 					contentType: "application/json",
@@ -871,27 +876,32 @@ jQuery(function ($) {
             return false;
         }
 
-        var vidBtn = $(this);
+        var vidBtn = $(this),
+            card = getCurrentCard();
 
         // Nothing is recording...
-        recording = initVideo();
+        recording = initVideo(card);
 
         // When the recorder ends...
         recording.onend = function () {
-            recording = false;
+            recording.started = false;
+            recording = null;
 
             // Reset the video button
             vidBtn.removeClass('recording');
 
             // Hide controls
             videoContainer.removeClass('ready');
-            timeElem.text('0:0');
+            timeElem.text('00:00');
+
+            // Save
+            updateVideo(card);
+            checkCard(card);
+            bigUl.trigger(lastEvent);
         };
 
         recording.onready = function () {
             videoContainer.addClass('ready');
-
-            videoContainer.find('.play-pause').on('click', doPlayPause)
         };
 
         recording.onpause = function () {
@@ -916,6 +926,44 @@ jQuery(function ($) {
         vidBtn.addClass('recording');
         return false;
     });
+
+    videoContainer.find('.play-pause').on('click', doPlayPause);
+
+    function updateVideo (card) {
+        // Attach the signature to the card...
+        var videoId = card.video;
+
+        if(!videoId) {
+            return false;
+        }
+
+        var count = 0;
+
+        function update() {
+            count++;
+
+            if(videoId !== card.video) {
+                // Video ID has changed
+                console.warn('Video ID has changed... aborting');
+                return;
+            }
+
+            if(count > 4) { // Timeout
+                return;
+            }
+
+            $.ajax({
+                url: CARD_VIDEO_SAVE_URI.format(card.orderId),
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify({video: videoId}),
+                error: function () {update.defer(5000);} // Retry until it succeeds or ultimately fails
+            });
+        }
+
+        update();
+    }
 
     /**
      * Handles play and pause button clicks

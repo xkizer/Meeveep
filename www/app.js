@@ -57,14 +57,22 @@ app.get('/star/:starId([0-9]+)', stars.starInfo);
 app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
 app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
 app.get('/autographs/unsigned', autographs.unsigned);
-app.post('/card/:orderId/update/signature', autographs.updateSignature);
+
+app.post('/card/:orderId/update/:medium(signature|video|audio)', autographs.updateMedia);
+
 app.post('/card/:orderId/accept', autographs.acceptOrder);
 app.get('/card/:orderId/reject', autographs.rejectOrder);
 
 // Create recording session
 app.get('/media/createSession', media.createSession);
 
-// Add an autograph card. 
+// Session verification
+app.get('/media/identify/:sessionId', media.verifySession);
+
+// Meant for the recording server. Notifies us that the video is complete
+app.post('/media/notify/complete', media.notifyComplete);
+
+// Add an autograph card.
 app.get('/cards/add', autographs.addCardPage);
 app.post('/cards/add', autographs.addCard);
 app.post('/cards/add', autographs.addCardPage);
@@ -96,10 +104,10 @@ var cli = require('cli-color');
 if (cluster.isMaster) {
     console.log(cli.yellow('CPU_COUNT', numCPUs));
     console.log(cli.cyan('Forking ', numCPUs, 'child processes'));
-    
+
     // Fork workers.
     var clusters = [];
-    
+
     for (var i = 0; i < numCPUs; i++) {
         clusters.push(cluster.fork());
     }

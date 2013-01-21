@@ -1003,24 +1003,24 @@ html {
 	background: url(../images/bgs/prof-bg.png);
 }
 
-#preview-page #live-autograph-list .content {
+#live-autograph-list .content {
 	padding-right: 7px;
 }
 
-#preview-page #live-autograph-list .video-container {
+#live-autograph-list .video-container {
 	margin-bottom: 3px;
 	position: relative;
 }
 
-#preview-page #live-autograph-list .controls {
+#live-autograph-list .controls {
     display: none;
 }
 
-#preview-page #live-autograph-list .ready .controls {
+#live-autograph-list .ready .controls {
     display: block;
 }
 
-#preview-page #live-autograph-list .controls .play-pause {
+#live-autograph-list .controls .play-pause {
 	width: 15px;
 	display: block;
 	float: left;
@@ -1031,7 +1031,7 @@ html {
     margin-top: 4px;
 }
 
-#preview-page #live-autograph-list .recording .controls .play-pause {
+#live-autograph-list .recording .controls .play-pause {
 	background: url(../images/icons/icon-sprite.png) 0 -205px;
     border-radius: 0;
 	height: 100%;
@@ -1039,7 +1039,7 @@ html {
     margin-top: 0;
 }
 
-#preview-page #live-autograph-list .controls .volume-icon {
+#live-autograph-list .controls .volume-icon {
 	display: block;
 	float: right;
 	width: 23px;
@@ -1047,16 +1047,20 @@ html {
 	background: url(../images/icons/icon-sprite.png) -26px -205px;
 }
 
-#preview-page #live-autograph-list #recording {
+#live-autograph-list #recording {
 	position: absolute;
 	top: 7px;
 	right: 7px;
 	color: #ce0606;
-	display: block;
+	display: none;
 	font: 10px/10px Arial, Helvetica, sans-serif;
 }
 
-#preview-page #live-autograph-list #recording:after {
+#live-autograph-list .recording #recording {
+	display: block;
+}
+
+#live-autograph-list #recording:after {
 	background: #ce0606;
 	display: block;
 	content: ' ';
