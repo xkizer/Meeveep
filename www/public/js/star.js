@@ -1,68 +1,82 @@
 jQuery(function ($) {
-	var bigUl = $('#preview-slideshow .viewport ul'),
-		currentCard = window.cardInfo && window.cardInfo[0],
-		lastEvent = null;
-
-	var CARD_SIGNATURE_SAVE_URI = '/card/{0}/update/signature',
+	var bigUl = $('#preview-slideshow .viewport ul'),               // The container of the slides
+		currentCard = window.cardInfo && window.cardInfo[0],        // Initialize the current card to the first card in the stack
+		lastEvent = null,                                           // Holds the last event triggered on the bigUl, so that the event can be easily fired again
+        
+        // Our URLs for AJAX actions
+        CARD_SIGNATURE_SAVE_URI = '/card/{0}/update/signature',
 		CARD_ACCEPT_URI = '/card/{0}/accept',
         CREATE_RECORDING_SESSION_URI = '/media/createSession',
-        CARD_VIDEO_SAVE_URI = '/card/{0}/update/video';
+        CARD_VIDEO_SAVE_URI = '/card/{0}/update/video',
 
-    var VIDEO_FREQUENCY = 25,                   // fps
-        VIDEO_PERIOD = 1000/VIDEO_FREQUENCY,    // period of frames
-        COMPILE_INTERVAL = 3000;                // Period of each batch sent to server
+        // Settings for the video recording
+        VIDEO_FREQUENCY = 25,                   // fps
+        VIDEO_PERIOD = 1000/VIDEO_FREQUENCY,    // period of frames (T = 1/f)
+        COMPILE_INTERVAL = 3000,                // Period of each batch sent to server (Send frames to server every x milliseconds)
+        VIDEO_QUALITY = 360,                    // The video quality for normal videos (360p)
 
-	var penColors = {
-		red: 'red',
-		blue: 'blue',
-		cyan: 'cyan',
-		white: 'white',
-		black: 'black',
-		yellow: 'yellow',
-		orange: 'orange',
-		green: 'green',
-		purple: 'purple',
-		pink: 'pink'
-	};
+        // Allowed pen colors (names matched to css values)
+        penColors = {
+            red: 'red',
+            blue: 'blue',
+            cyan: 'cyan',
+            white: 'white',
+            black: 'black',
+            yellow: 'yellow',
+            orange: 'orange',
+            green: 'green',
+            purple: 'purple',
+            pink: 'pink'
+        },
 
-	// Attach the various cards and the view represnting each to the other
+        // Map the name of the actions to the css class name given to their icons
+        iconMap = {
+            signature: 'note',
+            audio: 'audio',
+            video: 'video'
+        };
+
+	// Attach the various cards and the view representing each to the other
 	bigUl.find('li').each(function (i) {
 		$(this).data('card', cardInfo[i]);
 		cardInfo[i].dom = this;
 	});
 
-	// Delete the card info
+	// Delete the card info (note that this does not save memory, as the card
+    // info is still in scope. It only saves us from unwanted bugs by forcing
+    // us to access the card info only through the data attribute. It also helps
+    // to ensure that memroy is freed when each individual card is removed)
 	delete cardInfo;
 
-	var iconMap = {
-		signature: 'note',
-		audio: 'audio',
-		video: 'video'
-	};
-
+    // When the slideshow is scrolled (this event is fired from book.js)
 	bigUl.on('scrolled', function (e) {
-		var index = e.position;
-		var card = currentCard = $(bigUl.find('li')[index]).data('card');
-		lastEvent = e;
+		var index = e.position,
+            card = currentCard = $(bigUl.find('li')[index]).data('card');   // Attach the currently visible card to the currentCard variable...
+            
+		lastEvent = e;  // ...and set the event object as lastEvent
 
 		if(card) {
+            // Update the page headings to match the content of the card
 			$('#personal-autograph-preview h1 .name').html(card.name);
 			$('#personal-autograph-preview > p').html(card.msg);
 
 			// Check if card is ready to submit
 			checkCard(card);
-
+            
 			if(card.valid) {
 				// Card is complete, allow submit
 				$('#personal-autograph-preview .rightbox .accept').addClass('ready');
 			} else {
+                // Not yet complete
 				$('#personal-autograph-preview .rightbox .accept').removeClass('ready');
 			}
-
+            
+            // Hide all activating icons by default...
 			var icons = $('#personal-autographs-bottom .right');
 			icons.find('a').css({display: 'none'});
 
-			// Check what the card requires and what it does not
+			// ...then check what to enable and what to leave hidden (we enable only the icons that are required)
+            // TODO: We might have to change this in the future to show all icons, but disbale the ones that are not required
 			card.includes.forEach(function (part) {
 				var icon = icons.find('.' + iconMap[part]).css({display: 'block'});
 
@@ -78,6 +92,7 @@ jQuery(function ($) {
 
 	/**
 	 * Get the card that is currently in the forefront
+     * @return {object} Returns the card that is currently visible to the user
 	 */
 	function getCurrentCard () {
 		return currentCard;
@@ -89,10 +104,8 @@ jQuery(function ($) {
      * @param {object} card The card to check
 	 */
 	function checkCard(card) {
-		var valid = true; // Innocent until proven otherwise
-
-		// TODO: Implement the card checking function
-		var required = card.includes;
+		var valid = true, // Innocent until proven otherwise
+            required = card.includes;
 
 		for(var i = 0; i < required.length; i++) {
 			if(!card[required[i]]) {
@@ -110,15 +123,17 @@ jQuery(function ($) {
 
 	viewport.each(function () {
 		var viewport = $(this),
-		nameTip = viewport.find('.cursor-tip'),
-		offset = viewport.offset();
+            nameTip = viewport.find('.cursor-tip'),
+            offset = viewport.offset();
 
+        // Recalculate whenever the window is resized (the viewport is usually resized with the window)
 		$(window).resize(function () {
 			(function () {
 				offset = viewport.offset();
-			}).defer(100);
+			}).defer(100); // We defer the calling of this function by 100ms because of a bug
 		});
 
+        // When the user's mouse moves, relocate the star's name to match the mouse position (but moved 30px to the right)
 		viewport.on('mousemove', function (e) {
 			var x = e.pageX,
 				y = e.pageY;
@@ -135,24 +150,24 @@ jQuery(function ($) {
 	 */
 	function initSignature(card, callback) {
 		// Signing window auto resize
-		var overlay = $('#sign-overlay').fadeIn(),
-			img = overlay.find('.img'),
-			image = img.find('img').attr({src: card.large}),
-			header = overlay.find('header'),
+		var overlay = $('#sign-overlay').fadeIn(),                              // The signing window container
+			img = overlay.find('.img'),                                         // The image container
+			image = img.find('img').attr({src: card.large}),                    // The image itself (we display the large picture for the star to sign)
+			header = overlay.find('header'),                                    
 			content = overlay.find('.content'),
-			zIndex = 40,
-			canvas = $('<canvas>').appendTo(img).css({'z-index': zIndex++}),
-			startPosition = null,
-			canvasOffset = canvas.offset(),
-			context = canvas[0].getContext('2d'),
-			penColor = penColors[card.penColor],
-			currentStrokes = [],
-			mouseStrokes = []; // Records the various mouse stroke, for replay purposes
+			zIndex = 40,                                                        
+			canvas = $('<canvas>').appendTo(img).css({'z-index': zIndex++}),    // Put a transparent canvas on top of the image
+			startPosition = null,                                               // This holds the coordinates of the starting position of each stroke
+			canvasOffset = canvas.offset(),                                     
+			context = canvas[0].getContext('2d'),                               
+			penColor = penColors[card.penColor],                                // The pen color the user chose
+			currentStrokes = [],                                                // Holds the coordinates of the current mouse strokes
+			mouseStrokes = [];                                                  // Records all the various mouse stroke, for replay purposes
 
-		// Disable mody scrolling
+		// Disable body scrolling
 		$('body').addClass('no-scroll');
 
-		// If the card has a valid mouse stroke saved, we will redraw the mouse strokes
+		// If the card has a valid mouse stroke saved, we will redraw the mouse strokes (this means the card had been previously signed)
 		if(card.signature) {
 			mouseStrokes = JSON.parse(JSON.stringify(card.signature.strokes));
 			mouseStrokes.dimensions = card.signature.dimensions;
@@ -160,18 +175,23 @@ jQuery(function ($) {
 			// Redraw
 			redraw();
 		}
-
-		// Save dimension information to the mouse strokes
+        
+		// Save dimension information to the mouse strokes (this helps in future replay, in case window and overlay size has changed by then)
 		mouseStrokes.dimensions = [canvas.width(), canvas.height()];
 
 		// Header
 		header.find('.name').text(card.name);
 
+        /**
+         * Resizes the overlay, the image, and the canvas when the window is resized.
+         * When a canvas is resized, it is wiped clean. This function redraws the
+         * signature after resizing.
+         */
 		function doResize() {
 			var height = overlay.height() - header.height() - 52;
 			img.height(height);
 			content.width(Math.max(image.width(), header.width()));
-
+            
 			if(canvas) {
 				canvas.attr({'width': image.width(), 'height': image.height()});
 				canvasOffset = canvas.offset();
@@ -181,7 +201,8 @@ jQuery(function ($) {
 		}
 
 		/**
-		 * Recalibrates the mouse strokes based on a new canvas size
+		 * Recalibrates the mouse strokes based on a new canvas size. This means
+         * basically, resampling the mouse strokes to fit the current picture size.
 		 */
 		function recalibrate() {
 			var dimensions = [canvas.width(), canvas.height()];
@@ -192,7 +213,7 @@ jQuery(function ($) {
 				return;
 			}
 
-			// Get the ratios. X- and Y- ration are usually the same, but we take precaution and treat them separately
+			// Get the ratios. X- and Y-ratios are usually the same, but we take precaution and treat them separately
 			var ratios = [
 							dimensions[0] / mouseStrokes.dimensions[0],
 							dimensions[1] / mouseStrokes.dimensions[1]
@@ -200,7 +221,8 @@ jQuery(function ($) {
 
 			// Set the new dimensions
 			mouseStrokes.dimensions = dimensions;
-
+            
+            // Recalibrate...
 			mouseStrokes.forEach(function (currentStrokes) {
 				currentStrokes.forEach(function (xy) {
 					xy[0] *= ratios[0];
@@ -233,17 +255,33 @@ jQuery(function ($) {
 				ctx.stroke();
 				ctx.closePath();
 			});
-
+            
+            // Remove mouse events from old canvas. This is probably not necessary but used as a precaution to avoid
+            // any manner of memory leak
+            if(canvas) {
+                canvas.off('mousedown')
+                        .off('mouseout')
+                        .off('mouseup')
+                        .off('mousemove');
+            }
+            
+            // Create the new empty canvas (the canvas that will take new strokes)
 			canvas = $('<canvas>').appendTo(img).css({'z-index': zIndex++});
 			context = canvas[0].getContext('2d');
 			canvas.attr({'width': image.width(), 'height': image.height()});
-			attachEvents();
+			attachEvents(); // Attach the mousemove events to the new canvas
 		}
 
-		// Disable drag
+		/**
+         * Attach events to the current canvas (the foremost canvas)
+         */
 		function attachEvents() {
 			canvas.on('mousedown', startStroke);
 
+            /**
+             * Called when the user presses the mouse down (to start the signature sequence)
+             * @param {object} e
+             */
 			function startStroke (e) {
 				// Start the drag
 				startPosition = [e.pageX, e.pageY];
@@ -255,7 +293,11 @@ jQuery(function ($) {
 
 				canvas.on('mouseout mouseup', endStroke).on('mousemove', doStroke);
 			}
-
+            
+            /**
+             * Called when the user makes a stroke (moves the mouse)
+             * @param {object} e
+             */
 			function doStroke (e) {
 				if(startPosition === null) {
 					return;
@@ -268,6 +310,12 @@ jQuery(function ($) {
 				context.stroke();
 			}
 
+            /**
+             * Called when the user releases the mouse or leaves the signature area.
+             * This ends the signature sequence, locks the canvas, and creates a new canvas
+             * for the next strokes.
+             * @param {object} e
+             */
 			function endStroke (e) {
 				if(startPosition === null) {
 					return;
@@ -280,7 +328,7 @@ jQuery(function ($) {
 					return;
 				}
 
-				canvas.off('mousedown mouseup mousemove');
+				canvas.off('mousedown mouseup mousemove mouseout');
 				context.closePath();
 				mouseStrokes.push(currentStrokes);
 
@@ -296,7 +344,7 @@ jQuery(function ($) {
 		}
 
 		/**
-		 * Undo the last layer
+		 * Undo the last layer (last stroke)
 		 */
 		function undo() {
 			// Get the last canvas
@@ -323,6 +371,7 @@ jQuery(function ($) {
 
 		/**
 		 * Serialize the signature into a form that can be sent and stored
+         * @return {object} Returns the signature in a form that can be safely stored
 		 */
 		function serialize () {
 			// Decision point: should we save the image with the signature hard-coded,
@@ -345,7 +394,9 @@ jQuery(function ($) {
 		}
 
 		/**
-		 * Cancel the signature
+		 * Cancel the signature.
+         * Cancelling removes all mouse strokes, all canvases, and returns us to
+         * the main screen.
 		 */
 		function cancel () {
 			// Remove all the canvas
@@ -367,13 +418,16 @@ jQuery(function ($) {
 			overlay.fadeOut();
 			$('body').removeClass('no-scroll');
 		}
-
+        
+        /********* BEGIN THE SIGNING PROCESS ***********/
 		attachEvents();
+        
+        // Attach events to the icons on the top-right of the page
 		$('#sign-actions a').click(function (e) {e.preventDefault();});
-		$('#sign-action-undo').click(undo);
-		$('#sign-action-cancel').click(cancel);
+		$('#sign-action-undo').click(undo);     // Undo button
+		$('#sign-action-cancel').click(cancel); // Cancel button
 
-		$('#sign-action-accept').click(function (e) {
+		$('#sign-action-accept').click(function (e) {   // Accept button
 			// Attempt to accept the signature
 			var accept = serialize();
 
@@ -384,42 +438,52 @@ jQuery(function ($) {
 
 			// If here... the signature was not accepted
 		});
-
+        
+        // When the window resizes...
 		$(window).resize(doResize).resize();
+        
+        // When the image is loaded, we artificially fire a resize event, so that
+        // the window will be sized with the new image dimensions
 		image.on('load', doResize);
 	}
-
+    
+    
+    
+    
+    /****************** START VIDEO/AUDIO RECORDING FUNCTIONS ****************/
+    
+    // Cross-browser getUserMedia
     window.getUserMedia = navigator.getUserMedia
                     || navigator.webkitGetUserMedia
                     || navigator.mozGetUserMedia
                     || navigator.oGetUserMedia
                     || navigator.msGetUserMedia;
-
+    
+    //Cross-browser window.URL
     window.URL = window.webkitURL
                   || window.mozURL
                   || window.URL
                   || {createObjectURL: function(obj){return obj;}};
-
+    
+    // Cross-browser window.audioContext (As of writing, only Chrome 23+ supports this)
     window.audioContext = window.audioContext || window.webkitAudioContext;
 
+    // Configuration for Recorderjs
     var recorderConfig = {
-        workerPath: '/js/lib/recorderWorker.js',
-        type: 'audio/wav'
-    };
+            workerPath: '/js/lib/recorderWorker.js',
+            type: 'audio/wav'
+        },
 
-    // The video quality for normal videos (360p)
-    var VIDEO_QUALITY = 360;
+        // Tells whether there is an active recording going on or not.
+        recording = false,
+        
+        // Make-shift error reporting
+        showError = function () {
+            console.error.apply(console, arguments);
+        },
 
-    // Tells whether there is an active recording going on or not.
-    var recording = false;
-
-    var showError = function () {
-        console.error.apply(console, arguments);
-    };
-
-    var videoContainer = $('.video-container');
-
-    //var audioContext = new webkitAudioContext();
+        // Video container (the element holding the video element)
+        videoContainer = $('.video-container');
 
     /**
      * Initialize a video recording session. Video is streamed live to the server,
@@ -428,28 +492,30 @@ jQuery(function ($) {
      * negotiation includes generation of a session ID that is attached to the
      * video.
      * @param {obect} card The card that the video will be attached to
+     * @return {object} Returns the recorder. The recorder object can be used to control the 
+     * recording (record, pause, end, etc). This essentially created a closure.
      */
     function initVideo (card) {
-        var vidElem = document.querySelector('#video-preview video'),
-        audioElem = document.querySelector('#video-preview audio'),
-        recorder = {
-            /**
-             * Ends the recording session before anything begins
-             */
-            end: function () {
-                // Trigger the onend callback
-                if(this.onend) {
-                    this.onend();
-                }
-                
-                vidElem.src = 'about:blank';
-                vidElem.pause();
-            },
+        var vidElem = document.querySelector('#video-preview video'),           // We use document.querySelector here because we are dealing with only standards-compliant browsers
+            audioElem = document.querySelector('#video-preview audio'),         // This is currently not used
+            recorder = {
+                /**
+                 * Ends the recording session before anything begins
+                 */
+                end: function () {
+                    // Trigger the onend callback
+                    if(this.onend) {
+                        this.onend();
+                    }
 
-            paused: false,
+                    vidElem.src = 'about:blank';
+                    vidElem.pause();
+                },
 
-            started: false
-        };
+                paused: false,
+
+                started: false
+            };
 
         // Get permission to record video and audio
         getUserMedia.call(navigator, {audio: true, video: true}, function (stream) {
@@ -479,7 +545,7 @@ jQuery(function ($) {
                     // Create a hidden canvas where we'll write our video data
                     canvas = $('<canvas>').css({display: 'none'}).appendTo('body'),
 
-                    // Start a worker instance
+                    // Start a worker process
                     // TODO: reuse workers
                     worker = new Worker('/js/streamWorker.js'),
 
@@ -509,7 +575,9 @@ jQuery(function ($) {
                     recorder.end();
                 });
 
-                // When everything is ready (video, worker, socket)
+                /**
+                 * Called when everything is ready (video, worker, socket)
+                 */
                 function streamReady () {
                     socket.emit('identify', sessionId);
 
@@ -625,6 +693,10 @@ jQuery(function ($) {
                     });
                 };
 
+                /**
+                 * Capture a single picture frame from the video
+                 * @returns {string} Returns a base64-encoded JPEG of the current frame
+                 */
                 function captureFrame () {
                     var w = width,
                         h = height;
@@ -634,9 +706,11 @@ jQuery(function ($) {
                 }
 
                 /**
-                 * Captures a single frame and buffers it
+                 * Captures a single frame and buffers it (stores it for sending).
+                 * Note that buffering is handled by the worker.
                  */
                 function captureAndBuffer () {
+                    // Calculate time elapsed since video recording started
                     if(!timer) {
                         timer = new Date();
                     } else {
@@ -648,20 +722,31 @@ jQuery(function ($) {
                     // Send frame to worker
                     worker.postMessage({type: 'captureFrame', frame: captureFrame()});
 
-                    // Throw event
+                    // Throw timer event
                     if(recorder.ontimer) {
                         recorder.ontimer(timeElapsed);
                     }
                 }
 
+                /**
+                 * Compile frames for sending to the server. Frames are compiled every x seconds
+                 * and some of the compiling functions (the heavy ones) are handled by the workers.
+                 */
                 function compileFrames () {
+                    // Get the WAV audio from the recorder
                     rec.exportWAV(function (blob) {
                         worker.postMessage({type: 'compileFrames', wav: blob});
                     });
 
+                    // Clear the audio buffer
                     rec.clear();
                 }
 
+                /**
+                 * Send the compiled frames to the server (the compiled frames is
+                 * a deflated binary string, so we have to encode it in base64)
+                 * @param {string} payload Binary string of the payload to send
+                 */
                 function sendFrames (payload) {
                     socket.emit('frame', {data: btoa(payload)});
                 }
@@ -672,7 +757,7 @@ jQuery(function ($) {
                 var rec = new Recorder(mediaStreamSource, recorderConfig);
 
                 // Event listeners
-                socket.on('connect', function () {
+                socket.on('connect', function () { // When we are connected to the server...
                     console.log('Connected to recording server... ready to stream data');
                     socketReady = true;
 
@@ -681,6 +766,7 @@ jQuery(function ($) {
                     }
                 });
 
+                // When the video is ready...
                 vid.on('loadedmetadata', function () {
                     console.log('Loaded video meta data... ready to record video');
                     metaLoaded = true;
@@ -690,11 +776,16 @@ jQuery(function ($) {
                     }
                 });
 
+                // When the worker sends us a message...
                 worker.onmessage = function (event) {
                     var data = event.data;
                     console.log('From worker', data);
 
+                    // There are different types of messages the worker may send
+                    // us. We use switch to find out which.
                     switch(data.type) {
+                        // Ready event signifies the worker is ready to start crunching numbers.
+                        // This event is usually a response to the 'ready' event we sent to the worker.
                         case 'ready':
                             console.log('Worker ready... ready to process output');
                             workerReady = true;
@@ -704,10 +795,12 @@ jQuery(function ($) {
                             }
                         break;
 
+                        // The worker wants to console.log something (workers do not have direct access to the console object)
                         case 'log':
                             console.log.apply(console, data.message);
                         break;
 
+                        // The worker sent us the result of number crunching, ready for the server.
                         case 'payload':
                             sendFrames(data.payload);
                         break;
@@ -719,9 +812,10 @@ jQuery(function ($) {
                     streamReady();
                 }
 
+                // Tell the worker we are ready
                 worker.postMessage({type: 'ready'});
             });
-        }, function (err) {
+        }, function (err) { // The user either clicked "Deny" on the permissions screen or something worse happened
             if(err) {
                 alert('You need to grant us permission to use your camera and microphone');
                 console.error('Something bad happened!');
@@ -731,9 +825,14 @@ jQuery(function ($) {
 
         return recorder;
     }
-
-
-
+    
+    /**
+     * Creates a recording session. This tells the server that we want to record something.
+     * The server checks if we have the permission to record something, and tells us using the callback.
+     * @param {function} callback The callback receives an error object (null if no error occured) and the
+     * result of the operation. An error means something bad happens, and an id means we are allowed to record.
+     * This id must be used to authenticate against the recording server (also sent in the payload).
+     */
     function createRecordingSession (callback) {
         $.ajax({
             type: 'get',
@@ -815,7 +914,7 @@ jQuery(function ($) {
      * http://stackoverflow.com/questions/10313992/upload-html5-canvas-as-a-blob
      * @param {HTMLCanvasElement} canvas
      */
-   function getAsJPEGBlob(canvas) {
+    function getAsJPEGBlob(canvas) {
         /*if(canvas.mozGetAsFile) {
             return canvas.mozGetAsFile("foo.jpg", "image/jpeg");
         } else {*/
@@ -825,10 +924,20 @@ jQuery(function ($) {
         //}
     }
 
+    /**
+     * Checks the byte value of the specified character
+     * @param {string} x The character to check
+     * @return {number} Returns the byte value
+     */
     function byteValue(x) {
         return x.charCodeAt(0) & 0xff;
     }
 
+    /**
+     * Converts a byte string to a binary buffer
+     * @param {type} byteString
+     * @return {ArrayBuffer} Returns an ArrayBuffer representing the input in binary
+     */
     function toBlob (byteString) {
         var ords = Array.prototype.map.call(byteString, byteValue);
         var ui8a = new Uint8Array(ords);
@@ -836,7 +945,7 @@ jQuery(function ($) {
     }
 
     /*
-     * Process signature button even
+     * Process signature button event
      */
 	$('#personal-autographs-bottom .note').click(function (e) {
 		e.preventDefault();
@@ -848,6 +957,7 @@ jQuery(function ($) {
 
 			var count = 0;
 
+            // Update the signature property of the card on the server
 			function update() {
 				// ...and update server
 				count++;
@@ -868,7 +978,7 @@ jQuery(function ($) {
 					dataType: 'json',
 					contentType: "application/json",
 					data: JSON.stringify(signature),
-					error: function () {update.defer(5000);} // Retry until it succeeds
+					error: function () {update.defer(5000);} // Retry until it succeeds or times out
 				});
 			}
 
@@ -948,16 +1058,21 @@ jQuery(function ($) {
 
     videoContainer.find('.play-pause').on('click', doPlayPause);
 
+    /**
+     * Update a card with the video
+     * @param {object} card The card to update
+     */
     function updateVideo (card) {
-        // Attach the signature to the card...
+        // Attach the video to the card...
         var videoId = card.video;
 
-        if(!videoId) {
+        if(!videoId) { // No video
             return false;
         }
 
         var count = 0;
 
+        // Do AJAX
         function update() {
             count++;
 
@@ -977,7 +1092,7 @@ jQuery(function ($) {
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify({video: videoId}),
-                error: function () {update.defer(5000);} // Retry until it succeeds or ultimately fails
+                error: function () {update.defer(5000);} // Retry until it succeeds or times out
             });
         }
 
@@ -999,6 +1114,7 @@ jQuery(function ($) {
         }
     }
 
+    // When the card is accepted
 	$('#personal-autograph-preview .rightbox .accept').click(function (e) {
 		e.preventDefault();
 
@@ -1011,6 +1127,7 @@ jQuery(function ($) {
         fromContainer = $('.datepicker [name="validity.from"]'),
         toContainer = $('.datepicker [name="validity.to"]');
 
+    // From date...
     fromContainer.datepicker({
         defaultDate: "+0d",
         changeMonth: true,
@@ -1020,6 +1137,7 @@ jQuery(function ($) {
         }
     });
 
+    // To date...
     toContainer.datepicker({
         defaultDate: "+1m",
         changeMonth: true,

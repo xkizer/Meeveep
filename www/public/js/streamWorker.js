@@ -1,7 +1,4 @@
-/**
- * Setup
- */
-var window = self;
+var window = self; // For compatibility with the deflate functions
 
 (function () {
     /**
@@ -13,10 +10,19 @@ var window = self;
         return window.RawDeflate.deflate(data);
     }
     
+    /**
+     * Save a frame to the buffer
+     * @param {string} frame The frame to save
+     * @returns {undefined}
+     */
     function captureFrame (frame) {
         framesBuffer.push(frame);
     }
     
+    /**
+     * Compile the frames and ready them for sending
+     * @param {ArrayBuffer|string} audio The WAV audio (as blob or as data URL)
+     */
     function compileFrames (audio) {
         var frames = [];
 
@@ -52,12 +58,8 @@ var window = self;
         oFileReader.readAsDataURL(blob);
     }
     
-    function compressFrames () {
-        
-    }
-    
-    var framesBuffer = [],
-        frame = 0;
+    var framesBuffer = [],  // Stores the frames
+        frame = 0;          // The number of the current frame
     
     // Define a way to send messages to the console
     var console = {
@@ -88,17 +90,6 @@ var window = self;
     // Ready now
     self.postMessage({type: 'ready'});
 })();
-
-
-
-
-
-
-
-
-
-
-
 
 
 
