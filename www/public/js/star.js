@@ -10,10 +10,10 @@ jQuery(function ($) {
         CARD_VIDEO_SAVE_URI = '/card/{0}/update/video',
 
         // Settings for the video recording
-        VIDEO_FREQUENCY = 25,                   // fps
+        VIDEO_FREQUENCY = 24,                   // fps
         VIDEO_PERIOD = 1000/VIDEO_FREQUENCY,    // period of frames (T = 1/f)
         COMPILE_INTERVAL = 3000,                // Period of each batch sent to server (Send frames to server every x milliseconds)
-        VIDEO_QUALITY = 360,                    // The video quality for normal videos (360p)
+        VIDEO_QUALITY = 320,                    // The video quality for normal videos (360p)
 
         // Allowed pen colors (names matched to css values)
         penColors = {
@@ -113,7 +113,30 @@ jQuery(function ($) {
 				break;
 			}
 		}
-
+        
+        // Check if any display element should be shown
+        var current = getCurrentCard();
+        
+        if(current === card) {
+            // We are dealing with the current card...
+            if(!recording) {
+                // Check if it has a video attached
+                if(card.videoURL) {
+                    vidElem.src = card.videoURL + '?type=ogv';
+                    vidElem.poster = card.videoPoster;
+                    videoContainer.attr('data-mode', 'playback').addClass('ready');
+                    //vidElem.play();
+                } else {
+                    vidElem.pause();
+                    vidElem.src = 'about:blank';
+                    videoContainer.removeClass('ready');
+                    videoContainer.removeClass('playing');
+                    videoContainer.removeAttr('data-mode');
+                }
+            }
+        } else {
+        }
+        
 		card.valid = valid;
 		return valid;
 	}
@@ -483,7 +506,17 @@ jQuery(function ($) {
         },
 
         // Video container (the element holding the video element)
-        videoContainer = $('.video-container');
+        videoContainer = $('.video-container'),
+        
+        // We use document.querySelector here because we are dealing with only standards-compliant browsers
+        vidElem = document.querySelector('#video-preview video'),
+        
+        // The audio element. This is currently not used
+        audioElem = document.querySelector('#video-preview audio'),
+        
+        // The element that displays playback time
+        timeElem = videoContainer.find('.time');
+
 
     /**
      * Initialize a video recording session. Video is streamed live to the server,
@@ -496,9 +529,7 @@ jQuery(function ($) {
      * recording (record, pause, end, etc). This essentially created a closure.
      */
     function initVideo (card) {
-        var vidElem = document.querySelector('#video-preview video'),           // We use document.querySelector here because we are dealing with only standards-compliant browsers
-            audioElem = document.querySelector('#video-preview audio'),         // This is currently not used
-            recorder = {
+            var recorder = {
                 /**
                  * Ends the recording session before anything begins
                  */
@@ -508,8 +539,8 @@ jQuery(function ($) {
                         this.onend();
                     }
 
-                    vidElem.src = 'about:blank';
                     vidElem.pause();
+                    vidElem.src = 'about:blank';
                 },
 
                 paused: false,
@@ -538,7 +569,6 @@ jQuery(function ($) {
                 ///audioElem.src = window.URL.createObjectURL(stream);
                 vidElem.play();
 
-                console.log(server);
                 var socket = io.connect(server, {'force new connection': true}),
                     vid = $(vidElem),
 
@@ -574,6 +604,9 @@ jQuery(function ($) {
                     alert('Cannot record because of server error');
                     recorder.end();
                 });
+                
+                // Set the mode for recording
+                videoContainer.attr('data-mode', 'record');
 
                 /**
                  * Called when everything is ready (video, worker, socket)
@@ -583,22 +616,22 @@ jQuery(function ($) {
 
                     // Wait for "ready"
                     socket.on('ready', function () {
-                        // Calculate scaleFactor
-                        var p = VIDEO_QUALITY; // We intend recording at 360p
-                        scaleFactor = p / vid.height();
-                        console.log('Video quality: ' + p);
-                        console.log('Scale factor: ' + scaleFactor);
-
-                        width = vid.width() * scaleFactor,
-                        height = vid.height() * scaleFactor;
-
-                        canvas.attr({width: width, height: height});
-
                         console.log('Everything ready... waiting for user');
 
                         // Controls
                         // Start the recorder
                         recorder.record = function () {
+                            // Calculate scaleFactor
+                            var p = VIDEO_QUALITY; // We intend recording at 320p
+                            scaleFactor = p / vid.height();
+                            console.log('Video quality: ' + p);
+                            console.log('Scale factor: ' + scaleFactor);
+
+                            width = vid.width() * scaleFactor,
+                            height = vid.height() * scaleFactor;
+
+                            canvas.attr({width: width, height: height});
+
                             if(!recorder.paused) { // Means this is most probably an initial start
                                 socket.emit('start-stream', {stream: sessionId, rate: VIDEO_FREQUENCY});
                             }
@@ -616,7 +649,7 @@ jQuery(function ($) {
                         };
 
                         // Pause recording
-                        recorder.pause = function () {
+                        recorder.pause = function (feedbackId) {
                             // Stop the cycle
                             window.clearInterval(captureInterval);
                             window.clearInterval(compileInterval);
@@ -624,7 +657,7 @@ jQuery(function ($) {
 
                             // Send the current buffer
                             captureAndBuffer();
-                            compileFrames();
+                            compileFrames(feedbackId);
 
                             // Set to paused
                             recorder.paused = true;
@@ -638,16 +671,24 @@ jQuery(function ($) {
                         recorder.end = function () {
                             // Has anything been recorded?
                             if(recorder.started) {
+                                var feedbackId = Math.random();
+                                
+                                socket.on('feedback', function (fdId) {
+                                    if(fdId === feedbackId) {
+                                        // Matches
+                                        console.log('Ending now...');
+                                        // Send "end" signal
+                                        socket.emit('end');
+                                    }
+                                });
+                            
                                 // Follow the pause procedure
-                                this.pause();
+                                this.pause(feedbackId);
 
                                 // Attach video to card
                                 card.video = sessionId;
                             }
 
-                            // Send "end" signal
-                            socket.emit('end');
-                            
                             // Stop video
                             vidElem.pause();
                             vidElem.src = 'about:blank';
@@ -656,7 +697,16 @@ jQuery(function ($) {
                             canvas.remove();
 
                             // End connection
-                            socket.disconnect();
+                            //socket.disconnect(); // We do not end the connection because the server will use this connection to tell us when the video is ready
+                            socket.on('video-ready', function (videoData) { // Video processing is complete
+                                // We can now disconnect the socket
+                                socket.disconnect();
+                                
+                                // Append the video data to the card, and refresh card
+                                card.videoURL = videoData.videoURL;
+                                card.videoPoster = videoData.posterURL;
+                                checkCard(card);
+                            });
 
                             // Stop the cycle
                             window.clearInterval(captureInterval);
@@ -732,10 +782,10 @@ jQuery(function ($) {
                  * Compile frames for sending to the server. Frames are compiled every x seconds
                  * and some of the compiling functions (the heavy ones) are handled by the workers.
                  */
-                function compileFrames () {
+                function compileFrames (feedbackId) {
                     // Get the WAV audio from the recorder
                     rec.exportWAV(function (blob) {
-                        worker.postMessage({type: 'compileFrames', wav: blob});
+                        worker.postMessage({type: 'compileFrames', wav: blob, feedbackId: feedbackId});
                     });
 
                     // Clear the audio buffer
@@ -747,8 +797,14 @@ jQuery(function ($) {
                  * a deflated binary string, so we have to encode it in base64)
                  * @param {string} payload Binary string of the payload to send
                  */
-                function sendFrames (payload) {
-                    socket.emit('frame', {data: btoa(payload)});
+                function sendFrames (payload, feedbackId) {
+                    var data = {data: btoa(payload)};
+                    
+                    if(feedbackId) {
+                        data.feedbackId = feedbackId;
+                    }
+                    
+                    socket.emit('frame', data);
                 }
 
                 // Audio...
@@ -779,7 +835,7 @@ jQuery(function ($) {
                 // When the worker sends us a message...
                 worker.onmessage = function (event) {
                     var data = event.data;
-                    console.log('From worker', data);
+                    //console.log('From worker', data);
 
                     // There are different types of messages the worker may send
                     // us. We use switch to find out which.
@@ -802,7 +858,7 @@ jQuery(function ($) {
 
                         // The worker sent us the result of number crunching, ready for the server.
                         case 'payload':
-                            sendFrames(data.payload);
+                            sendFrames(data.payload, data.feedbackId);
                         break;
                     }
                 };
@@ -954,7 +1010,7 @@ jQuery(function ($) {
 		initSignature(card, function (signature) {
 			// Attach the signature to the card...
 			card.signature = signature;
-
+            
 			var count = 0;
 
             // Update the signature property of the card on the server
@@ -971,6 +1027,7 @@ jQuery(function ($) {
 				if(count > 4) {
 					return;
 				}
+            console.log(card);
 
 				$.ajax({
 					url: CARD_SIGNATURE_SAVE_URI.format(card.orderId),
@@ -997,9 +1054,7 @@ jQuery(function ($) {
         // Check if there is a recording session
         if(recording) {
             // Something is recording... stop it
-            console.log('Recording session complete');
-            recording.end();
-
+            console.log('Recording already in progress');
             return false;
         }
 
@@ -1041,8 +1096,6 @@ jQuery(function ($) {
             videoContainer.addClass('recording');
         };
 
-        var timeElem = videoContainer.find('.time');
-
         recording.ontimer = function (time) {
             time = Math.floor(time/1000);
 
@@ -1056,7 +1109,14 @@ jQuery(function ($) {
         return false;
     });
 
-    videoContainer.find('.play-pause').on('click', doPlayPause);
+    videoContainer.find('.play-pause').on('click', doPlayPause); // Play/pause button
+    videoContainer.find('.stop').on('click', function () { // Stop button
+        if(recording) { // Already recording something?
+            recording.end();
+        }
+        
+        return false; // no-op
+    });
 
     /**
      * Update a card with the video
@@ -1105,13 +1165,56 @@ jQuery(function ($) {
      */
     function doPlayPause (e) {
         e.preventDefault();
+        
+        // Check mode
+        var mode = videoContainer.attr('data-mode');
 
+        if(mode === 'playback') {
+            // Playback mode
+            if(vidElem.paused) {
+                initPlay();
+            } else {
+                videoContainer.removeClass('playing');
+                vidElem.pause();
+            }
+            
+            return;
+        }
+        
         if(!recording.started || recording.paused) {
             // Paused, resume play
             recording.record();
         } else {
             recording.pause();
         }
+    }
+    
+    function initPlay() {
+        vidElem.play();
+        videoContainer.addClass('playing');
+        
+        vidElem.onended = function () {
+            endPlay();
+        };
+        
+        vidElem.ontimeupdate = function () {
+            var secs = vidElem.currentTime % 60,
+                mins = Math.floor(vidElem.currentTime / 60),
+                totSec = vidElem.duration % 60,
+                totMin = Math.floor(vidElem.duration / 60);
+
+            timeElem.text('%02d:%02d/%02d:%02d'.printf(mins, secs, totMin, totSec));
+        };
+    }
+    
+    function endPlay() {
+        var totSec = vidElem.duration % 60,
+            totMin = Math.floor(vidElem.duration / 60);
+
+        vidElem.currentTime = 0;
+        timeElem.text('00:00/%02d:%02d'.printf(totMin, totSec));
+        vidElem.ontimeupdate = vidElem.onend = vidElem.onpause = null;
+        videoContainer.removeClass('playing');
     }
 
     // When the card is accepted
@@ -1121,6 +1224,9 @@ jQuery(function ($) {
 		// Submit card
 		doneSigning();
 	});
+    
+    // Check the cards
+    checkCard(getCurrentCard());
 
     // Elsewhere... we deal with date picker
     var date = new Date(),

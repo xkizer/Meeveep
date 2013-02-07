@@ -55,6 +55,8 @@ module.exports = {
                         txtAddSignature: 'txtAddSignature',
                         txtAddSignatureDescr: 'txtAddSignatureDescr',
                         txtRecording: 'txtRecording',
+                        txt_play_pause_descr: 'txtRecPlayPauseDescr',
+                        txt_stop_descr: 'txtRecStopDescr',
                         serializeIncludes: function () {
                             return JSON.stringify(this.card.includes);
                         },

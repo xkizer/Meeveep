@@ -31,7 +31,7 @@
                     <p>{{txtAddSignatureDescr}}</p>
                 </div>
             </a>
-            <a href="#" class="video active">
+            <a href="#" class="video">
                 <div>
                     <h3>{{txtRecordVideo}}</h3>
                     <p>{{txtRecordVideoDescr}}</p>
@@ -50,7 +50,7 @@
 <script>
     window.cardInfo = [
 {{#cards}}
-        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.large}}', penColor: '{{pen-color}}', includes: {{{serializeIncludes}}} {{#signature}}, signature: {{{signature}}}{{/signature}} {{#video}}, video: '{{video}}'{{/video}} {{#audio}}, audio: '{{audio}}'{{/audio}}},
+        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.large}}', penColor: '{{pen-color}}', includes: {{{serializeIncludes}}} {{#signature}}, signature: {{{signature}}}{{/signature}}{{#video}}, video: '{{video}}'{{/video}}{{#audio}}, audio: '{{audio}}'{{/audio}}{{#videoURL}}, videoURL: '{{videoURL}}'{{/videoURL}}{{#videoPoster}}, videoPoster: '{{videoPoster}}'{{/videoPoster}} },
 {{/cards}}
     ];
 </script>

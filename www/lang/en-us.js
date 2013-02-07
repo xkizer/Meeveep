@@ -78,14 +78,15 @@ var lang = {
     txtRecordVideo: 'Record Video',
     txtRecordAudio: 'Record Audio',
     txtAddSignature: 'Add Signature',
-    txtRecordVideoDescr: 'Click here to record the running video broadcast. Click again to stop recording.',
-    txtRecordAudioDescr: 'Click here to record the running audio broadcast. Click again to stop recording.',
+    txtRecordVideoDescr: 'Click here to record the running video broadcast. This will over-write any already-existing recording, if any.',
+    txtRecordAudioDescr: 'Click here to record the running audio broadcast. This will over-write any already-existing recording, if any.',
     txtAddSignatureDescr: 'Click here to add a signature.',
     txtGenerateComm: 'Generate new commercial autograph',
     txtSelectCelebName: 'Select celebrity name',
     txtSelectLang: 'Select language',
     txtRecording: 'Recording',
-    
+    txtRecPlayPauseDescr: 'Start recording or pause the recording',
+    txtRecStopDescr: 'End this recording session and save the video'
 };
 
 module.exports = lang;

@@ -11,6 +11,18 @@ var joiner = require('./includes/join');
 require('./util/extend');
 
 const SERVER_ID = 'V42KBoJY0sJnfYzHn8VJulOmEjVoX6ptpYTLNGOPArkfKPHC';
+const SERVER_ADDR = 'meeveep.dev';
+const SERVER_PORT = 9304; // Port for the recording server
+const HTTP_PORT = 9305; // Port for HTTP (used for streaming videos)
+const RECORDING_DIR = '/data/recordings/'; // The directory we are to store recordings (could be /dev/sdh/ or anything)
+
+global.SERVER = {
+    ID: SERVER_ID,
+    ADDR: SERVER_ADDR,
+    PORT: SERVER_PORT,
+    HTTP_PORT: HTTP_PORT,
+    DIR: RECORDING_DIR
+};
 
 var connections = 0;
 
@@ -82,7 +94,7 @@ io.sockets.on('connection', function (socket) {
 
                 // Create a directory for the stream
                 // TODO: This should be done at authentication step
-                var dirname = '/tmp/stream-' + util.generateKey(34) + '/';
+                var dirname = RECORDING_DIR + 'stream-' + util.generateKey(34) + '/';
                 socket.dirname = dirname;
 
                 // Create the working directory
@@ -114,6 +126,13 @@ io.sockets.on('connection', function (socket) {
 
                     // Start listening to message events
                     socket.on('frame', function (message) {
+                        var feedbackId = message.feedbackId;
+                        
+                        if(feedbackId) {
+                            // Feedback required (Feedback does not mean that the operation succeeded, but just an acknowledgement that data has reached here
+                            socket.emit('feedback', feedbackId);
+                        }
+                        
                         if(!socket.streaming) {
                             console.log(cli.red('frame rejected'), 'server not streaming...');
                             socket.emit('error', {code: 0xA24B, message: 'Not streaming'});
@@ -268,12 +287,18 @@ io.sockets.on('connection', function (socket) {
                                         res.on('end', function () {
                                             console.log(cli.green('Server notified'));
                                             console.log(data);
+                                            
+                                            // Notify the client if it's still connected
+                                            socket.emit('video-ready', {videoURL: 'http://%s:%d/watch/%s'.printf(SERVER_ADDR, HTTP_PORT, identity),
+                                                posterURL: 'http://%s:%d/poster/%s'.printf(SERVER_ADDR, HTTP_PORT, identity)});
                                         });
                                     });
                                     
                                     req.write(JSON.stringify({
                                         server: SERVER_ID,
-                                        sessionId: identity
+                                        sessionId: identity,
+                                        playback: 'http://%s:%d/watch/%s'.printf(SERVER_ADDR, HTTP_PORT, identity),
+                                        poster: 'http://%s:%d/poster/%s'.printf(SERVER_ADDR, HTTP_PORT, identity)
                                     }));
                                     
                                     req.end();
@@ -299,4 +324,6 @@ io.sockets.on('connection', function (socket) {
 });
 
 console.log('Socket IO running on port %d', port);
+
+require('./http.js');
 

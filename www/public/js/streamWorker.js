@@ -23,7 +23,7 @@ var window = self; // For compatibility with the deflate functions
      * Compile the frames and ready them for sending
      * @param {ArrayBuffer|string} audio The WAV audio (as blob or as data URL)
      */
-    function compileFrames (audio) {
+    function compileFrames (audio, feedbackId) {
         var frames = [];
 
         framesBuffer.forEach(function (image) {
@@ -52,7 +52,7 @@ var window = self; // For compatibility with the deflate functions
             var data = deflate(JSON.stringify(obj));
             
             // Send
-            self.postMessage({type: 'payload', payload: data});
+            self.postMessage({type: 'payload', payload: data, feedbackId: feedbackId});
         };
 
         oFileReader.readAsDataURL(blob);
@@ -82,7 +82,7 @@ var window = self; // For compatibility with the deflate functions
             break;
             
             case 'compileFrames':
-                compileFrames(data.wav);
+                compileFrames(data.wav, data.feedbackId);
             break;
         }
     };

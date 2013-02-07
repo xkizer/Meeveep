@@ -193,6 +193,7 @@ module.exports = {
                 '-r', rate,
                 '-qscale', '1',
                 '-i', path + '%d.jpg',
+                '-pix_fmt', 'yuv420p',
                 path + 'video.mp4'
             ];
             
@@ -203,6 +204,33 @@ module.exports = {
                 // We assume it completed
                 callback(null);
             });
+        });
+    },
+    
+    /**
+     * Convert the MP4 file to OGG
+     * @param {string} path The working directory
+     * @param {function} callback Callback receives an error object if error occurs
+     */
+    MP42OGG: function (path, callback) {
+        // Normalize path
+        if(!path.match(/\/$/)) {
+            path += '/';
+        }
+        
+        // Do the conversion right away
+        var options = [
+            '-i', path + 'audio-video.mp4',
+            '-pix_fmt', 'yuv420p',
+            path + 'audio-video.ogv'
+        ];
+        
+        var avconv = cp.spawn('avconv', options);
+        avconv.stdout.pipe(process.stdout);
+        avconv.stderr.pipe(process.stderr);
+        avconv.on('exit', function () {
+            // We assume it completed
+            callback(null);
         });
     },
     
@@ -296,21 +324,33 @@ module.exports = {
                     
                     fs.writeFile(dir + 'audio-video.mp4', buffer, function (err) {
                         if(err) {
+                            console.log(cli.red('Error:'), err);
                             return callback(err);
                         }
 
-                        callback();
+                        console.log(cli.red('Converting to OGG'), cli.cyan('Converting to OGG'));
+                        
+                        // Convert to OGG
+                        module.exports.MP42OGG.defer(1000, null, dir, function (err) {
+                            callback(); // Ignore error
+                        });
                     });
                 });
             }
             
             module.exports.combine(dir, function (err) {
                 if(err) {
+                    console.log(cli.red('Error:'), err);
                     callback(err);
                 } else {
-                    console.log(cli.green('Video processing complete'));
-                    console.log(cli.green('Video encoding complete for directory'), cli.yellow(dir));
-                    callback();
+                    console.log(cli.green('MP4 encoding complete'));
+                    console.log(cli.cyan('Converting to OGG'));
+
+                    // Convert to OGG
+                    module.exports.MP42OGG.defer(1000, null, dir, function (err) {
+                        console.log(cli.green('Video encoding complete for directory'), cli.yellow(dir));
+                        callback(); // Ignore error
+                    });
                 }
             });
         }  

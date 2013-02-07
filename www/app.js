@@ -86,11 +86,6 @@ app.post('/upload', function (req) {
 
 
 
-app.get('/test/video/:dirname', function (req, res) {
-    var file = '/tmp/stream-' + req.params.dirname + '/audio-video.mp4';
-    
-    res.sendfile(file);
-});
 
 
 

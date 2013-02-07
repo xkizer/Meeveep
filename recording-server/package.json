@@ -10,7 +10,6 @@
     "mongodb": "*",
     "cli-color": "*",
     "socket.io": "*",
-    "gm": "*",
-    "fluent-ffmpeg": "*"
+    "express": "*"
   }
 }

@@ -88,7 +88,7 @@ function getSession (sessionId, callback) {
 }
 
 function notifyComplete (data, callback) {
-    console.log(cli.yellow('Notify Complete'));
+    console.log(cli.yellow('Notify Complete'), data);
     db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection) {
         var sessionId = data.sessionId;
         
@@ -98,7 +98,7 @@ function notifyComplete (data, callback) {
                 return callback(err);
             }
             
-            collection.update({orderId: card.orderId}, {$set: {videoServer: data.server}}, function (err) {
+            collection.update({orderId: card.orderId}, {$set: {videoServer: data.server, videoURL: data.playback, videoPoster: data.poster}}, function (err) {
                 if(err) {
                     return callback(err);
                 }
