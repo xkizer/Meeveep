@@ -193,15 +193,12 @@ jQuery(function ($) {
 		// If the card has a valid mouse stroke saved, we will redraw the mouse strokes (this means the card had been previously signed)
 		if(card.signature) {
 			mouseStrokes = JSON.parse(JSON.stringify(card.signature.strokes));
-			mouseStrokes.dimensions = card.signature.dimensions;
-
-			// Redraw
-			redraw();
-		}
-        
-		// Save dimension information to the mouse strokes (this helps in future replay, in case window and overlay size has changed by then)
-		mouseStrokes.dimensions = [canvas.width(), canvas.height()];
-
+			mouseStrokes.dimensions = card.signature.referenceFrame;
+		} else {
+            // Save dimension information to the mouse strokes (this helps in future replay, in case window and overlay size has changed by then)
+            mouseStrokes.dimensions = [canvas.width(), canvas.height()];
+        }
+    
 		// Header
 		header.find('.name').text(card.name);
 
@@ -1006,6 +1003,8 @@ jQuery(function ($) {
 	$('#personal-autographs-bottom .note').click(function (e) {
 		e.preventDefault();
 		var card = getCurrentCard();
+        
+        console.log(card.signature.strokes);
 
 		initSignature(card, function (signature) {
 			// Attach the signature to the card...
@@ -1027,7 +1026,6 @@ jQuery(function ($) {
 				if(count > 4) {
 					return;
 				}
-            console.log(card);
 
 				$.ajax({
 					url: CARD_SIGNATURE_SAVE_URI.format(card.orderId),
