@@ -48,6 +48,10 @@ var window = self; // For compatibility with the deflate functions
 
             obj = {images: frames, audio: audio};
             
+            if(!frames) {
+                delete obj.images;
+            }
+            
             // Compress
             var data = deflate(JSON.stringify(obj));
             

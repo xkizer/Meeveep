@@ -196,6 +196,7 @@ io.sockets.on('connection', function (socket) {
                         }
 
                         socket.streaming = params.stream;
+                        socket.meta = params;
 
                         // Serialize the streaming params and save to the directory
                         fs.writeFile(dirname + 'meta.json', JSON.stringify(params), 'utf8', function (err) {
@@ -211,8 +212,13 @@ io.sockets.on('connection', function (socket) {
                         socket.ended = true;
                         socket.streaming = false;
                         
+                        // Check which function to invoke
+                        var doJoin = socket.meta.media.indexOf('video') >= 0 ? joiner.express : joiner.joinWAV,
+                            medium = socket.meta.media.indexOf('video') >= 0 ? 'video' : 'audio';
+                        
+                        
                         // Build the video
-                        joiner.express(dirname, function (err) {
+                        doJoin(dirname, function (err) {
                             if(err) {
                                 // Something bad happened... we log it but preserve the directory
                                 // We will have to try again some other time, or maybe manually
@@ -228,7 +234,7 @@ io.sockets.on('connection', function (socket) {
                                         return;
                                     }
                                     
-                                    client.hmset('video:build:err:' + identity, {
+                                    client.hmset('{0}:build:err:{1}'.format(medium, identity), {
                                         path: dirname,
                                         identity: identity
                                     }, function (err) {
@@ -248,7 +254,7 @@ io.sockets.on('connection', function (socket) {
                             
                             // Complete... save information about the video and send to the main server
                             db.redisConnect(function (err, client) {
-                                client.hmset('video:build:complete:' + identity, {
+                                client.hmset('{0}:build:complete:{1}'.format(medium, identity), {
                                     path: dirname,
                                     identity: identity
                                 }, function (err) {
@@ -294,12 +300,20 @@ io.sockets.on('connection', function (socket) {
                                         });
                                     });
                                     
-                                    req.write(JSON.stringify({
+                                    var payload = {
                                         server: SERVER_ID,
                                         sessionId: identity,
-                                        playback: 'http://%s:%d/watch/%s'.printf(SERVER_ADDR, HTTP_PORT, identity),
-                                        poster: 'http://%s:%d/poster/%s'.printf(SERVER_ADDR, HTTP_PORT, identity)
-                                    }));
+                                        type: medium
+                                    };
+                                    
+                                    if(medium === 'video') {
+                                        payload.playback = 'http://%s:%d/watch/%s'.printf(SERVER_ADDR, HTTP_PORT, identity);
+                                        payload.poster = 'http://%s:%d/poster/%s'.printf(SERVER_ADDR, HTTP_PORT, identity);
+                                    } else {
+                                        payload.playback = 'http://%s:%d/listen/%s'.printf(SERVER_ADDR, HTTP_PORT, identity);
+                                    }
+                                    
+                                    req.write(JSON.stringify(payload));
                                     
                                     req.end();
                                 });

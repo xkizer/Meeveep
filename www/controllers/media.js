@@ -90,15 +90,34 @@ function getSession (sessionId, callback) {
 function notifyComplete (data, callback) {
     console.log(cli.yellow('Notify Complete'), data);
     db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection) {
-        var sessionId = data.sessionId;
+        var sessionId = data.sessionId,
+            medium = data.type,
+            qry = {};
+        
+        qry[medium] = sessionId;
         
         // Find the particular order that has the video
-        collection.findOne({video: sessionId}, function (err, card) {
+        // Note the video: sessionId below? By now the user's browser SHOULD have
+        // sent in an update request. If not, this will ultimately fail.
+        collection.findOne(qry, function (err, card) {
             if(err) {
                 return callback(err);
             }
             
-            collection.update({orderId: card.orderId}, {$set: {videoServer: data.server, videoURL: data.playback, videoPoster: data.poster}}, function (err) {
+            if(!card) {
+                return callback({msg: 'Browser did not respond'});
+            }
+            
+            var update = {};
+            
+            update[medium + 'Server'] = data.server;
+            update[medium + 'URL'] = data.playback;
+            
+            if('video' === medium) {
+                update.videoPoster = data.poster;
+            }
+            
+            collection.update({orderId: card.orderId}, {$set: update}, function (err) {
                 if(err) {
                     return callback(err);
                 }

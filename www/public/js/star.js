@@ -8,6 +8,7 @@ jQuery(function ($) {
 		CARD_ACCEPT_URI = '/card/{0}/accept',
         CREATE_RECORDING_SESSION_URI = '/media/createSession',
         CARD_VIDEO_SAVE_URI = '/card/{0}/update/video',
+        CARD_AUDIO_SAVE_URI = '/card/{0}/update/audio',
 
         // Settings for the video recording
         VIDEO_FREQUENCY = 24,                   // fps
@@ -508,9 +509,6 @@ jQuery(function ($) {
         // We use document.querySelector here because we are dealing with only standards-compliant browsers
         vidElem = document.querySelector('#video-preview video'),
         
-        // The audio element. This is currently not used
-        audioElem = document.querySelector('#video-preview audio'),
-        
         // The element that displays playback time
         timeElem = videoContainer.find('.time');
 
@@ -522,10 +520,13 @@ jQuery(function ($) {
      * negotiation includes generation of a session ID that is attached to the
      * video.
      * @param {obect} card The card that the video will be attached to
+     * @param {boolean} justAudio Setting this to true will force the use of only audio recording
      * @return {object} Returns the recorder. The recorder object can be used to control the 
      * recording (record, pause, end, etc). This essentially created a closure.
      */
-    function initVideo (card) {
+    function initVideo (card, justAudio) {
+            var withVideo = !justAudio;
+            
             var recorder = {
                 /**
                  * Ends the recording session before anything begins
@@ -536,8 +537,10 @@ jQuery(function ($) {
                         this.onend();
                     }
 
-                    vidElem.pause();
-                    vidElem.src = 'about:blank';
+                    if(withVideo) {
+                        vidElem.pause();
+                        vidElem.src = 'about:blank';
+                    }
                 },
 
                 paused: false,
@@ -546,7 +549,7 @@ jQuery(function ($) {
             };
 
         // Get permission to record video and audio
-        getUserMedia.call(navigator, {audio: true, video: true}, function (stream) {
+        getUserMedia.call(navigator, {audio: true, video: withVideo}, function (stream) {
             // Create the recording session
             createRecordingSession (function (err, session) {
                 if(err) {
@@ -562,15 +565,16 @@ jQuery(function ($) {
                     scaleFactor,
                     timer, timeElapsed = 0;
 
-                vidElem.src = url;
-                ///audioElem.src = window.URL.createObjectURL(stream);
-                vidElem.play();
+                if(withVideo) {
+                    vidElem.src = url;
+                    vidElem.play();
+                }
 
                 var socket = io.connect(server, {'force new connection': true}),
                     vid = $(vidElem),
 
                     // Create a hidden canvas where we'll write our video data
-                    canvas = $('<canvas>').css({display: 'none'}).appendTo('body'),
+                    canvas = withVideo && $('<canvas>').css({display: 'none'}).appendTo('body'),
 
                     // Start a worker process
                     // TODO: reuse workers
@@ -582,7 +586,7 @@ jQuery(function ($) {
                     workerReady = false,
 
                     // etc
-                    ctx = canvas[0].getContext('2d'),
+                    ctx = canvas && canvas[0].getContext('2d'),
                     width, height, captureInterval, compileInterval;
 
                 // When an error occurs...
@@ -618,25 +622,39 @@ jQuery(function ($) {
                         // Controls
                         // Start the recorder
                         recorder.record = function () {
-                            // Calculate scaleFactor
-                            var p = VIDEO_QUALITY; // We intend recording at 320p
-                            scaleFactor = p / vid.height();
-                            console.log('Video quality: ' + p);
-                            console.log('Scale factor: ' + scaleFactor);
+                            if(withVideo) {
+                                // Calculate scaleFactor
+                                var p = VIDEO_QUALITY; // We intend recording at 320p
+                                scaleFactor = p / vid.height();
+                                console.log('Video quality: ' + p);
+                                console.log('Scale factor: ' + scaleFactor);
 
-                            width = vid.width() * scaleFactor,
-                            height = vid.height() * scaleFactor;
+                                width = vid.width() * scaleFactor,
+                                height = vid.height() * scaleFactor;
 
-                            canvas.attr({width: width, height: height});
+                                canvas.attr({width: width, height: height});
+                            }
 
                             if(!recorder.paused) { // Means this is most probably an initial start
-                                socket.emit('start-stream', {stream: sessionId, rate: VIDEO_FREQUENCY});
+                                var meta = {stream: sessionId};
+                                
+                                if(withVideo) {
+                                    meta.rate = VIDEO_FREQUENCY;
+                                    meta.media = ['audio', 'video'];
+                                } else {
+                                    meta.media = ['audio'];
+                                }
+                                
+                                socket.emit('start-stream', meta);
                             }
 
                             recorder.started = true;
 
-                            captureInterval = window.setInterval(captureAndBuffer, VIDEO_PERIOD); // Save a frame every 40ms
-                            compileInterval = window.setInterval(compileFrames, COMPILE_INTERVAL); // Upload frames every 2s
+                            if(withVideo) {
+                                captureInterval = window.setInterval(captureAndBuffer, VIDEO_PERIOD); // Save a frame every 40ms
+                            }
+                        
+                            compileInterval = window.setInterval(compileFrames, COMPILE_INTERVAL); // Upload buffer every x secs
                             captureAndBuffer();
 
                             // Audio
@@ -648,7 +666,10 @@ jQuery(function ($) {
                         // Pause recording
                         recorder.pause = function (feedbackId) {
                             // Stop the cycle
-                            window.clearInterval(captureInterval);
+                            if(withVideo) {
+                                window.clearInterval(captureInterval);
+                            }
+                            
                             window.clearInterval(compileInterval);
                             rec.stop();
 
@@ -683,30 +704,40 @@ jQuery(function ($) {
                                 this.pause(feedbackId);
 
                                 // Attach video to card
-                                card.video = sessionId;
+                                card[withVideo ? 'video' : 'audio'] = sessionId;
                             }
 
                             // Stop video
-                            vidElem.pause();
-                            vidElem.src = 'about:blank';
-
-                            // Remove canvas
-                            canvas.remove();
+                            if(withVideo) {
+                                vidElem.pause();
+                                vidElem.src = 'about:blank';
+                                
+                                // Remove canvas
+                                canvas.remove();
+                            }
 
                             // End connection
                             //socket.disconnect(); // We do not end the connection because the server will use this connection to tell us when the video is ready
-                            socket.on('video-ready', function (videoData) { // Video processing is complete
+                            socket.on('video-ready', function (data) { // Video processing is complete
                                 // We can now disconnect the socket
                                 socket.disconnect();
                                 
-                                // Append the video data to the card, and refresh card
-                                card.videoURL = videoData.videoURL;
-                                card.videoPoster = videoData.posterURL;
+                                if(withVideo) {
+                                    // Append the video data to the card, and refresh card
+                                    card.videoURL = data.videoURL;
+                                    card.videoPoster = data.posterURL;
+                                } else {
+                                    card.audioURL = data.audioURL
+                                }
+                                
                                 checkCard(card);
                             });
 
                             // Stop the cycle
-                            window.clearInterval(captureInterval);
+                            if(withVideo) {
+                                window.clearInterval(captureInterval);
+                            }
+                            
                             window.clearInterval(compileInterval);
 
                             // Fire event
@@ -723,8 +754,10 @@ jQuery(function ($) {
                                         this.onend();
                                     }
                                     
-                                    vidElem.src = 'about:blank';
-                                    vidElem.pause();
+                                    if(withVideo) {
+                                        vidElem.src = 'about:blank';
+                                        vidElem.pause();
+                                    }
                                 },
 
                                 paused: false,
@@ -757,7 +790,11 @@ jQuery(function ($) {
                  * Note that buffering is handled by the worker.
                  */
                 function captureAndBuffer () {
-                    // Calculate time elapsed since video recording started
+                    if(justAudio) { // Just audio, nothing to capture buddy
+                        return;
+                    }
+                    
+                    // Calculate time elapsed since recording started
                     if(!timer) {
                         timer = new Date();
                     } else {
@@ -821,13 +858,17 @@ jQuery(function ($) {
 
                 // When the video is ready...
                 vid.on('loadedmetadata', function () {
-                    console.log('Loaded video meta data... ready to record video');
+                    console.log('Loaded media meta data... ready to record');
                     metaLoaded = true;
 
                     if(socketReady && workerReady) {
                         return streamReady();
                     }
                 });
+                
+                if(justAudio) {
+                    vid.trigger('loadedmetadata');
+                }
 
                 // When the worker sends us a message...
                 worker.onmessage = function (event) {
@@ -870,7 +911,7 @@ jQuery(function ($) {
             });
         }, function (err) { // The user either clicked "Deny" on the permissions screen or something worse happened
             if(err) {
-                alert('You need to grant us permission to use your camera and microphone');
+                alert('You need to grant us permission to use your camera and/or microphone');
                 console.error('Something bad happened!');
                 console.log(err);
             }
@@ -1048,7 +1089,7 @@ jQuery(function ($) {
     /*
      * Process the video button click event
      */
-	$('#personal-autographs-bottom .video').click(function (e) {
+	$('#personal-autographs-bottom .video').click(function () {
         // Check if there is a recording session
         if(recording) {
             // Something is recording... stop it
@@ -1060,7 +1101,7 @@ jQuery(function ($) {
             card = getCurrentCard();
 
         // Nothing is recording...
-        recording = initVideo(card);
+        recording = initVideo(card, false);
 
         // When the recorder ends...
         recording.onend = function () {
@@ -1107,6 +1148,68 @@ jQuery(function ($) {
         return false;
     });
 
+    /*
+     * Process the video button click event
+     */
+	$('#personal-autographs-bottom .audio').click(function () {
+        // Check if there is a recording session
+        if(recording) {
+            // Something is recording... stop it
+            console.log('Recording already in progress');
+            return false;
+        }
+
+        var audBtn = $(this),
+            card = getCurrentCard();
+
+        // Nothing is recording...
+        recording = initVideo(card, true);
+
+        // When the recorder ends...
+        recording.onend = function () {
+            // Reset the video button
+            audBtn.removeClass('recording');
+
+            // Hide controls
+            videoContainer.removeClass('ready');
+            timeElem.text('00:00');
+
+            if(recording && recording.started) {
+                // Save
+                updateAudio(card);
+            }
+            
+            checkCard(card);
+            bigUl.trigger(lastEvent);
+            recording.started = false;
+            recording = null;
+        };
+
+        recording.onready = function () {
+            videoContainer.addClass('ready');
+        };
+
+        recording.onpause = function () {
+            videoContainer.removeClass('recording');
+        };
+
+        recording.onresume = function () {
+            videoContainer.addClass('recording');
+        };
+
+        recording.ontimer = function (time) {
+            time = Math.floor(time/1000);
+
+            var secs = time % 60,
+                mins = Math.floor(time / 60);
+
+            timeElem.text('%02d:%02d'.printf(mins, secs));
+        };
+
+        audBtn.addClass('recording');
+        return false;
+    });
+
     videoContainer.find('.play-pause').on('click', doPlayPause); // Play/pause button
     videoContainer.find('.stop').on('click', function () { // Stop button
         if(recording) { // Already recording something?
@@ -1150,6 +1253,47 @@ jQuery(function ($) {
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify({video: videoId}),
+                error: function () {update.defer(5000);} // Retry until it succeeds or times out
+            });
+        }
+
+        update();
+    }
+
+    /**
+     * Update a card with the audio
+     * @param {object} card The card to update
+     */
+    function updateAudio (card) {
+        // Attach the audio to the card...
+        var audioId = card.audio;
+
+        if(!audioId) { // No audio
+            return false;
+        }
+
+        var count = 0;
+
+        // Do AJAX
+        function update() {
+            count++;
+
+            if(audioId !== card.audio) {
+                // Audio ID has changed
+                console.warn('Audio ID has changed... aborting');
+                return;
+            }
+
+            if(count > 4) { // Timeout
+                return;
+            }
+
+            $.ajax({
+                url: CARD_AUDIO_SAVE_URI.format(card.orderId),
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify({audio: audioId}),
                 error: function () {update.defer(5000);} // Retry until it succeeds or times out
             });
         }
