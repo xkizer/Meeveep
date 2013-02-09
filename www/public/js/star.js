@@ -123,16 +123,24 @@ jQuery(function ($) {
             if(!recording) {
                 // Check if it has a video attached
                 if(card.videoURL) {
+                    videoContainer.show();
                     vidElem.src = card.videoURL + '?type=ogv';
                     vidElem.poster = card.videoPoster;
                     videoContainer.attr('data-mode', 'playback').addClass('ready');
-                    //vidElem.play();
+                    videoContainer.addClass('video');
+                } else if (card.audioURL) {
+                    videoContainer.show();
+                    vidElem.src = card.videoURL + '?type=ogv';
+                    videoContainer.attr('data-mode', 'playback').addClass('ready');
+                    videoContainer.removeClass('video');
                 } else {
                     vidElem.pause();
                     vidElem.src = 'about:blank';
                     videoContainer.removeClass('ready');
                     videoContainer.removeClass('playing');
                     videoContainer.removeAttr('data-mode');
+                    videoContainer.hide();
+                    videoContainer.removeClass('video');
                 }
             }
         } else {
@@ -527,6 +535,12 @@ jQuery(function ($) {
     function initVideo (card, justAudio) {
             var withVideo = !justAudio;
             
+            if(withVideo) {
+                videoContainer.addClass('video');
+            } else {
+                videoContainer.removeClass('video');
+            }
+            
             var recorder = {
                 /**
                  * Ends the recording session before anything begins
@@ -556,6 +570,11 @@ jQuery(function ($) {
                     // Could not create the recording session...
                     showError(err);
                     return recorder.end();
+                }
+                
+                // Throw timer event
+                if(recorder.ontimer) {
+                    recorder.ontimer(timeElapsed);
                 }
 
                 // We created the recording session...
@@ -607,6 +626,7 @@ jQuery(function ($) {
                 });
                 
                 // Set the mode for recording
+                videoContainer.show();
                 videoContainer.attr('data-mode', 'record');
 
                 /**
@@ -650,10 +670,7 @@ jQuery(function ($) {
 
                             recorder.started = true;
 
-                            if(withVideo) {
-                                captureInterval = window.setInterval(captureAndBuffer, VIDEO_PERIOD); // Save a frame every 40ms
-                            }
-                        
+                            captureInterval = window.setInterval(captureAndBuffer, VIDEO_PERIOD); // Save a frame every 40ms
                             compileInterval = window.setInterval(compileFrames, COMPILE_INTERVAL); // Upload buffer every x secs
                             captureAndBuffer();
 
@@ -666,10 +683,7 @@ jQuery(function ($) {
                         // Pause recording
                         recorder.pause = function (feedbackId) {
                             // Stop the cycle
-                            if(withVideo) {
-                                window.clearInterval(captureInterval);
-                            }
-                            
+                            window.clearInterval(captureInterval);
                             window.clearInterval(compileInterval);
                             rec.stop();
 
@@ -687,6 +701,7 @@ jQuery(function ($) {
 
                         // End recording session
                         recorder.end = function () {
+                            videoContainer.show();
                             // Has anything been recorded?
                             if(recorder.started) {
                                 var feedbackId = Math.random();
@@ -718,7 +733,7 @@ jQuery(function ($) {
 
                             // End connection
                             //socket.disconnect(); // We do not end the connection because the server will use this connection to tell us when the video is ready
-                            socket.on('video-ready', function (data) { // Video processing is complete
+                            socket.on('media-ready', function (data) { // Video processing is complete
                                 // We can now disconnect the socket
                                 socket.disconnect();
                                 
@@ -734,10 +749,7 @@ jQuery(function ($) {
                             });
 
                             // Stop the cycle
-                            if(withVideo) {
-                                window.clearInterval(captureInterval);
-                            }
-                            
+                            window.clearInterval(captureInterval);
                             window.clearInterval(compileInterval);
 
                             // Fire event
@@ -790,10 +802,6 @@ jQuery(function ($) {
                  * Note that buffering is handled by the worker.
                  */
                 function captureAndBuffer () {
-                    if(justAudio) { // Just audio, nothing to capture buddy
-                        return;
-                    }
-                    
                     // Calculate time elapsed since recording started
                     if(!timer) {
                         timer = new Date();
@@ -803,13 +811,17 @@ jQuery(function ($) {
                         timeElapsed += timer - then;
                     }
 
-                    // Send frame to worker
-                    worker.postMessage({type: 'captureFrame', frame: captureFrame()});
-
                     // Throw timer event
                     if(recorder.ontimer) {
                         recorder.ontimer(timeElapsed);
                     }
+
+                    if(justAudio) { // Just audio, nothing to capture buddy
+                        return;
+                    }
+                    
+                    // Send frame to worker
+                    worker.postMessage({type: 'captureFrame', frame: captureFrame()});
                 }
 
                 /**

@@ -985,8 +985,12 @@ html {
 }
 
 #live-autograph-stream #video-preview video {
-	display: block;
+	display: none;
 	width: 277px;
+}
+
+#live-autograph-stream #video-preview .video video {
+	display: block;
 }
 
 #live-autograph-stream #video-preview [data-mode="record"] video {

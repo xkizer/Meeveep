@@ -16,6 +16,18 @@ module.exports = {
             }
         },
         
+        test: {
+            host:   '127.0.0.1',
+            port:   27017,
+            db:     'test',
+            collections: {
+                // Allow all collection names...
+                indexOf: function() {
+                    return true;
+                }
+            }
+        },
+        
         meeveep: {
             host:   '127.0.0.1',
             port:   27017,

@@ -294,9 +294,14 @@ io.sockets.on('connection', function (socket) {
                                             console.log(cli.green('Server notified'));
                                             console.log(data);
                                             
-                                            // Notify the client if it's still connected
-                                            socket.emit('video-ready', {videoURL: 'http://%s:%d/watch/%s'.printf(SERVER_ADDR, HTTP_PORT, identity),
-                                                posterURL: 'http://%s:%d/poster/%s'.printf(SERVER_ADDR, HTTP_PORT, identity)});
+                                            if(medium === 'video') {
+                                                // Notify the client if it's still connected
+                                                socket.emit('media-ready', {videoURL: 'http://%s:%d/watch/%s'.printf(SERVER_ADDR, HTTP_PORT, identity),
+                                                    posterURL: 'http://%s:%d/poster/%s'.printf(SERVER_ADDR, HTTP_PORT, identity)});
+                                            } else {
+                                                // Notify the client if it's still connected
+                                                socket.emit('media-ready', {audioURL: 'http://%s:%d/listen/%s'.printf(SERVER_ADDR, HTTP_PORT, identity)});
+                                            }
                                         });
                                     });
                                     
