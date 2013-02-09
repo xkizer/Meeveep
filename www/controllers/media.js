@@ -40,7 +40,7 @@ function createSession (userInfo, callback) {
             // The server parameter will ultimately be generated using a very
             // sophisticated algorithm to know which server has been less busy,
             // and will be less busy in the next few minutes.
-            server: 'meeveep.dev:9304',
+            server: 'meeveep.kizer.com.ng:9304',
 
             // We attach the session to the user ID of the provided user. This
             // user is the owner of the stream
