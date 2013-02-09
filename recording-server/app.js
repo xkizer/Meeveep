@@ -11,7 +11,7 @@ var joiner = require('./includes/join');
 require('./util/extend');
 
 const SERVER_ID = 'V42KBoJY0sJnfYzHn8VJulOmEjVoX6ptpYTLNGOPArkfKPHC';
-const SERVER_ADDR = 'meeveep.dev';
+const SERVER_ADDR = 'meeveep.kizer.com.ng';
 const SERVER_PORT = 9304; // Port for the recording server
 const HTTP_PORT = 9305; // Port for HTTP (used for streaming videos)
 const RECORDING_DIR = '/data/recordings/'; // The directory we are to store recordings (could be /dev/sdh/ or anything)
