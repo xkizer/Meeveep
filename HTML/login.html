@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="js/lib/modernizr.js"></script>
 	<script type="text/javascript" src="js/lib/css3-mediaqueries.js"></script>
 </head>
-<body id="dashboard-page">
+<body id="login-page">
 	<div id="wrapper">
     	<div id="container">
         	<header id="header-main">
@@ -61,7 +61,7 @@
                                         	<ul>
                                             	<li><a href="#">Persönliche Daten</a></li>
                                             	<li><a href="#">Verwaltete Künstler</a></li>
-                                            	<li><a href="#">Autogramme verwalten</a></li>
+                                            	<li class="active"><a href="#">Autogramme verwalten</a></li>
                                             	<li><a href="#">Passwort ändern</a></li>
                                             	<li><a href="#">Nachrichten (1)</a></li>
                                             	<li><a href="#">Rechnungen</a></li>
@@ -89,76 +89,31 @@
                             </div>
                         </section>
                         <section class="right">
-                        	<div id="personal-autograph-dashboard">
-	                            <h1>Neues Kauf-Autogramm erstellen</h1>
-                                <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                        	<div id="personal-autograph-register">
+	                            <header>
+                                	<hgroup>
+                                    	<h1>Login</h1>
+                                        <h2>Deine Stars – hautnah!</h2>
+                                    </hgroup>
+                                </header>
                                 <section class="content">
                                 	<form method="post">
                                         <div class="left">
                                         	<div>
-                                            	<h3>Künstler wählen</h3>
-                                                <select name="star">
-                                                    <option value="289389283938">Guildo Horn</option>
-                                                </select>
+                                            	<h3>E-Mail</h3>
+                                                <input type="email" required name="email" />
                                             </div>
-                                        	<div>
-                                            	<h3>Sprache wählen</h3>
-                                                <select name="lang">
-                                                    <option value="938921029002">Deutsch</option>
-                                                </select>
-                                            </div>
-                                        	<div id="dashboard-02oa7d">
-                                            	<h3>Autogramm erlaubt folgende Optionen</h3>
-                                                <div>
-                                                    <label><input name="includes" value="video" type="checkbox" checked /> Video</label>
-                                                    <label><input name="includes" value="hq-video" type="checkbox" checked /> Hohe Qualität</label>
-                                                </div>
-                                                <div>
-                                                    <label><input name="includes" value="audio" type="checkbox" checked /> Audio</label>
-                                                    <label><input name="includes" value="user-image" type="checkbox" /> Nutzerbilder*</label>
-                                                </div>
-                                            </div>
-                                            <p class="fineprints">
-                                            	* Die Nutzungsbedingungen sehen vor, dass ausschließlich
-                                                Bilder legitimiert werden, auf denen der Künstler selbst zu
-                                                sehen ist. (Weitere Bedingungen hier »)
-                                            </p>
-                                            <div>
-                                            	<h3>Laufzeit wählen <i>(keine Änderung = unbegrenzt)</i></h3>
-                                                <div class="datepicker"><input type="text" name="validity.from" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
-                                                <div class="datepicker"><input type="text" name="validity.to" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
-                                                <span class="cl"></span>
-                                            </div>
-                                            <div id="dashboard-pricing">
-                                            	<div class="left">
-                                                	<h3>Preis</h3>
-                                                    <label><span>EUR </span><input name="price" value="5,5" type="text" /></label>
-                                                </div>
-                                                <div class="right">
-                                                	<h3>Verfügbarkeit</h3>
-                                                    <label><span>Stk. </span><input name="amount" value="100" type="text" /></label>
-                                                </div>
-                                                <span class="cl"></span>
+                                            <div class="last">
+                                            	<a href="#">Passwort vergessen?</a>
+                                                <a href="#">Noch nicht registriert?</a>
                                             </div>
                                         </div>
                                         <div class="right">
-                                        	<div id="dashboard-star-thumbnail">
-                                            	<div>
-                                                    <img src="images/imgs/starts-small/thumb-09.jpg" alt="Star name" />
-                                                    <div class="mm-icons">
-                                                    	<span class="video">HQ</span>
-                                                    </div>
-                                                    <h3>Guildo Horn</h3>
-                                                    <span class="price">5,50€</span>
-                                                </div>
+                                        	<div>
+                                            	<h3>Password</h3>
+                                                <input type="password" required name="password" pattern=".{6,32}" />
                                             </div>
-                                            <div id="dashboard-rand9ps1l">
-                                            	<h3>Bitte wählen</h3>
-                                                <div><label><input name="terms-accepted" value="yes" type="checkbox" /> <span>Ich akzeptiere die AGB. (linksstehend)</span></label></div>
-                                                <div><label><input name="newsletter" value="yes" type="checkbox" /> <span>Ja, ich möchte den Newsletter von Meeveep empfangen.</span></label></div>
-                                                <span class="cl"></span>
-                                            </div>
-                                            <button type="submit">Jetzt einstellen »</button>
+                                            <button type="submit">Einloggen »</button>
                                         </div>
                                     </form>
                                 </section>

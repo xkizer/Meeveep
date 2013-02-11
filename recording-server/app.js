@@ -100,6 +100,7 @@ io.sockets.on('connection', function (socket) {
                 // Create the working directory
                 fs.mkdir(dirname, function (err) {
                     if(err) {
+                        console.log(err);
                         return socket.emit('error', {code: 0xA222, message: 'Error creating directory. Cannot continue.'});
                     }
 
