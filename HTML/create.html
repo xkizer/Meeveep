@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untitled Document</title>
+    <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" media="all" />
+    <link rel="stylesheet" href="css/uniform.default.css" media="all" />
+    <link rel="stylesheet" href="/css/jquery-ui.css" media="all" />
+    <!--[if lte IE 7]>
+    <link href="css/ie7.css" rel="stylesheet" media="all" />
+    <![endif]-->
+	<script type="text/javascript" src="js/lib/modernizr.js"></script>
+	<script type="text/javascript" src="js/lib/css3-mediaqueries.js"></script>
+</head>
+<body id="dashboard-page">
+	<div id="wrapper">
+    	<div id="container">
+        	<header id="header-main">
+            	<div id="header-top">
+	                <div id="slogan">Digitale Autogramme deiner Stars!</div>
+	                <a href="#" id="star-alarm-link">Star-Alarm</a>
+                	<div id="logo"><a href="/"><img src="images/imgs/logo.png" alt="Meeveep" /></a></div>
+                </div>
+                <div id="header-bottom">
+                	<nav class="left">
+                    	<a href="#" id="icon-nav-home">Home</a>
+                    	<a href="#" id="icon-nav-settings">Settings</a>
+                    	<a href="#" id="icon-nav-profile">Profile</a>
+                    </nav>
+                    <div id="header-star-stat">Nächste Autogrammstunde mit <i>DJ Ötzi</i> in: <i>1 Tag, 3 Std. und 40 MIn.</i></div>
+                	<nav class="right">
+                        <a href="#" id="language-selector">German</a>
+                    	<a href="#" id="header-top-info">Wie funktioniert <i>Meveep?</i></a>
+                    </nav>
+                    <div id="user-info-box">
+                        <form id="login-form" method="post" action="/auth/login">
+                            <h2>Login</h2>
+                            <p>Um in deinen persönlichen Bereich zu gelangen, musst du dich zuerst einloggen.</p>
+                            <fieldset>
+                            	<input type="email" placeholder="E-Mail-Adresse" />
+                            	<input type="password" placeholder="Passwort" />
+                                <button type="submit">Absenden</button>
+                            </fieldset>
+                            <p class="register-link">Noch kein Konto? <a href="#">Registrieren &raquo;</a></p>
+                        </form>
+                    </div>
+                </div>
+            </header>
+            <section id="main">
+            	<section id="content">
+                	<div id="divide">
+                    	<section class="left">
+                        	<section id="live-autographs">
+                            	<div id="live-autograph-stream">
+                                	<h2>Meine Daten</h2>
+                                    <span id="live-autograph-found">ANGEMELDET ALS AGENTUR</span>
+                                    <div id="live-autograph-list" class="scrolling">
+                                    	<nav class="content">
+                                        	<ul>
+                                            	<li><a href="#">Persönliche Daten</a></li>
+                                            	<li><a href="#">Verwaltete Künstler</a></li>
+                                            	<li><a href="#">Autogramme verwalten</a></li>
+                                            	<li><a href="#">Passwort ändern</a></li>
+                                            	<li><a href="#">Nachrichten (1)</a></li>
+                                            	<li><a href="#">Rechnungen</a></li>
+                                            	<li><a href="#">Persönliche Daten</a></li>
+                                            	<li><a href="#">Verwaltete Künstler</a></li>
+                                            	<li><a href="#">Autogramme verwalten</a></li>
+                                            	<li><a href="#">Passwort ändern</a></li>
+                                            	<li><a href="#">Nachrichten (1)</a></li>
+                                            	<li><a href="#">Rechnungen</a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                                <div id="live-autograph-counter"></div>
+                            </section>
+                            <div id="newsletter-subscription">
+                            	<h2>Bitte informiert mich!</h2>
+                                <p>Ja, ich möchte wöchentlich über neue Autogramme und Termine informiert werden.</p>
+                                <form method="post" action="nlt/subscribe">
+                                	<fieldset>
+                                        <input type="email" name="email" placeholder="E-Mail-Adresse hier eintragen" required />
+                                        <button type="submit">Subscribe</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </section>
+                        <section class="right">
+                        	<div id="personal-autograph-dashboard">
+	                            <h1>Neues Kauf-Autogramm erstellen</h1>
+                                <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                <section class="content">
+                                	<form method="post">
+                                        <div class="left">
+                                        	<div>
+                                            	<h3>Künstler wählen</h3>
+                                                <select name="star">
+                                                    <option value="289389283938">Guildo Horn</option>
+                                                </select>
+                                            </div>
+                                        	<div>
+                                            	<h3>Sprache wählen</h3>
+                                                <select name="lang">
+                                                    <option value="938921029002">Deutsch</option>
+                                                </select>
+                                            </div>
+                                        	<div id="dashboard-02oa7d">
+                                            	<h3>Autogramm erlaubt folgende Optionen</h3>
+                                                <div>
+                                                    <label><input name="includes" value="video" type="checkbox" checked /> Video</label>
+                                                    <label><input name="includes" value="hq-video" type="checkbox" checked /> Hohe Qualität</label>
+                                                </div>
+                                                <div>
+                                                    <label><input name="includes" value="audio" type="checkbox" checked /> Audio</label>
+                                                    <label><input name="includes" value="user-image" type="checkbox" /> Nutzerbilder*</label>
+                                                </div>
+                                            </div>
+                                            <p class="fineprints">
+                                            	* Die Nutzungsbedingungen sehen vor, dass ausschließlich
+                                                Bilder legitimiert werden, auf denen der Künstler selbst zu
+                                                sehen ist. (Weitere Bedingungen hier »)
+                                            </p>
+                                            <div>
+                                            	<h3>Laufzeit wählen <i>(keine Änderung = unbegrenzt)</i></h3>
+                                                <div class="datepicker"><input type="text" name="validity.from" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
+                                                <div class="datepicker"><input type="text" name="validity.to" class="datepicker" placeholder="TT.MM.JJJJ" /></div>
+                                                <span class="cl"></span>
+                                            </div>
+                                            <div id="dashboard-pricing">
+                                            	<div class="left">
+                                                	<h3>Preis</h3>
+                                                    <label><span>EUR </span><input name="price" value="5,5" type="text" /></label>
+                                                </div>
+                                                <div class="right">
+                                                	<h3>Verfügbarkeit</h3>
+                                                    <label><span>Stk. </span><input name="amount" value="100" type="text" /></label>
+                                                </div>
+                                                <span class="cl"></span>
+                                            </div>
+                                        </div>
+                                        <div class="right">
+                                        	<div id="dashboard-star-thumbnail">
+                                            	<div>
+                                                    <img src="images/imgs/starts-small/thumb-09.jpg" alt="Star name" />
+                                                    <div class="mm-icons">
+                                                    	<span class="video">HQ</span>
+                                                    </div>
+                                                    <h3>Guildo Horn</h3>
+                                                    <span class="price">5,50€</span>
+                                                </div>
+                                            </div>
+                                            <div id="dashboard-rand9ps1l">
+                                            	<h3>Bitte wählen</h3>
+                                                <div><label><input name="terms-accepted" value="yes" type="checkbox" /> <span>Ich akzeptiere die AGB. (linksstehend)</span></label></div>
+                                                <div><label><input name="newsletter" value="yes" type="checkbox" /> <span>Ja, ich möchte den Newsletter von Meeveep empfangen.</span></label></div>
+                                                <span class="cl"></span>
+                                            </div>
+                                            <button type="submit">Jetzt einstellen »</button>
+                                        </div>
+                                    </form>
+                                </section>
+                                <div id="personal-autographs-bottom">&nbsp;</div>
+                            </div>
+                        </section>
+                        <span class="cl"></span>
+                    </div>
+                    <div id="random-bg-r26a4"><img src="images/imgs/hind-1.jpg" alt="" /></div>
+                </section>
+            </section>
+            <footer id="footer-main">
+            	<div>
+                    <section>
+                        <h2>Informationen für:</h2>
+                        <h3>Managements, Clubs</h3>
+                        <p>Sie möchten mit Ihren Stars ganz weit nach vorne? Starten Sie hier und bringen Sie Ihre Schützlinge den Fans ganz nahe.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                        <h3>Prominente</h3>
+                        <p>Sie wollen maximale Nähe zu den Fans aus aller Welt? Gleichzeitig? Starten Sie jetzt und geben Sie Ihrer Karriere den nächsten Schub.</p>
+                        <a href="#" class="more">hier anmelden &raquo;</a>
+                    </section>
+                    <section>
+                        <h2>Sie können uns vertrauen!</h2>
+                        <p>Nicht nur unsere Nutzer, sondern auch zahlreiche größere Unternehmen sprechen uns ihr Vertrauen aus. Aber sehen Sie selbst.</p>
+                        <section class="icons" id="footer-certified">
+                        	<a href="#" id="footer-certified-bkf"></a>
+                        	<a href="#" id="footer-certified-aaa"></a>
+                        	<a href="#" id="footer-certified-eee"></a>
+                        </section>
+                    </section>
+                    <section>
+                        <h2>Meeveep ist sicher!</h2>
+                        <p>Durch unsere zahlreichen Partner für Bezahlsysteme und Sicherheit bieten wir unseren Nutzern, den Managern und natürlich den teilnehmenden Prominenten maximale Sicherheit.</p>
+                        <section class="icons" id="footer-payment-options"></section>
+                        <section id="footer-service-links">
+                        	<strong>Service</strong>
+                            <a href="#">AGB</a> | <a href="#">Impressum</a> | <a href="#">Kontakt</a> | <a href="#">Datenschutz</a>
+                        </section>
+                    </section>
+                </div>
+            </footer>
+        </div>
+    </div>
+	<script src="js/lib/jquery-1.8.2.min.js"></script>
+    <script src="/js/lib/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mousewheel.min.js"></script>
+    <script src="/js/lib/custom-scrollbar-plugin/jquery.mCustomScrollbar.js"></script>
+    <script src="js/lib/jquery.selectbox/jquery.selectbox-0.2.min.js"></script>
+    <script src="js/lib/uniform/jquery.uniform.min.js"></script>
+	<script type="text/javascript" src="js/lib/util.js"></script>
+	<script type="text/javascript" src="js/core.js"></script>
+	<script type="text/javascript" src="js/star.js"></script>
+    <!--[if IE 8]>
+    <script src="js/lib/ie/ie8.js"></script>
+    <![endif]-->
+</body>
+</html>
