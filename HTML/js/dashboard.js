@@ -100,7 +100,7 @@ jQuery(function ($) {
     });
 
     // Set as profile picture
-    $('#personal-autograph-dashboard ul').delegate('.profile-pic', 'click', function (e) {
+    $('#dashboard-star-thumbnails ul').delegate('.profile-pic', 'click', function (e) {
         e.preventDefault();
         
         // Look for the profile-pic element, or create it if not found
@@ -116,7 +116,7 @@ jQuery(function ($) {
     });
 
     // Delete picture
-    $('#personal-autograph-dashboard ul').delegate('.delete', 'click', function (e) {
+    $('#dashboard-star-thumbnails ul').delegate('.delete', 'click', function (e) {
         e.preventDefault();
         
         var parent = $(this).closest('li'),
