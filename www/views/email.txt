@@ -1,0 +1,5 @@
+{{yield}}
+
+This mail is intended for {{email}} and was sent because you use Meeveep or has
+given it permission to mail you. To change your email preferences, please login
+to the website and go to your account settings.

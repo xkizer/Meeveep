@@ -18,6 +18,7 @@
     "socket.io": "*",
     "socket.io-client": "*",
     "webrtc-stream": "*",
-    "browserify-server": "*"
+    "browserify-server": "*",
+    "nodemailer": "*"
   }
 }

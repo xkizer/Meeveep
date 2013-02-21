@@ -4,8 +4,8 @@
 
 // Error codes and messages
 var getError = require('./error.js'),
-    mongo = require('../util/db.js'),
-    dbinfo = require('./dbinfo');
+    db = require('../util/db.js'),
+    cli = require('cli-color');
 
 module.exports = {
     hash: function (password, salt) {
@@ -24,6 +24,8 @@ module.exports = {
             key = '',
             index,
             i = 0;
+            
+        keyLength = keyLength || 16;
         
         for(; i < keyLength; i++) {
             index = Math.floor(Math.random() * chars.length);
@@ -74,26 +76,103 @@ module.exports = {
         
         callback(userInfo);
     },
-
+    
     /**
-     * Shortcut helper function for connecting to mongo DB
+     * Store some data and return nonce data that can be used to retrieve it
+     * @param data The stuff to be stored
+     * @param lifespan The number of seconds that the key is valid
+     * @param {function} callback The callback receives an error object and the nonce object
      */
-    mongoConnect: function (collection, callback) {
-        mongo.mongoConnect(dbinfo.mongo.todo, function (err, db) {
+    createNonce: function (data, lifespan, callback) {
+        if(arguments.length === 2) {
+            callback = arguments[1];
+            lifespan = 0;
+        }
+        
+        // Generate nonce key and serialize data
+        var nonceKey = this.generateKey(36),
+            verifier = this.generateKey(24),
+            key = 'nonce:key:' + nonceKey;
+        
+        data = JSON.stringify({data: data, verifier: verifier});
+        lifespan = Number(lifespan) || 60*60*24; // Default lifespan is 24 hours
+        
+        // Create record
+        // TODO: Standardise errors
+        db.redisConnect(function (err, client) {
             if(err) {
                 return callback(err);
             }
             
-            db.collection(collection, function (err, collection) {
+            client.multi()
+                .set(key, data)
+                .expire(key, lifespan)
+                .exec(function (err) {
+                    if(err) {
+                        return callback(err);
+                    }
+                    
+                    callback(null, {
+                        key: nonceKey,
+                        verifier: verifier
+                    });
+                });
+        });
+    },
+    
+    resolveNonce: function (nonceKey, verifier, destroy, callback) {
+        if(arguments.length === 2) {
+            callback = arguments[1];
+            verifier = false;
+        } else if (arguments.length === 3) {
+            callback = arguments[2];
+            
+            if('boolean' === typeof verifier) {
+                destroy = arguments[1];
+                verifier = null;
+            } else {
+                destroy = true;
+            }
+        }
+        
+        if(false !== destroy) {
+            // Not set explicitly to false, always destroy
+            destroy = true;
+        }
+        
+        db.redisConnect(function (err, client) {
+            if(err) {
+                return callback('Redis failed');
+            }
+            
+            var key ='nonce:key:' + nonceKey;
+            
+            client.get(key, function (err, data) {
                 if(err) {
-                    return callback(0x1810);
+                    return callback(err);
                 }
                 
-                return callback(null, collection);
+                if(!data) {
+                    // Not found
+                    return callback('Not found');
+                }
+                
+                data = JSON.parse(data);
+                
+                if(verifier && verifier !== data.verifier) {
+                    return callback('Verification failed');
+                }
+                
+                if(destroy) {
+                    // Destroy
+                    client.del(key, function () {});
+                }
+                
+                callback(null, data.data);
             });
         });
     }
-}
+};
 
 
 

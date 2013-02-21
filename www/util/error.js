@@ -12,6 +12,7 @@ module.exports = function (code, original) {
 
         if(original) {
             error.originalError = original;
+            console.error(original);
         }
 
         return error;
@@ -19,7 +20,7 @@ module.exports = function (code, original) {
 
     // Code does not exist... probably not an error code. Transmit.
     return code;
-}
+};
 
 var errorCodes = {
     0x1810: 'System error: please contact admin',                               // Generic system error for unexpected system failure
@@ -41,6 +42,7 @@ var errorCodes = {
     0x2902: 'Account is inactive. Please make sure you have verified account and that account is not blocked.',
     0x2903: 'Server error while loging in',                                     // MongoDB connection error
     0x2904: 'Serever error while login in',                                     // MongoDB query failure
+    0x290C: 'No session data provided',                                         // Attempt to create session with bad session details
 
     0x2A00: 'Server error while retrieving session information',                // Redis pooped on the pants
     0x2A01: 'Session information not found',                                    // Occurs when we cannot find the session identified by the given key
@@ -54,13 +56,21 @@ var errorCodes = {
 
     0x4B01: 'User not found',                                                   // User with ID {userId} not found
     0x4B02: 'Server error: could not get user information',                     // Database error trying to get user's information
-    0x4B03: 'Could not check availability of username',                         // Redis failed us while checking if username is free
+   // 0x4B03: 'Could not check availability of username',                         // Redis failed us while checking if username is free
     0x4B04: 'Username is already taken',                                        // Please choose another username!
+    0x4B05: 'Error retrieving user information',                                // Redis during findByUsername or findByEmail
+    0x4B06: 'User not found',                                                   // Maybe not really, but user was not found in the cache
+    0x4B07: 'Internal error',                                                   // Mongo failed during getFromMongo
     0x4B08: 'Database connection error while creating account',                 // MongoDB!!!
     0x4B09: 'Unexpected DB error while creating account',                       // MongoDB fail while executing insert
     0x4B0A: 'Unexpected DB error while creating account',                       // Redis connect error
     0x4B0B: 'Unexpected DB error while creating account',                       // Redis error while saving to cache
-
+    0x4B0C: 'Internal error',                                                   // Mongo failed during findByEmail
+    0x4B0D: 'Email not found',                                                  // No user with that email!!!
+    0x4B0E: 'Error resetting the user\'s password',                             // MongoDB connection during PW reset
+    0x4B0F: 'Error resetting user\'s password',                                 // Mongo update failed while resetting password
+    0x4B1A: 'Error resetting user\'s password',                                 // redis failed while resetting password
+    
     0x9000: 'Database error while retrieving list of stars',
     0x9001: 'Database error while retrieving star info',
     0x9002: 'Star not found',                                                   // Self explanatory
@@ -89,5 +99,8 @@ var errorCodes = {
     0xAF02: 'Something weird',                                                  // Something really weird. Redis connection failed while creating media session
     0xAF03: 'Server error',                                                     // Redis connection error while retrieving media session
     0xAF04: 'Server error',                                                     // Redis query error while doing above
+    
+    0xB3A0: 'Unknown sender',                                                   // An unknown sender was trying to send a mail
+    0xB3A1: 'Incomplete mail',                                                  // Trying to send an incomplete mail
     
 };

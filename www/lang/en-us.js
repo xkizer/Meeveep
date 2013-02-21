@@ -15,6 +15,7 @@ var lang = {
     txtLogin: 'Login',
     txtLoginIntro: 'In order to get to your personal profile, please log in first.',
     txtEmailAddress: 'E-Mail address',
+    txtEmail: 'E-Mail',
     txtPassword: 'Password',
     txtSubmit: 'Submit',
     txtNoAccount: 'No account yet',
@@ -86,7 +87,27 @@ var lang = {
     txtSelectLang: 'Select language',
     txtRecording: 'Recording',
     txtRecPlayPauseDescr: 'Start recording or pause the recording',
-    txtRecStopDescr: 'End this recording session and save the video'
+    txtRecStopDescr: 'End this recording session and save the video',
+    txtStarClose: 'Your stars - very close!',
+    txtForgotPassword: 'Forgot your password',
+    txtNotRegistered: 'Not registered',
+    txtRegistration: 'Registration',
+    txtSalutation: 'Salutation',
+    txtFirstname: 'First name',
+    txtSurname: 'Surname',
+    txtPleaseSelect: 'Please select',
+    txtDateOfBirth: 'Date of birth',
+    txtDD: 'DD',
+    txtMM: 'MM',
+    txtYY: 'YY',
+    txtYYYY: 'YYYY',
+    txtRegisterNow: 'Register now',
+    txtGreetingMiss: 'Miss',
+    txtGreetingMr: 'Mr.',
+    txtGreetingMrs: 'Mrs.',
+    txtNeedSomeHelp: 'Need some help',
+    txtRequestNewPassword: 'Request new password',
+    
 };
 
 module.exports = lang;

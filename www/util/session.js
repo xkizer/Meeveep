@@ -41,8 +41,6 @@ function isLoggedIn () {
 function getUser(callback) {
     var req = this;
 
-    console.log('User', req.isLoggedIn());
-
     if(!req.isLoggedIn()) {
         // Not logged in...
         return callback(null, null);

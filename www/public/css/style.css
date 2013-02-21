@@ -1322,9 +1322,126 @@ html {
 
 
 
+#login-page #divide > .right,
+#registration-page #divide > .right {
+	width: 698px;
+}
 
+#personal-autograph-register header {
+	height: 219px;
+	position: relative;
+	background: url(../images/imgs/big-star.jpg) no-repeat;
+}
 
+#personal-autograph-register header hgroup {
+	height: 51px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background: url(../images/bgs/noise.png);
+	width: 100%;
+	color: #313131;
+}
 
+#divide #personal-autograph-register header h1 {
+	line-height: 51px;
+	float: left;
+	text-indent: 12px;
+}
+
+#personal-autograph-register header h2 {
+	line-height: 51px;
+	float: right;
+	padding-right: 20px;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#divide #personal-autograph-register .content {
+	border-top: none;
+	padding: 11px 17px 0;
+	height: auto;
+}
+
+#divide #personal-autograph-register div.invalid {
+	background: rgba(255, 0, 0, 0.25);
+}
+
+#divide #personal-autograph-register form > .error {
+    background: rgba(255, 0, 0, 0.25);
+    padding: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#personal-autograph-register .invalid h3 {
+	color: #fff;
+}
+
+#personal-autograph-register .valid {
+	position: relative;
+}
+
+#personal-autograph-register .valid:after {
+	display: block;
+	width: 20px;
+	height: 14px;
+	background: url(../images/icons/icon-sprite.png) 0 -281px;
+	content: " ";
+	position: absolute;
+	top: 3px;
+	right: 3px;
+}
+
+#personal-autograph-register .last {
+	height: 82px;
+}
+
+#personal-autograph-register .right > div,
+#personal-autograph-register .left > div {
+	padding: 6px 10px 10px !important;
+}
+
+#personal-autograph-register #birthday input {
+	float: left;
+	width: 23px;
+	margin-right: 10px;
+}
+
+#personal-autograph-register #birthday input[name="year"] {
+	width: 43px;
+}
+
+#personal-autograph-register button {
+	display: block;
+	width: 100%;
+	height: 96px;
+	border: none;
+	background: #f75209;
+	font-size: 28px;
+	font-weight: bold;
+	font-style: italic;
+	color: #fff;
+	padding: 0 70px;
+	line-height: 34px;
+}
+
+#login-page #personal-autograph-register button {
+	height: 59px;
+	padding: 0;
+}
+
+#login-page #personal-autograph-register .last {
+	background: none;
+}
+
+#login-page #personal-autograph-register .last a {
+	color: #F75209;
+	font-weight: bold;
+	display: inline-block;
+	margin-right: 120px;
+}
 
 
 
@@ -1351,19 +1468,24 @@ html {
 }
 
 #personal-autograph-dashboard .right,
-#personal-autograph-dashboard .left {
+#personal-autograph-dashboard .left,
+#personal-autograph-register .right,
+#personal-autograph-register .left {
 	width: 342px;
 }
 
 #personal-autograph-dashboard .right > div,
-#personal-autograph-dashboard .left > div {
+#personal-autograph-dashboard .left > div,
+#personal-autograph-register .right > div,
+#personal-autograph-register .left > div {
 	background: rgba(247, 247, 247, 0.07);
 	display: block;
 	padding: 6px 10px;
 	margin-bottom: 8px;
 }
 
-#personal-autograph-dashboard h3 {
+#personal-autograph-dashboard h3,
+#personal-autograph-register h3 {
 	color: #F75209;
 	font-size: 12px;
 	font-weight: bold;
@@ -1375,8 +1497,20 @@ html {
 	font-style: normal;
 }
 
-#personal-autograph-dashboard .sbHolder {
+#personal-autograph-dashboard .sbHolder,
+#personal-autograph-register .sbHolder,
+#personal-autograph-register input[type="text"],
+#personal-autograph-register input[type="password"],
+#personal-autograph-register input[type="email"],
+#dashboard-page #personal-autograph-dashboard input[type="text"],
+#dashboard-page #personal-autograph-dashboard input[type="password"],
+#dashboard-page #personal-autograph-dashboard input[type="email"] {
 	width: 300px;
+	float: none;
+}
+
+#personal-autograph-dashboard .sbHolder + select + .sbHolder {
+	margin-top: 9px;
 }
 
 #dashboard-02oa7d label {
@@ -1484,6 +1618,161 @@ html {
 	font-weight: bold;
 	font-style: italic;
 }
+
+
+
+
+#dashboard-page #personal-autograph-dashboard .fineprints {
+    background: none;
+    padding: 10px 0 0;
+}
+
+#dashboard-page #personal-autograph-dashboard .fineprints > .checker {
+    float: left;
+    margin-top: 8px;
+}
+
+#dashboard-page #personal-autograph-dashboard .fineprints > span {
+    display: block;
+    width: 296px;
+    float: left;
+}
+
+#dashboard-page #dashboard-star-thumbnails {
+    height: 310px;
+    padding: 6px 9px;
+}
+
+#dashboard-star-thumbnails ul {
+    height: 225px;
+}
+
+#dashboard-star-thumbnails li {
+    float: left;
+    margin: 0 9px 9px 0;
+    position: relative;
+    overflow: hidden;
+    height: 105px;
+    width: 102px;
+}
+
+#dashboard-star-thumbnails li > img {
+    display: block;
+}
+
+#dashboard-star-thumbnails li > span {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url(../images/bgs/noise.png);
+    opacity: 0;
+    top: 100%;
+    -moz-transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+#dashboard-star-thumbnails li.loading canvas {
+    display: block;
+    margin: 18px 24px 5px;
+}
+
+#dashboard-star-thumbnails li.loading span {
+    height: auto;
+    position: static;
+    text-align: center;
+    display: block;
+    opacity: 1;
+    background: none;
+    font-weight: bold;
+    color: #f75209;
+}
+
+#dashboard-star-thumbnails li:hover > span {
+    opacity: 1;
+    top: 0;
+}
+
+#dashboard-star-thumbnails li:nth-child(3n) {
+    margin-right: 0;
+}
+
+#dashboard-star-thumbnails li .profile-pic {
+    display: block;
+    width: 100%;
+    color: #303030;
+    padding-top: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 18px;
+}
+
+#dashboard-star-thumbnails li .delete {
+    position: absolute;
+    background: url(../images/icons/icon-sprite.png) -30px -282px;
+    width: 14px;
+    height: 17px;
+    overflow: hidden;
+    text-indent:  -40000px;
+    right: 9px;
+    bottom: 7px;
+}
+
+.own-photo {
+    height: 34px;
+    border-bottom: 1px solid #fff;
+    font-weight: 200;
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 8px;
+}
+
+.own-photo:before {
+    content: ' ';
+    display: block;
+    float: left;
+    width: 28px;
+    height: 100%;
+    background: url(../images/icons/icon-sprite.png) -51px -276px;
+}
+
+.own-photo .info {
+    float: right;
+    height: 100%;
+    width: 18px;
+    background: url(../images/icons/icon-sprite.png) -476px -68px;
+    overflow: hidden;
+    display: block;
+    text-indent: -90000px;
+}
+
+#wrapper #container .file-upload  input[type="text"] {
+    float: left;
+    width: 225px;
+}
+
+.file-upload  .picker {
+    display: block;
+    float: left;
+    width: 20px;
+    height: 21px;
+    background: url(../images/icons/icon-sprite.png) -85px -282px;
+    margin-left: -24px;
+}
+
+.file-upload  input[type="file"] {
+    display: none;
+    opacity: 0; /* this and the next style prevents the element from messing up the UI in case of a slow system during the show-hide sequence */
+    position: absolute;
+}
+
+.file-upload  .upload {
+    font-weight: 500;
+    float: right;
+}
+
+
 
 
 
@@ -1973,3 +2262,190 @@ html {
 .no-scroll {
 	overflow: hidden;
 }
+
+#manage-page #personal-autograph-preview .mCSB_dragger_bar {
+    background: #f8500f;
+}
+
+#manage-page #personal-autograph-preview .mCSB_draggerRail {
+    background: #656565;
+}
+#manage-page #personal-autograph-preview .mCustomScrollBox {
+    padding-right: 15px;
+    width: 100%;
+}
+
+#manage-page #personal-autograph-preview .divide > section {
+    width: 341px;
+}
+
+#manage-page #personal-autograph-preview h2 {
+    font-weight: 200;
+    line-height: 30px;
+    font-size: 20px;
+    border-bottom: solid 1px #5e5e5e;
+    padding-bottom:  8px;
+    margin: -7px 0 11px;
+}
+
+#manage-page #personal-autograph-preview a.btn {
+    display: block;
+    height: 48px;
+    margin-bottom: 2px;
+    background: #f65308;
+    text-align: center;
+    line-height: 48px;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#manage-page #personal-autograph-preview li {
+    height: 55px;
+    background: rgba(247, 247, 247, 0.07);
+    margin-bottom: 3px;
+    color: #f65308;
+}
+
+#manage-page #personal-autograph-preview .right li {
+    height: 69px;
+}
+
+#manage-page #personal-autograph-preview .right .left {
+    width: 166px;
+    padding-left: 8px;
+}
+
+#manage-page #personal-autograph-preview li .name {
+    float: left;
+    margin: 10px 0 0 8px;
+    width: 166px;
+    font-weight: bold;
+    color: #f65308;
+}
+
+#manage-page #personal-autograph-preview .right .name {
+    margin-left: 0;
+}
+
+#manage-page #personal-autograph-preview .right .gultig {
+    color: #fff
+}
+
+#manage-page #personal-autograph-preview li .date {
+    float: left;
+    margin: 4px 12px 0 4px;
+    width: 118px;
+    font-weight: 200;
+    font-size: 24px;
+    white-space: nowrap;
+    text-align: right;
+    line-height: 25px;
+}
+
+#manage-page #personal-autograph-preview li .time {
+    display: block;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+#manage-page #personal-autograph-preview li .buttons {
+    display: block;
+    float: right;
+    height: 100%;
+    background: rgba(247, 247, 247, 0.07);
+    width: 33px;
+}
+
+#manage-page #personal-autograph-preview li .buttons a {
+    display: block;
+    overflow: hidden;
+    text-indent: -200px;
+    background: url(../images/icons/icon-sprite.png) -175px -256px;
+    height: 17px;
+    width: 17px;
+    margin: 5px auto 0;
+}
+
+#manage-page #personal-autograph-preview li .buttons a:first-child {
+    margin-top: 9px;
+    background-position: -155px -256px;
+}
+
+#manage-page #personal-autograph-preview .mm-icons span {
+    margin-right: 0;
+}
+
+
+
+
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+}
+
+.dialog .viel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.65);
+    z-index: 1800;
+}
+
+.dialog .body {
+    margin: 0 auto;
+    width: 418px;
+    padding: 16px;
+    background: url(../images/bgs/prof-bg.png);
+    position: relative;
+    z-index: 1900;
+    box-shadow: 1px 1px 2px #000206;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.dialog .content {
+    font-weight: 500;
+    line-height: 18px;
+    overflow: auto;
+}
+
+.dialog h1 {
+    font-weight: 200;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 12px;
+    line-height: 31px;
+}
+
+.dialog .actions {
+    text-align: right;
+    padding-top: 6px;
+}
+
+.dialog .actions .btn {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: italic;
+    color: #fff;
+    background: none;
+    border: none;
+    margin-right: 10px;
+}
+
+.dialog .actions .btn:last-child {
+    margin-right: 0;
+}
+
+
+

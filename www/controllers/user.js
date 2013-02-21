@@ -1,6 +1,7 @@
 var db = require('../util/db.js'),
     error = require('../util/error.js'),
-    util = require('../util/util.js');
+    util = require('../util/util.js'),
+    cli = require('cli-color');
 
 
 module.exports = {
@@ -14,7 +15,9 @@ module.exports = {
     
     usernameExists: function () {
         return usernameExists.apply(this, [].slice.apply(arguments));
-    }
+    },
+    
+    findByEmail: findByEmail
 };
 
 function User (userId, callback) {
@@ -61,13 +64,13 @@ function User (userId, callback) {
     }
     
     /**
-     * Helper function to get user information from mongo
+     * Helper function to get user information from mongo (busting any cache)
      * @returns {undefined}
      */
     function getFromMongo () {
         db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
             if(err) {
-                return callback(err);
+                return callback(error(0x4B07, err));
             }
 
             collection.findOne({$or: [{userId: Number(userId)}, {username: String(userId).toLowerCase()}]}, function (err, user) {
@@ -88,8 +91,6 @@ function User (userId, callback) {
                         return;
                     }
                 
-                    //console.log(client);
-                    
                     // Delete from cache after 4 hours. This helps avoid users
                     // being forgotten perpetually in the cache.
                     // It also frees up space for other information to be stored in the cache
@@ -128,6 +129,51 @@ User.prototype = {
     
     get userData () {
         return {}.extend(this._data);
+    },
+    
+    /**
+     * Reset the user's password
+     * @param {function} callback The callback receives an error object and boolean
+     */
+    resetPassword: function (newPass, callback) {
+        var userInfo = this._data;
+        var password = util.hash(newPass, userInfo.username);
+        var oldPass = userInfo.password;
+        
+        // Set the password
+        db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
+            if(err) {
+                return callback(error(0x4B0E, err));
+            }
+            
+            collection.update({userId: userInfo.userId}, {$set: {password: password}}, function (err) {
+                if(err) {
+                    return callback(error(0x4B0F, err));
+                }
+                
+                // Update completed... update the cache
+                db.redisConnect(function (err, client) {
+                    if(err) {
+                        // Failed... revert
+                        collection.update({userId: userInfo.userId}, {$set: {password: oldPass}}, function () {});
+                        return callback(error(0x4B1A, err));
+                    }
+                    
+                    client.multi()
+                        .del('auth:user:' + userInfo.username)
+                        .del('auth:user:' + userInfo.userId)
+                        .exec(function (err) {
+                            if(err) {
+                                // Failed... revert
+                                collection.update({userId: userInfo.userId}, {$set: {password: oldPass}}, function () {});
+                                return callback(error(0x4B1A, err));
+                            }
+                            
+                            return callback(null, true);
+                        });
+                });
+            });
+        });
     }
 };
 
@@ -147,8 +193,14 @@ function createUser (userInfo, callback) {
         userId: userId,
         username: username,
         password: password,
-        created: new Date()
+        created: new Date(),
+        status: 'active',
+        emailVerified: false
     };
+    
+    if(userInfo.email) {
+        info.email = String(userInfo.email).toLowerCase();
+    }
     
     var fn = function (){};
     
@@ -167,7 +219,7 @@ function createUser (userInfo, callback) {
         // Create user
         db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
             if(err) {
-                return callback(error(0x4B08, err));
+                return callback(error(0x4B07, err));
             }
             
             collection.insert(info, function (err) {
@@ -215,28 +267,40 @@ function createUser (userInfo, callback) {
 function usernameExists(username, callback) {
     username = String(username);
     
-    db.redisConnect(function (err, redis) {
+    new User(username, function (err, user) {
         if(err) {
-            return callback(error(0x4B03, err));
+            // Could not check if user exists... let's be pessimistic
+            return callback(err);
         }
         
-        redis.hgetall('auth:user:' + username.toLowerCase(), function (err, info) {
+        return callback(null, Boolean(user));
+   });
+}
+
+/**
+ * Get information about a user, based on the email
+ * @param {string} email The email to search for
+ * @param {function} callback Callback receives error object and user object
+ */
+function findByEmail(email, callback) {
+    db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
+        if(err) {
+            return callback(error(0x4B0C, err));
+        }
+
+        collection.findOne({email: String(email).toLowerCase()}, function (err, user) {
             if(err) {
-                // Could not check if user exists... let's be pessimistic
-                return callback(error(0x4B03, err));
+                return callback(error(0x4B02, err));
             }
-            
-            return callback(null, Boolean(info));
+
+            if(!user) {
+                return callback(error(0x4B0D));
+            }
+
+            new User(user.userId, callback);
         });
     });
 }
 
-/**
- * Get information about a user, based on the username
- * @param {string} username
- * @param {type} callback
- * @returns {undefined}
- */
-function findByUserName(username, callback) {
-    
-}
+
+

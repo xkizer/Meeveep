@@ -35,3 +35,36 @@
     <div id="personal-autographs-count">{{found}} {{txt_found}}</div>
 </div>
 
+{{#userRegistered}}
+<script>
+    window.addEventListener('load', function () {
+        Meeveep.dialog.create({
+            title: 'Welcome {{firstName}}!',
+            message: 'Welcome to Meeveep. Your account has been registered. However, we will need you to confirm your ownership of the email {{email}}. We have therefore sent a mail to {{email}} with instructions on how to proceed. Until you verify your email, you will not be able to perform any action that will require sending mails.'
+        });
+    });
+</script>
+{{/userRegistered}}
+{{#newPWReset}}
+<script>
+    window.addEventListener('load', function () {
+        Meeveep.dialog.create({
+            title: 'Password is reset',
+            message: 'Your password has been reset. Your new password is "{{password}}" (without the quotes). If you wish to change the password, go to your account settings.',
+            buttons: [
+                {
+                    text: 'Change password',
+                    action: function () {
+                        window.location = '/account/changepw';
+                    }
+                },
+                {
+                    text: 'Okay »',
+                    action: 'close'
+                }
+            ]
+        });
+    });
+</script>
+{{/newPWReset}}
+

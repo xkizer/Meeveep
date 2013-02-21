@@ -1,0 +1,51 @@
+{{!
+    EMAIL TEMPLATES
+    This template is the base for all email messages sent out from this website.
+    
+    TODO: Get an email template designed and sliced to replace this one
+}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{title}}</title>
+    <style>
+        body {
+            margin: 0;
+            background: #eee;
+        }
+
+        #container {
+            margin: 0 auto;
+            width: 700px;
+            background: #ccc;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+	<div id="wrapper">
+    	<div id="container">
+        	<header id="header-main">
+            	<div id="header-top">
+	                <div id="slogan">{{header_slogan}}</div>
+                	<div id="logo"><a href="{{host}}/"><img src="{{host}}/images/imgs/logo.png" alt="Meeveep" /></a></div>
+                </div>
+            </header>
+            <section id="main">
+            	<section id="content">
+                    {{{ yield }}}
+                </section>
+            </section>
+            <footer id="footer-main">
+            	<div>
+                    This mail is intended for {{email}} and was sent because you use Meeveep or has
+                    given it permission to mail you. To change your email preferences, please login
+                    to the website and go to your account settings.
+                </div>
+            </footer>
+        </div>
+        {{>tailer}}
+    </div>
+</body>
+</html>

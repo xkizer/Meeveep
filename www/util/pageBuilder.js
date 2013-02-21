@@ -70,7 +70,7 @@ function mergeInto(from, to) {
     return to;
 }
 
-function render (opts, req, res, next) {
+function render (opts, req, res, next, callback) {
     // The template variables
     var vars = opts.vars;
     var lang = opts.lang;
@@ -162,9 +162,9 @@ function render (opts, req, res, next) {
             vars.title = (opts.title.prefix || '') + (vars.title || '') + (opts.title.suffix || '');
             
             var layout = opts.layout || 'layout';
-            res.render(opts.page, vars);
+            res.render(opts.page, vars, callback);
         }
-    })
+    });
 }
 
 module.exports = function (options) {
@@ -183,8 +183,8 @@ module.exports = function (options) {
         /**
          * Render page
          */
-        render: function (opts, req, res, next) {
-            render (mergeInto(opts, mergeInto(options, {})), req, res, next);
+        render: function (opts, req, res, next, callback) {
+            render (mergeInto(opts, mergeInto(options, {})), req, res, next, callback);
         }
     };
     

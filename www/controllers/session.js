@@ -7,6 +7,7 @@ var defaultOptions = {
 
 var error = require('../util/error.js');
 var db = require('../util/db.js');
+var cli = require('cli-color');
 
 module.exports = {
     /**
@@ -21,6 +22,11 @@ module.exports = {
      * @param callback The callback receives an optional error object and a token
      */
     createSession: function (details, options, callback) {
+        if(!details) {
+            // No details provided
+            return callback(error(0x290C));
+        }
+        
         if(arguments.length < 3) {
             callback = options;
             options = {};

@@ -1,9 +1,50 @@
-
+var step = require('../util/step'),
+    util = require('../util/util');
 
 module.exports = {
     index: function(req, res, next){
         var renderer = require('../util/pageBuilder.js')();
         //res.render('index', { title: 'Express', sidebar_counter: 'Some content' });
+        var chain = step.init();
+        
+        if(req.query.regComplete && req.query.nonce) {
+            // We have a registration complete
+            chain.add(function (next) {
+                // Verify that the registration nonce is valid
+                var info = util.resolveNonce(req.query.nonce, function (err, data) {
+                    if(err || !data) {
+                        return next();
+                    }
+                    
+                    if(data.created === true && data.userId == req.query.uid) {
+                        // Valid
+                        view.userRegistered = data;
+                    }
+                    
+                    next();
+                });
+            });
+        }
+        
+        if(req.query.npr && req.query.v2) {
+            // We have a registration complete
+            chain.add(function (next) {
+                // Verify that the registration nonce is valid
+                var info = util.resolveNonce(req.query.v2, function (err, data) {
+                    if(err || !data) {
+                        return next();
+                    }
+                    
+                    if(data.newPWReset === true && data.password) {
+                        // Valid
+                        view.newPWReset = data;
+                    }
+                    
+                    next();
+                });
+            });
+        }
+        
         var view = {
             title: 'Express',
             newsletter: true,
@@ -20,60 +61,25 @@ module.exports = {
             txt_information: 'txtInformation',
             txt_found: {text: 'txtFound', filter: 'toUpperCase'}
         };
-        
-        // Get the list of stars
-        require('../controllers/stars.js').getStars({limit: 10}, function (err, stars) {
-            if(err) {
-                // Something bad
-                return res.send('Server error', 500);
-            }
-            
-            view.stars = stars;
-            view.found = stars.length;
-            
-            // Add images to the objects
-            stars.forEach(function (star) {
-                star.image = '/images/stars/thumbs/' + star.starId + '.jpg'; // TODO: Rewrite this function to use a more standard/dynamic image URL generator
-            });
-            
-            renderer.render({page: 'main/index', vars: view}, req, res, next);
-        });
-    },
-    
-    login: function (req, res, next) {
-        var post = req.body;
-        var auth = require('../controllers/auth.js');
-        auth.login(post.username, post.password, function (err, details) {
-            if(err) {
-                return res.json({error: err.message || err});
-            }
-            
-            var session = require('../controllers/session.js');
-            session.createSession(details, {ip: req.socket.remoteAddress, userAgent: req.headers['user-agent']}, function (err, sessionId) {
+
+        chain.exec(function () {
+            // Get the list of stars
+            require('../controllers/stars.js').getStars({limit: 10}, function (err, stars) {
                 if(err) {
-                    return res.json({error: err.message || err});
+                    // Something bad
+                    return res.send('Server error', 500);
                 }
-                
-                // Session created... send session cookies
-                res.cookie('sid', sessionId);
-                
-                // Respond
-                res.json({
-                    success: true,
-                    token: sessionId
+
+                view.stars = stars;
+                view.found = stars.length;
+
+                // Add images to the objects
+                stars.forEach(function (star) {
+                    star.image = '/images/stars/thumbs/' + star.starId + '.jpg'; // TODO: Rewrite this function to use a more standard/dynamic image URL generator
                 });
+
+                renderer.render({page: 'main/index', vars: view}, req, res, next);
             });
-        });
-    },
-    
-    logout: function (req, res, next) {
-        req.logout(function (err) {
-            if(err) {
-                res.send('Could not log out', 500);
-                res.end();
-            } else {
-                res.redirect('/');
-            }
         });
     }
 };

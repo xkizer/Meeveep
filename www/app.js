@@ -6,14 +6,17 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , auth = require('./routes/auth')
   , stars = require('./routes/stars.js')
+  , account = require('./routes/account.js')
   , autographs = require('./routes/autograph.js')
   , media = require('./routes/media.js')
   , http = require('http')
   , path = require('path')
   , cons = require('consolidate')
   , session = require('./util/session.js')
-  , io = require('socket.io');
+  , io = require('socket.io')
+  , url = require('url');
 
 // Extend objects
 require('./util/extend.js');
@@ -25,6 +28,7 @@ var app = express();
 app.set('layout', 'layout');
 app.set('partials', {head: "head", sidebar: 'sidebar', newsletter: 'sidebar/newsletter'});
 app.engine('html', require('hogan-express'));
+app.engine('txt', require('hogan-express'));
 app.set('json spaces', null);
 
 
@@ -51,8 +55,6 @@ app.configure('development', function(){
 
 
 app.get('/', routes.index);
-app.post('/auth/login', routes.login);
-app.get('/auth/logout', routes.logout);
 app.get('/star/:starId([0-9]+)', stars.starInfo);
 app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
 app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
@@ -77,11 +79,22 @@ app.get('/cards/add', autographs.addCardPage);
 app.post('/cards/add', autographs.addCard);
 app.post('/cards/add', autographs.addCardPage);
 
-/*
-app.post('/upload', function (req) {
-    console.log(req);
+// Account management
+app.get('/auth/logout', auth.logout);
+app.post('/auth/login', auth.login);
+app.get('/auth/login', auth.displayLogin);
+app.get('/login', function (req, res) {
+    res.redirect('/auth/login' + (url.parse(req.url).search || ''));
 });
-*/
+
+app.get('/auth/forgotpw', auth.forgotPassword);
+app.post('/auth/forgotpw', auth.retrievePassword);
+app.get('/auth/resetpw/:nonce/:verifier', auth.resetPassword);
+
+app.get('/account/register', account.register);
+app.get('/register', account.register); // Alias
+app.post('/account/register', account.doRegister);
+app.post('/account/register', account.register); // If the registration fails
 
 
 

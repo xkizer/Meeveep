@@ -28,7 +28,7 @@ module.exports = {
                 }
                 
                 // Check account status
-                if(!userInfo.active) {
+                if(!userInfo.status === 'active') {
                     return callback(error(0x2902, err));
                 }
                 

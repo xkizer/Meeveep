@@ -985,8 +985,15 @@ html {
 }
 
 #live-autograph-stream #video-preview video {
-	display: block;
+	display: none;
 	width: 277px;
+}
+
+#live-autograph-stream #video-preview .video video {
+	display: block;
+}
+
+#live-autograph-stream #video-preview [data-mode="record"] video {
     -webkit-transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
     -ms-transform: rotateY(180deg);
@@ -1027,8 +1034,11 @@ html {
 	margin-right: 4px;
     background: #fff;
     height: 15px;
-    border-radius: 10px;
     margin-top: 4px;
+}
+
+#live-autograph-list [data-mode="record"] .controls .play-pause {
+    border-radius: 10px;
 }
 
 #live-autograph-list .recording .controls .play-pause {
@@ -1038,6 +1048,15 @@ html {
 	width: 20px;
     margin-top: 0;
 }
+
+#live-autograph-list [data-mode="playback"] .controls .play-pause {
+	background: url(../images/icons/buttonArrow_white.png) 4px 2px no-repeat;
+}
+
+#live-autograph-list .playing[data-mode="playback"] .controls .play-pause {
+	background: url(../images/icons/icon-sprite.png) -2px -208px;
+}
+
 
 #live-autograph-list .controls .stop {
     display: none;
@@ -1342,11 +1361,18 @@ html {
 #divide #personal-autograph-register .content {
 	border-top: none;
 	padding: 11px 17px 0;
-	height: 298px;
+	height: auto;
 }
 
 #divide #personal-autograph-register div.invalid {
 	background: rgba(255, 0, 0, 0.25);
+}
+
+#divide #personal-autograph-register form > .error {
+    background: rgba(255, 0, 0, 0.25);
+    padding: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 #personal-autograph-register .invalid h3 {

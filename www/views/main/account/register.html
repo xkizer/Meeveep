@@ -1,0 +1,55 @@
+<div id="personal-autograph-register">
+    <header>
+        <hgroup>
+            <h1>{{page_title}}</h1>
+            <h2>{{page_title_description}}</h2>
+        </hgroup>
+    </header>
+    <section class="content">
+        <form method="post">
+            {{#form.error_msg}}<div class="error">{{form.error_msg}}</div>{{/form.error_msg}}
+            <div class="left">
+                <div>
+                    <h3>{{txt_salutation}}</h3>
+                    <select name="salutation">
+                        <option value="">{{txt_please_select}}</option>
+                        <option{{#form.defaults.salutation_mr}} selected="selected"{{/form.defaults.salutation_mr}} value="Mr">{{txt_mr}}</option>
+                        <option{{#form.defaults.salutation_mrs}} selected="selected"{{/form.defaults.salutation_mrs}} value="Mrs">{{txt_mrs}}</option>
+                        <option{{#form.defaults.salutation_ms}} selected="selected"{{/form.defaults.salutation_ms}} value="Ms">{{txt_miss}}</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>{{txt_firstname}}*</h3>
+                    <input value="{{form.defaults.firstName}}" type="text" required pattern="^[a-zA-Z][a-zA-Z\-'\s]*$" name="firstName" />
+                </div>
+                <div class="valid">
+                    <h3>{{txt_surname}}*</h3>
+                    <input value="{{form.defaults.lastName}}" type="text" required pattern="^[a-zA-Z][a-zA-Z\-'\s]*$" name="lastName" />
+                </div>
+                <div class="last">
+                    <h3>{{txt_please_select}}</h3>
+                    <label><input{{#form.defaults.terms}} checked="checked"{{/form.defaults.terms}} name="terms" value="accept" type="checkbox" /> {{txt_terms_accept}}</label>
+                </div>
+            </div>
+            <div class="right">
+                <div id="birthday">
+                    <h3>{{txt_birthday}}</h3>
+                    <input maxlength="2" value="{{form.defaults.day}}" type="text" pattern="[0-3]?[1-9]" name="day" placeholder="{{txt_dd}}" />
+                    <input maxlength="2" value="{{form.defaults.month}}" type="text" name="month" pattern="[01]?[1-9]" placeholder="{{txt_mm}}" />
+                    <input maxlength="4" value="{{form.defaults.year}}" type="text" name="year" pattern="[12][1-9]{3}" placeholder="{{txt_yyyy}}" />
+                    <span class="cl"></span>
+                </div>
+                <div>
+                    <h3>{{txt_email_addr}}*</h3>
+                    <input value="{{form.defaults.email}}" type="email" required name="email" />
+                </div>
+                <div>
+                    <h3>{{txt_password}}*</h3>
+                    <input value="{{form.defaults.password}}" type="password" required name="password" pattern=".{6,32}" />
+                </div>
+                <button type="submit">{{txt_reg_now}} »</button>
+            </div>
+        </form>
+    </section>
+    <div id="personal-autographs-bottom">&nbsp;</div>
+</div>
