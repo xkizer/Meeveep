@@ -269,7 +269,7 @@ module.exports = {
                                 res.cookie('sid', sessionId);
 
                                 // Get nonce
-                                res.redirect('/?npr=1&v2=' + nonce.key);
+                                res.redirect('/account/changepw?npr=1&v2=' + nonce.key);
                             });
                         });
                     });

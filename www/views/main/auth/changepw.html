@@ -1,0 +1,40 @@
+<div id="personal-autograph-register">
+    <header>
+        <hgroup>
+            <h1>{{page_title}}</h1>
+            <h2>{{page_title_description}}</h2>
+        </hgroup>
+    </header>
+    <section class="content">
+        <form method="post">
+            {{#error}}<div class="error">{{error}}</div>{{/error}}
+            <div class="left">
+                <div>
+                    <h3>{{txt_old_pw}}{{#newPWReset}} <i>({{txt_edit_not}})</i>{{/newPWReset}}</h3>
+                    <input {{#newPWReset}}readonly value="{{password}}"{{/newPWReset}} type="password" pattern="^.{6,32}$" tabindex="1" required name="password" />
+                </div>
+                <div class="last">
+                    <a href="/help">{{txt_need_help}}?</a>
+                </div>
+            </div>
+            <div class="right">
+                <div>
+                    <h3>{{txt_new_pw}}</h3>
+                    <input tabindex="2" type="password" required name="newpassword" pattern="^.{6,32}$" />
+                </div>
+                <button type="submit">{{txt_change_pw}} »</button>
+            </div>
+        </form>
+    </section>
+    <div id="personal-autographs-bottom">&nbsp;</div>
+</div>
+{{#pwChanged}}
+<script>
+    window.addEventListener('load', function () {
+        Meeveep.dialog.create({
+            title: 'Password changed!',
+            message: 'Your password has been changed. Your new password will take effect immediately and the old one will not work again.'
+        });
+    });
+</script>
+{{/pwChanged}}

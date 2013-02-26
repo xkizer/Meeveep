@@ -5,6 +5,7 @@
 var cli = require('cli-color'),
     users = require('../controllers/user'),
     util = require('../util/util'),
+    step = require('../util/step'),
     auth = require('../controllers/auth');
 
 module.exports = {
@@ -79,6 +80,12 @@ module.exports = {
         renderer.render({page: 'main/account/register', vars: view}, req, res, next);
     },
     
+    /**
+     * Execute the registration of an account
+     * @param {object} req
+     * @param {object} res
+     * @param {function} next
+     */
     doRegister: function (req, res, next) {
         var data = req.body,
             me = module.exports;
@@ -129,7 +136,28 @@ module.exports = {
             data.birthday = birthday;
         }
         
-        delete data.day, data.month, data.year;
+        delete data.day;
+        delete data.month;
+        delete data.year;
+        
+        // Security... make sure the data we have is the data we should have
+        var dt = {};
+        var fields = ['firstName', 'lastName', 'salutation', 'email', 'terms', 'password', 'birthday'];
+        
+        for(var i = 0; i < fields.length; i++) {
+            var fieldName = fields[i];
+            
+            if(data.hasOwnProperty(fieldName)) {
+                dt[fieldName] = data['fieldName'];
+            }
+        }
+        
+        data = dt;
+        
+        // Check for account type
+        if(req.query._t === 'mrg') {
+            data.pendingManagerApproval = true;
+        }
         
         // If we are here, verification was successful
         users.createUser(data, function (err, userId) {
@@ -157,6 +185,116 @@ module.exports = {
                     // Get nonce
                     var nonce = util.createNonce({userId: userId, created: true, firstName: data.firstName, email: data.email}, 360, function (err, nonce) {
                         res.redirect('/?regComplete=1&nonce=' + nonce.key + '&uid=' + userId);
+                    });
+                });
+            });
+        });
+    },
+    
+    displayChangePassword: function (req, res, next) {
+        var args = arguments;
+        
+        req.requireLogin(function () {
+            var chain = step.init();
+            
+            if(req.query.pwc && req.query.xt && req.query.vc) {
+                // We potentially have a changed password
+                chain.add(function (next) {
+                    // Verify that the nonce is valid
+                    util.resolveNonce(req.query.xt, req.query.vc, function (err, data) {
+                        if(err || !data) {
+                            return next();
+                        }
+
+                        if(data.pwChanged === true) {
+                            // Valid
+                            view.pwChanged = true;
+                        }
+
+                        next();
+                    });
+                });
+            }
+            
+            if(req.query.npr && req.query.v2) {
+                // We potentially have a password reset
+                chain.add(function (next) {
+                    // Verify that the nonce is valid
+                    var info = util.resolveNonce(req.query.v2, false, function (err, data) {
+                        if(err || !data) {
+                            return next();
+                        }
+
+                        if(data.newPWReset === true) {
+                            // Valid
+                            view.newPWReset = data;
+                        }
+
+                        next();
+                    });
+                });
+            }
+
+            var renderer = require('../util/pageBuilder.js')(),
+                err;
+
+            if(args.length > 3) {
+                err = args[3];
+            }
+
+            var view = {
+                error: err,
+                txt_edit_not: 'txtEditNot',
+                newsletter: true,
+                page_title: 'txtChangePassword',
+                page_title_description: 'txtStarClose',
+                txt_need_help: 'txtNeedSomeHelp',
+                txt_old_pw: 'txtOldPassword',
+                txt_new_pw: 'txtNewPassword',
+                txt_change_pw: 'txtChangePassword',
+                sidebar_counter: ' ',
+                body: {
+                    id: 'login-page'
+                }
+            };
+
+            chain.exec(function () {
+                renderer.render({page: 'main/auth/changepw', vars: view}, req, res, next);
+            });
+        });
+    },
+    
+    changePassword: function (req, res, next) {
+        req.requireLogin(function () {
+            req.getUser(function (err, user) {
+                if(err) {
+                    return module.exports.displayChangePassword(req, res, next, err.message || err);
+                }
+                
+                var oldPass = req.body.password,
+                    newPass = req.body.newpassword;
+
+                // Verify values
+                user.changePassword(oldPass, newPass, function (err) {
+                    if(err) {
+                        return module.exports.displayChangePassword(req, res, next, err.message || err);
+                    }
+                    
+                    // Done
+                    util.createNonce({pwChanged: true}, function (err, nonce) {
+                        if(err) {
+                            // It succeeded, but we can't display a message.
+                            // We redirect to the home page instead and hope the
+                            // user will know it succeeded.
+                            return res.redirect('/');
+                        }
+                        
+                        res.redirect('/account/changepw?pwc=1&xt=' + nonce.key + '&vc=' + nonce.verifier);
+                        
+                        // Background: delete nonce if any
+                        if(req.query.npr && req.query.v2) {
+                            util.deleteNonce(req.query.v2, true, function () { /* empty */ });
+                        }
                     });
                 });
             });

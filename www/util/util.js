@@ -171,7 +171,26 @@ module.exports = {
                 callback(null, data.data);
             });
         });
-    }
+    },
+    
+    deleteNonce: function (key, callback) {
+        db.redisConnect(function (err, client) {
+            if(err) {
+                return callback('Redis failed');
+            }
+            
+            var key ='nonce:key:' + nonceKey;
+            client.del(key, function (err) {
+                if(err) {
+                    return callback('Redis error');
+                }
+                
+                callback();
+            });
+        });
+    },
+    
+    destroyNonce: module.exports.deleteNonce
 };
 
 

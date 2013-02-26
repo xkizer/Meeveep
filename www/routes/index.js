@@ -26,25 +26,6 @@ module.exports = {
             });
         }
         
-        if(req.query.npr && req.query.v2) {
-            // We have a registration complete
-            chain.add(function (next) {
-                // Verify that the registration nonce is valid
-                var info = util.resolveNonce(req.query.v2, function (err, data) {
-                    if(err || !data) {
-                        return next();
-                    }
-                    
-                    if(data.newPWReset === true && data.password) {
-                        // Valid
-                        view.newPWReset = data;
-                    }
-                    
-                    next();
-                });
-            });
-        }
-        
         var view = {
             title: 'Express',
             newsletter: true,

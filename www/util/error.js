@@ -56,7 +56,7 @@ var errorCodes = {
 
     0x4B01: 'User not found',                                                   // User with ID {userId} not found
     0x4B02: 'Server error: could not get user information',                     // Database error trying to get user's information
-   // 0x4B03: 'Could not check availability of username',                         // Redis failed us while checking if username is free
+    0x4B03: 'Incorrect password',                                               // Redis failed us while checking if username is free
     0x4B04: 'Username is already taken',                                        // Please choose another username!
     0x4B05: 'Error retrieving user information',                                // Redis during findByUsername or findByEmail
     0x4B06: 'User not found',                                                   // Maybe not really, but user was not found in the cache
@@ -69,7 +69,12 @@ var errorCodes = {
     0x4B0D: 'Email not found',                                                  // No user with that email!!!
     0x4B0E: 'Error resetting the user\'s password',                             // MongoDB connection during PW reset
     0x4B0F: 'Error resetting user\'s password',                                 // Mongo update failed while resetting password
+    //
+    0x4B19: 'Password need to be between 6 and 32 characters',                  
     0x4B1A: 'Error resetting user\'s password',                                 // redis failed while resetting password
+    //
+    0x4B1E: 'Error changing password',                                          // MongoDB connection during PW change
+    0x4B1F: 'Error changing password',                                          // Mongo update failed while resetting password
     
     0x9000: 'Database error while retrieving list of stars',
     0x9001: 'Database error while retrieving star info',

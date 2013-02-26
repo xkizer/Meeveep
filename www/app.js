@@ -9,6 +9,7 @@ var express = require('express')
   , auth = require('./routes/auth')
   , stars = require('./routes/stars.js')
   , account = require('./routes/account.js')
+  , manager = require('./routes/manager.js')
   , autographs = require('./routes/autograph.js')
   , media = require('./routes/media.js')
   , http = require('http')
@@ -91,11 +92,20 @@ app.get('/auth/forgotpw', auth.forgotPassword);
 app.post('/auth/forgotpw', auth.retrievePassword);
 app.get('/auth/resetpw/:nonce/:verifier', auth.resetPassword);
 
+app.get('/account/changepw', account.displayChangePassword);
+app.post('/account/changepw', account.changePassword);
+
 app.get('/account/register', account.register);
 app.get('/register', account.register); // Alias
 app.post('/account/register', account.doRegister);
 app.post('/account/register', account.register); // If the registration fails
 
+
+// Star management
+app.get('/star/add', manager.addStarForm);
+app.post('/star/add', manager.addStar);
+app.get('/product/add', manager.addProduct);
+app.post('/product/add', manager.doAddProduct);
 
 
 

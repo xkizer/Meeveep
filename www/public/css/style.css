@@ -852,7 +852,7 @@ html {
 	background-position: -460px -129px;
 }
 
-.mm-icons span.hq-video:before {
+.mm-icons span.hq:before {
 	display: none;
 }
 
@@ -1368,7 +1368,7 @@ html {
 	background: rgba(255, 0, 0, 0.25);
 }
 
-#divide #personal-autograph-register form > .error {
+#divide form > .error {
     background: rgba(255, 0, 0, 0.25);
     padding: 10px;
     margin-bottom: 10px;
@@ -1396,6 +1396,12 @@ html {
 
 #personal-autograph-register .last {
 	height: 82px;
+}
+
+#personal-autograph-register .last .fineprints {
+    font-size: 0.85em;
+    line-height: 1.1em;
+    margin-top: 5px;
 }
 
 #personal-autograph-register .right > div,
@@ -1491,6 +1497,14 @@ html {
 	font-weight: bold;
 }
 
+#personal-autograph-dashboard h3 i,
+#personal-autograph-register h3 i {
+    font-style: normal;
+    font-weight: normal;
+    color: #fff;
+    font-size: 0.8em;
+}
+
 #personal-autograph-dashboard h3 i {
 	color: #fff;
 	font-weight: 500;
@@ -1556,7 +1570,8 @@ html {
 }
 
 #dashboard-star-thumbnail img {
-	display: block;
+	width: 152px;
+	display: none;
 	margin-bottom: 3px;
 	box-shadow: 1px 1px 5px rgba(0, 2, 6, 0.45);
 }
@@ -1574,14 +1589,15 @@ html {
 #dashboard-star-thumbnail .mm-icons span {
 	float: right;
 	height: 15px;
-	display: block;
+	display: none;
 	line-height: 15px;
 	font-weight: bold;
 	font-style: italic;
 	font-size: 13px;
+    margin-right: 5px;
 }
 
-#dashboard-star-thumbnail .mm-icons span:after {
+#dashboard-star-thumbnail .mm-icons .audio {
 	width: 15px;
 	height: 15px;
 	float: right;

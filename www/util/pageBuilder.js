@@ -92,7 +92,7 @@ function render (opts, req, res, next, callback) {
                     return res.send('Internal Server Error', 500);
                 }
                 
-                vars.extendIfNotExists(user, 'user_');
+                vars.loggedInUser = user.userData;
                 renderPage();
             });
         } else {

@@ -54,7 +54,7 @@
                         </form>
                         {{/loggedIn}}
                         {{#loggedIn}}
-                            User logged in as <em>{{user_username}}</em>
+                            User logged in as <em>{{loggedInUser.username}}</em>
                             <div><a href="/auth/logout">Logout</a></div>
                         {{/loggedIn}}
                     </div>
@@ -82,10 +82,10 @@
                         <h2>{{footer_info_about}}</h2>
                         <h3>{{management_clubs}}</h3>
                         <p>{{footer_pave_way}}</p>
-                        <a href="#" class="more">{{register_here}} &raquo;</a>
+                        <a href="/account/register?_t=mrg" class="more">{{register_here}} &raquo;</a>
                         <h3>{{celerities}}</h3>
                         <p>{{celeb_closeness}}</p>
-                        <a href="#" class="more">{{register_here}} &raquo;</a>
+                        <a href="/account/register?_t=str" class="more">{{register_here}} &raquo;</a>
                     </section>
                     <section>
                         <h2>{{footer_trust}}</h2>

@@ -94,7 +94,7 @@ function User (userId, callback) {
                     // Delete from cache after 4 hours. This helps avoid users
                     // being forgotten perpetually in the cache.
                     // It also frees up space for other information to be stored in the cache
-                    var ttl = 60 * 60 * 4;
+                    var ttl = 14400;
                     
                     // Serialize
                     var username = user.username.toLowerCase(),
@@ -124,7 +124,7 @@ function User (userId, callback) {
 
 User.prototype = {
     get id () {
-        return this._data.userId
+        return this._data.userId;
     },
     
     get userData () {
@@ -133,6 +133,7 @@ User.prototype = {
     
     /**
      * Reset the user's password
+     * @param {string} newPass The new password
      * @param {function} callback The callback receives an error object and boolean
      */
     resetPassword: function (newPass, callback) {
@@ -169,11 +170,41 @@ User.prototype = {
                                 return callback(error(0x4B1A, err));
                             }
                             
+                            // Remember to update "this" instance
+                            userInfo.password = password;
+                            
+                            // TODO: define an event that all user objects can subscribe to. This event
+                            // will be fired once to notify all user objects to update their data
+                            
                             return callback(null, true);
                         });
                 });
             });
         });
+    },
+    
+    /**
+     * Change the user's password normally
+     * @param {string} oldPass The user's old password
+     * @param {string} newPass The user's new password
+     * @param {function} callback The callback receives an optional error object
+     */
+    changePassword: function (oldPass, newPass, callback) {
+        // Check if the old password matches the new one
+        var userInfo = this._data;
+        oldPass = util.hash(oldPass, userInfo.username);
+        
+        if(oldPass !== userInfo.password) {
+            // Foul
+            return callback(error(0x4B03));
+        }
+        
+        if(newPass.length < 6 || newPass.length > 32) {
+            return callback(error(0x4B19));
+        }
+        
+        // Set the user's password
+        this.resetPassword(newPass, callback);
     }
 };
 
@@ -267,13 +298,18 @@ function createUser (userInfo, callback) {
 function usernameExists(username, callback) {
     username = String(username);
     
-    new User(username, function (err, user) {
+    new User(username, function (err) {
         if(err) {
+            if(err.code === 0x4B01) {
+                // User not found
+                return callback(null, false);
+            }
+            
             // Could not check if user exists... let's be pessimistic
             return callback(err);
         }
         
-        return callback(null, Boolean(user));
+        return callback(null, true);
    });
 }
 

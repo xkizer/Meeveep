@@ -34,7 +34,6 @@
     </section>
     <div id="personal-autographs-count">{{found}} {{txt_found}}</div>
 </div>
-
 {{#userRegistered}}
 <script>
     window.addEventListener('load', function () {
@@ -45,26 +44,3 @@
     });
 </script>
 {{/userRegistered}}
-{{#newPWReset}}
-<script>
-    window.addEventListener('load', function () {
-        Meeveep.dialog.create({
-            title: 'Password is reset',
-            message: 'Your password has been reset. Your new password is "{{password}}" (without the quotes). If you wish to change the password, go to your account settings.',
-            buttons: [
-                {
-                    text: 'Change password',
-                    action: function () {
-                        window.location = '/account/changepw';
-                    }
-                },
-                {
-                    text: 'Okay »',
-                    action: 'close'
-                }
-            ]
-        });
-    });
-</script>
-{{/newPWReset}}
-

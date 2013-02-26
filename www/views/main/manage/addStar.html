@@ -1,0 +1,64 @@
+<div id="personal-autograph-dashboard">
+    <h1>{{page_title}}</h1>
+    <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+    <section class="content">
+        <form method="post" action="/star/create">
+            <div class="left">
+                <div>
+                    <h3>{{txt_star_name}}</h3>
+                    <input name="name" type="text" />
+                </div>
+                <div>
+                    <h3>{{txt_choose_language}}</h3>
+                    <select name="lang">
+                        <option value="en-us">English (US)</option>
+                        <option value="de">Deutsch</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>{{txt_star_email}}</h3>
+                    <input name="email" type="text" />
+                </div>
+                <div>
+                    <h3>{{txt_star_pw}}</h3>
+                    <input name="name" type="text" />
+                </div>
+                <div>
+                    <h3>{{txt_select_cat}}</h3>
+                    <div>
+                        <select name="lang">
+                            <option value="938921029032">Music</option>
+                        </select>
+                        <select name="lang">
+                            <option value="938921059002">Sports</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="fineprints">
+                    <input name="sss" type="checkbox" /> <span>Hiermit bestätige ich, dass ich für oben angegebene Person einen entsprechenden Account anlegen darf.</span>
+                </div>
+            </div>
+            <div class="right">
+                <div id="dashboard-star-thumbnails">
+                    <h3>Autogrammupload</h3>
+                    <ul>
+                    </ul>
+                    <span class="cl"></span>
+                    <div class="file-upload">
+                        <div class="own-photo">
+                            <span>Eigenes Foto</span>
+                            <a href="#" class="info">More information</a>
+                        </div>
+                        <input type="text" readonly="readonly" placeholder="Datei wählen..." class="filename" />
+                        <input type="file" name="img" accept="image/*" />
+                        <a href="#" class="picker"></a>
+                        <a href="#" class="upload">hochladen »</a>
+                        <span class="cl"></span>
+                    </div>
+                </div>
+                <button type="submit">Jetzt einstellen »</button>
+            </div>
+        </form>
+    </section>
+    <div id="personal-autographs-bottom">&nbsp;</div>
+</div>

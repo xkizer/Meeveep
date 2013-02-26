@@ -47,7 +47,7 @@ jQuery(function ($) {
     // info is still in scope. It only saves us from unwanted bugs by forcing
     // us to access the card info only through the data attribute. It also helps
     // to ensure that memroy is freed when each individual card is removed)
-	delete cardInfo;
+	delete window.cardInfo;
 
     // When the slideshow is scrolled (this event is fired from book.js)
 	bigUl.on('scrolled', function (e) {
@@ -185,13 +185,13 @@ jQuery(function ($) {
 		var overlay = $('#sign-overlay').fadeIn(),                              // The signing window container
 			img = overlay.find('.img'),                                         // The image container
 			image = img.find('img').attr({src: card.large}),                    // The image itself (we display the large picture for the star to sign)
-			header = overlay.find('header'),                                    
+			header = overlay.find('header'),
 			content = overlay.find('.content'),
-			zIndex = 40,                                                        
+			zIndex = 40,
 			canvas = $('<canvas>').appendTo(img).css({'z-index': zIndex++}),    // Put a transparent canvas on top of the image
 			startPosition = null,                                               // This holds the coordinates of the starting position of each stroke
-			canvasOffset = canvas.offset(),                                     
-			context = canvas[0].getContext('2d'),                               
+			canvasOffset = canvas.offset(),
+			context = canvas[0].getContext('2d'),
 			penColor = penColors[card.penColor],                                // The pen color the user chose
 			currentStrokes = [],                                                // Holds the coordinates of the current mouse strokes
 			mouseStrokes = [];                                                  // Records all the various mouse stroke, for replay purposes
@@ -885,8 +885,6 @@ jQuery(function ($) {
                 // When the worker sends us a message...
                 worker.onmessage = function (event) {
                     var data = event.data;
-                    //console.log('From worker', data);
-
                     // There are different types of messages the worker may send
                     // us. We use switch to find out which.
                     switch(data.type) {
@@ -1057,8 +1055,6 @@ jQuery(function ($) {
 		e.preventDefault();
 		var card = getCurrentCard();
         
-        console.log(card.signature.strokes);
-
 		initSignature(card, function (signature) {
 			// Attach the signature to the card...
 			card.signature = signature;
@@ -1380,7 +1376,9 @@ jQuery(function ($) {
 	});
     
     // Check the cards
-    checkCard(getCurrentCard());
+    try {
+        checkCard(getCurrentCard());
+    } catch (e) {}
 
     // Elsewhere... we deal with date picker
     var date = new Date(),
@@ -1406,4 +1404,49 @@ jQuery(function ($) {
             fromContainer.datepicker( "option", "maxDate", selectedDate );
         }
     });
+    
+    // Make it possible to pick one and only one of video, audio and HQ video
+    var mediaSelector = $('#dashboard-02oa7d :checkbox').not('[value="user-image"]').not('[value="hq"]');
+    
+    mediaSelector.on('change', function () {
+        if(this.checked) {
+            // This option has been checked, uncheck every other option
+            mediaSelector.not(this).each(function () {
+                this.checked = false;
+                $.uniform.update(this);
+            });
+        }
+    });
+    
+    if(window.starInfo) {
+        // Star info is set, this is the "add product" page
+        (function () {
+            var starSelect = $('#star-select');
+            var starImage = $('#dashboard-star-thumbnail img');
+            var nameContainer = $('#dashboard-star-thumbnail h3');
+            var price = $('#dashboard-star-thumbnail .price');
+            var priceInput = $('#dashboard-pricing [name="price"]');
+            
+            function checkStar() {
+                var currentId = starSelect.val();
+                var star;
+                
+                // Find star object
+                for(var i = 0; i < starInfo.length; i++) {
+                    if(starInfo[i].id === currentId) {
+                        star = starInfo[i];
+                        break;
+                    }
+                }
+                
+                starImage.attr('src', star.image);
+                starImage.css('display', 'block');
+                nameContainer.text(star.name);
+                price.text((parseFloat(priceInput.val()) || 0) + '€');
+            }
+            
+            starSelect.change(checkStar).change();
+            priceInput.on('mouseu', checkStar);
+        }());
+    }
 });

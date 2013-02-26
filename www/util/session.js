@@ -58,12 +58,13 @@ function getUser(callback) {
         }
 
         req.currentUser = user; // Cache
-        return callback(null, user.userData);
+        return callback(null, user);
     });
 }
 
 /**
  * End the current session
+ * @param {function} callback
  */
 function endSession(callback) {
     var req = this;
@@ -137,11 +138,12 @@ module.exports = {
                 req.session = userInfo;
                 req.sessionId = sessionId;
 
-                res.on("finish", saveSession.callback(req))
+                res.on("finish", saveSession.callback(req));
                 next();
             }
         );
     }
-}
+};
+
 
 

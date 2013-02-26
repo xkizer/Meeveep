@@ -1,0 +1,94 @@
+<div id="personal-autograph-dashboard">
+    <h1>{{txt_generate_autograph}}</h1>
+    <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+    <section class="content">
+        <form method="post">
+            {{#error}}<div class="error">{{error}}</div>{{/error}}
+            <div class="left">
+                <div>
+                    <h3>{{txt_select_star}}</h3>
+                    <select id="star-select" name="star">
+                        {{#stars.length}}
+                        {{#stars}}
+                        <option value="{{starId}}">{{name}}</option>
+                        {{/stars}}
+                        {{/stars.length}}
+                        {{^stars.length}}
+                        <option value="">{{txt_no_stars}}</option>
+                        {{/stars.length}}
+                    </select>
+                </div>
+                <div>
+                    <h3>{{txt_choose_lang}}</h3>
+                    <select name="lang">
+                        {{#langs}}
+                        <option value="{{code}}">{{name}}</option>
+                        {{/langs}}
+                    </select>
+                </div>
+                <div id="dashboard-02oa7d">
+                    <h3>{{txt_auto_opts}}</h3>
+                    <div>
+                        <label><input name="includes" value="video" type="checkbox" checked /> {{txt_video}}</label>
+                        <label><input name="includes" value="hq" type="checkbox" checked /> {{txt_hd}}</label>
+                    </div>
+                    <div>
+                        <label><input name="includes" value="audio" type="checkbox" checked /> {{txt_audio}}</label>
+                        <label><input name="includes" value="user-image" type="checkbox" /> {{txt_user_image}}*</label>
+                    </div>
+                </div>
+                <p class="fineprints">
+                    * {{txt_star_depiction}}. (<a href="#">{{txt_more_details}} »</a>)
+                </p>
+                <div>
+                    <h3>{{txt_avail_period}} <i>({{txt_blank}} = {{txt_infinite}})</i></h3>
+                    <div class="datepicker"><input type="text" name="validity.from" class="datepicker" placeholder="{{txt_DD}}.{{txt_MM}}.{{txt_YYYY}}" /></div>
+                    <div class="datepicker"><input type="text" name="validity.to" class="datepicker" placeholder="{{txt_DD}}.{{txt_MM}}.{{txt_YYYY}}" /></div>
+                    <span class="cl"></span>
+                </div>
+                <div id="dashboard-pricing">
+                    <div class="left">
+                        <h3>{{txt_price}}</h3>
+                        <label><span>EUR </span><input name="price" value="{{data.price}}" required pattern="^[0-9]+(\.[0-9]+)?$" type="text" /></label>
+                    </div>
+                    <div class="right">
+                        <h3>{{txt_availability}}</h3>
+                        <label><span>{{txt_pcs}} </span><input name="pieces" value="{{data.pieces}}" required pattern="^[1-9][0-9]{0,5}$" type="text" /></label>
+                    </div>
+                    <span class="cl"></span>
+                </div>
+            </div>
+            <div class="right">
+                <div id="dashboard-star-thumbnail">
+                    <div>
+                        <img src="about:blank" />
+                        <div class="mm-icons">
+                            <span class="video"></span>
+                            <span class="hq">HQ</span>
+                            <span class="audio"></span>
+                        </div>
+                        <h3></h3>
+                        <span class="price">5,50€</span>
+                    </div>
+                </div>
+                <div id="dashboard-rand9ps1l">
+                    <h3>{{txt_select}}</h3>
+                    <div><label><input name="terms-accepted" value="yes" type="checkbox" /> <span>{{txt_accept_terms}}</span></label></div>
+                    <div><label><input name="newsletter" value="yes" type="checkbox" /> <span>{{txt_receive_nlt}}.</span></label></div>
+                    <span class="cl"></span>
+                </div>
+                <button type="submit">{{txt_submit}} »</button>
+            </div>
+        </form>
+    </section>
+    <div id="personal-autographs-bottom">&nbsp;</div>
+</div>
+{{#stars.length}}
+<script>
+    var starInfo = [
+{{#stars}}
+        {name: '{{name}}', id: '{{starId}}', image: '{{tiny}}'},
+{{/stars}}
+    ]
+</script>
+{{/stars.length}}
