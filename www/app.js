@@ -55,7 +55,7 @@ app.configure('development', function(){
 // require('./util/params.js')(app); // I doubt the need for this. Every router should process its own params
 
 
-app.get('/', routes.index);
+app.get(/^\/(?:(?:index|home)(?:\.html)?)?$/, routes.index);
 app.get('/star/:starId([0-9]+)', stars.starInfo);
 app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
 app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
@@ -106,7 +106,11 @@ app.get('/star/add', manager.addStarForm);
 app.post('/star/add', manager.addStar);
 app.get('/product/add', manager.addProduct);
 app.post('/product/add', manager.doAddProduct);
+app.get('/manage/dashboard', manager.listProducts);
+app.get('/product/delete/:productId', manager.deleteProduct);
 
+app.post('/star/upload/image', manager.tempUploadImage);
+app.options('/star/upload/image', manager.tempUploadImage);
 
 
 

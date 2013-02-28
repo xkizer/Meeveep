@@ -1,6 +1,7 @@
 jQuery(function ($) {
-    var PICTURE_UPLOAD_URL = 'star/upload/image';
-    var PICTURE_DELETE_URL = 'star/upload/image/remove/{0}/{1}';
+    var PICTURE_UPLOAD_URL = '/star/upload/image';
+    var PICTURE_DELETE_URL = '/star/upload/image/remove/{0}/{1}';
+    var PRODUCT_DELETE_URL = '/product/delete/{0}';
     var worker = new Worker('/js/blob-converter.js');
     var uploadId = String(Math.random() * 1E10) + String(Math.random() * 10E4);
     $('#personal-autograph-dashboard form').append($('<input type="hidden" name="uploadId">').val(uploadId));
@@ -54,7 +55,7 @@ jQuery(function ($) {
                     type: 'post',
                     data: fData,
                     processData: false,
-                    contentType: 'multipart/form-data',
+                    contentType: false,
                     dataType: 'json',
                     xhr: function() {
                         xhr = $.ajaxSettings.xhr();
@@ -73,7 +74,6 @@ jQuery(function ($) {
                     $(canvas).remove();
                     $(cnv).remove();
                     text.remove();
-                    me.off('upload');
                 }).done(function (data) {
                     // Convert li to something useful
                     var imgId = data.id;
@@ -131,4 +131,46 @@ jQuery(function ($) {
             parent.remove();
         });
     });
+    
+    // Commercial autographs delete
+    $('#commercial-autographs-list .delete').click(function (e) {
+        // The container
+        var li = $(this).closest('li').addClass('deleting'),
+            productId = li.attr('data-product-id');
+        
+        // Attempt deleting the product
+        $.ajax({
+            url: PRODUCT_DELETE_URL.format(productId),
+            dataType: 'json'
+        }).error(function () {
+            li.removeClass('deleting');
+        }).done(function (d) {
+            if(d.error) {
+                li.removeClass('deleting');
+            } else {
+                li.remove();
+            }
+        });
+        
+        return false;
+    });
+    
+    // Adding star, switching categories
+    var catSelect = $('select#star-category');
+    
+    if(catSelect.length === 1 && window.categoryTree) {
+        var subCatSelect = $('select#star-subcategory');
+        
+        // When the category is switched
+        catSelect.on('change', function () {
+            var subCats = categoryTree[this.value].subcategories;
+            subCatSelect.empty();
+            
+            subCats.forEach(function (sub) {
+                var option = $('<option>').attr('value', sub).text(sub).appendTo(subCatSelect);
+                subCatSelect.selectbox('detach');
+                subCatSelect.selectbox('attach');
+            });
+        }).change();
+    }
 });

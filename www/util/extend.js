@@ -349,46 +349,30 @@ var printfMap = {
     },
     
     /**
-     * Formats input as float. <code>width</code> is the minimum length of the final output, including any decimal points.
+     * Formats input as float. <code>width</code> is the minimum length of the 
+     * final output, including any decimal points.
      */
-            f: function (arg) {
-                var value = parseFloat(arg.value) || 0,
-                    sign = ((value >= 0 && arg.sign) ? '+' : ''),
-                    precision = arg.precision,
-                    
-                    // Get the floated part of the number...
-                    integer = (value < 0 ? Math.ceil(value) : Math.floor(value)),
-                    floatedNumber = Math.abs(value - integer),
-                    
-                    // Furure variables...
-                    divisor, divided, normalized;
-                
-                // Apply precision
-                if(precision) {
-                    // Make sure the floated number is up to the precision digits
-                    floatedNumber = floatedNumber.toString().pad(precision, '0', 'right');
-                    floatedNumber = String(floatedNumber * Math.pow(10, floatedNumber.length - 2)).pad(precision, '0', 'right');
-                    
-                    divisor = Math.pow(10, floatedNumber.toString().length - precision);
-                    divided = floatedNumber / divisor;
-                    normalized = Math.round(divided);
-                    
-                    if(normalized >= Math.pow(10, precision)) {
-                        // A number was carried
-                        integer += 1;
-                    }
-                    
-                    value = integer.toString() + '.' + normalized.toString().truncate(precision).pad(precision, '0', 'right');
-                }
-                
-                // Add padding
-                if(arg.width) {
-                    value = value.toString().pad(arg.width, arg.padString || 0);
-                }
-                
-                // Add sign and return
-                return sign + value.toString();
-            },
+    f: function (arg) {
+        var value = parseFloat(arg.value) || 0,
+            sign = ((value >= 0 && arg.sign) ? '+' : ''),
+            precision = arg.precision,
+
+            // Get the floated part of the number...
+            integer = (value < 0 ? Math.ceil(value) : Math.floor(value));
+
+        // Apply precision
+        if(precision) {
+            value = value.toFixed(precision);
+        }
+
+        // Add padding
+        if(arg.width) {
+            value = value.toString().pad(arg.width, arg.padString || 0);
+        }
+
+        // Add sign and return
+        return sign + value.toString();
+    },
     
     /**
      * Treats input as integer, but returns the ASCII character with that character code.
