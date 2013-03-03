@@ -1589,19 +1589,18 @@ html {
 #dashboard-star-thumbnail .mm-icons span {
 	float: right;
 	height: 15px;
-	display: none;
+	display: block;
 	line-height: 15px;
 	font-weight: bold;
 	font-style: italic;
 	font-size: 13px;
-    margin-right: 5px;
+    margin: 0 0 0 5px;
 }
 
 #dashboard-star-thumbnail .mm-icons .audio {
 	width: 15px;
 	height: 15px;
 	float: right;
-	margin-left: 4px;
 	content: ' ';
 	background: url("../images/icons/icon-sprite.png") -441px -129px;
 }
@@ -2325,6 +2324,12 @@ html {
 
 #manage-page #personal-autograph-preview .right li {
     height: 69px;
+}
+
+#manage-page #personal-autograph-preview .right li.deleting {
+    opacity: 0.24;
+    background-color: #000;
+    cursor: progress;
 }
 
 #manage-page #personal-autograph-preview .right .left {

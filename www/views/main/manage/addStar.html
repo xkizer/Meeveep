@@ -2,63 +2,70 @@
     <h1>{{page_title}}</h1>
     <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
     <section class="content">
-        <form method="post" action="/star/create">
+        <form method="post">
+            {{#error}}<div class="error">{{error}}</div>{{/error}}
             <div class="left">
                 <div>
                     <h3>{{txt_star_name}}</h3>
-                    <input name="name" type="text" />
+                    <input name="name" type="text" required pattern="^[a-zA-Z].*$" />
                 </div>
                 <div>
                     <h3>{{txt_choose_language}}</h3>
                     <select name="lang">
-                        <option value="en-us">English (US)</option>
-                        <option value="de">Deutsch</option>
+                        {{#langs}}
+                        <option value="{{code}}">{{name}}</option>
+                        {{/langs}}
                     </select>
                 </div>
                 <div>
                     <h3>{{txt_star_email}}</h3>
-                    <input name="email" type="text" />
+                    <input name="email" type="email" required="required" />
                 </div>
                 <div>
                     <h3>{{txt_star_pw}}</h3>
-                    <input name="name" type="text" />
+                    <input name="password" type="password" title="6 - 32 chars" required pattern="^.{6,32}$" />
                 </div>
                 <div>
                     <h3>{{txt_select_cat}}</h3>
                     <div>
-                        <select name="lang">
-                            <option value="938921029032">Music</option>
+                        <select id="star-category" name="category">
+                            {{#categories}}
+                            <option value="{{code}}">{{text}}</option>
+                            {{/categories}}
                         </select>
-                        <select name="lang">
-                            <option value="938921059002">Sports</option>
+                        <select id="star-subcategory" name="subcategory">
                         </select>
                     </div>
                 </div>
                 <div class="fineprints">
-                    <input name="sss" type="checkbox" /> <span>Hiermit bestätige ich, dass ich für oben angegebene Person einen entsprechenden Account anlegen darf.</span>
+                    <input name="terms" value="accept" type="checkbox" /> <span>Hiermit bestätige ich, dass ich für oben angegebene Person einen entsprechenden Account anlegen darf.</span>
                 </div>
             </div>
             <div class="right">
                 <div id="dashboard-star-thumbnails">
-                    <h3>Autogrammupload</h3>
+                    <h3>{{txt_auto_upld}}</h3>
                     <ul>
                     </ul>
                     <span class="cl"></span>
                     <div class="file-upload">
                         <div class="own-photo">
-                            <span>Eigenes Foto</span>
+                            <span>{{txt_own_foto}}</span>
                             <a href="#" class="info">More information</a>
                         </div>
-                        <input type="text" readonly="readonly" placeholder="Datei wählen..." class="filename" />
+                        <input type="text" readonly="readonly" placeholder="{{txt_select_file}}..." class="filename" />
                         <input type="file" name="img" accept="image/*" />
                         <a href="#" class="picker"></a>
-                        <a href="#" class="upload">hochladen »</a>
+                        <a href="#" class="upload">{{txt_upld}} »</a>
                         <span class="cl"></span>
                     </div>
                 </div>
-                <button type="submit">Jetzt einstellen »</button>
+                <button type="submit">{{txt_submit}} »</button>
             </div>
         </form>
     </section>
     <div id="personal-autographs-bottom">&nbsp;</div>
 </div>
+<script>
+    var categoryTree = {{{categoryTree}};
+    var imageActionsMarkup = '<span><a href="#" class="profile-pic">Als Profilbild</a><a href="#" class="delete">Delete</a></span>';
+</script>

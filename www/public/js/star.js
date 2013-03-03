@@ -1406,12 +1406,13 @@ jQuery(function ($) {
     });
     
     // Make it possible to pick one and only one of video, audio and HQ video
-    var mediaSelector = $('#dashboard-02oa7d :checkbox').not('[value="user-image"]').not('[value="hq"]');
+    var mediaSelector = $('#dashboard-02oa7d :checkbox');
+    var mmIcons = $('#dashboard-star-thumbnail .mm-icons');
     
-    mediaSelector.on('change', function () {
+    mediaSelector.not('[value="user-image"]').not('[value="hq"]').on('change', function () {
         if(this.checked) {
             // This option has been checked, uncheck every other option
-            mediaSelector.not(this).each(function () {
+            mediaSelector.not(this).not('[value="user-image"]').not('[value="hq"]').each(function () {
                 this.checked = false;
                 $.uniform.update(this);
             });
@@ -1443,10 +1444,23 @@ jQuery(function ($) {
                 starImage.css('display', 'block');
                 nameContainer.text(star.name);
                 price.text((parseFloat(priceInput.val()) || 0) + '€');
+                
+                // Includes
+                mediaSelector.each(function () {
+                    var name = this.value;
+                    var icon = mmIcons.find('.' + name);
+                    
+                    if(this.checked) {
+                        icon.css({display: 'block'});
+                    } else {
+                        icon.css({display: 'none'});
+                    }
+                });
             }
             
             starSelect.change(checkStar).change();
-            priceInput.on('mouseu', checkStar);
+            priceInput.on('mouseup change keyup', checkStar);
+            mediaSelector.on('change', checkStar);
         }());
     }
 });
