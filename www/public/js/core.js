@@ -210,9 +210,6 @@ jQuery(function ($) {
                                 button.action.call(dialog);
                             } else if (typeof button.action === 'string' && typeof dialog.actions[button.action] === 'function') {
                                 dialog.actions[button.action].call(dialog);
-                            } else if (typeof button.action === 'string' || typeof button.action === 'number') {
-                                // We treat as hyperlink
-                                window.location = button.action;
                             }
                         });
                     });

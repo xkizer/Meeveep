@@ -74,7 +74,7 @@ var lang = {
     txtAcceptCondTTL: 'I accept the terms and conditions (to the left)',
     txtWishToRecNlt: 'Yes, i wish to receive the Meeveep newsletter',
     txtTotalPrice: 'Total Price',
-    txtInclVAT: 'Incl. VAT',
+    txtInclVAT: 'incl. VAT',
     txtOrderWaitWarning: 'The next step will automatically take you to the order transaction, please don\'t close the window before being prompted to.',
     txtCelebrities: 'Celebrities',
     txtAddCard: 'Add data',
@@ -133,24 +133,7 @@ var lang = {
     txtPcs: 'Pcs.',
     txtMakeAvailable: 'Make available',
     txtNoStarsFound: 'No stars found',
-    txtAddNewElement: 'Add new element',
-    txtManageAutographs: 'Manage autographs',
-    txtLiveAutographs: 'Live autograph sessions',
-    txtCommercialAutographs: 'Commercial autographs',
-    txtValidFrom: 'Valid from',
-    txtConfigure: 'Configure',
-    txtDelete: 'Delete',
-    txtAutographUpload: 'Autograph upload',
-    txtOwnPhoto: 'Own Photo',
-    txtSelectFile: 'Select File',
-    txtUpload: 'Upload',
-    txtAddStar: 'Add star',
     
-    
-    
-    starCategoryMusic: 'Music',
-    starCategorySports: 'Sports',
-    starCategoryTv: 'Television'
 };
 
 module.exports = lang;

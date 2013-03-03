@@ -5,6 +5,7 @@ var db = require('../util/db.js'),
 // Fields we are allowed to sort by
 sortFields = ['price','name'];
 
+
 module.exports = {
     getStars: getStars,
     getStar: getStar,
@@ -12,9 +13,7 @@ module.exports = {
     getUnsignedAutographs: getUnsignedAutographs,
     toString: function () {
         return '[controller#Stars:controllers/stars.js]';
-    },
-    getCategories: getCategories,
-    createStar: createStar
+    }
 };
 
 
@@ -240,64 +239,3 @@ function getUnsignedAutographs(starId, callback) {
     });
 }
 
-/**
- * Get all supported categories, along with their subcategories
- * @param {function} callback The callback receives an error object and an
- *  array of categories
- */
-function getCategories(callback) {
-    db.mongoConnect({db: 'meeveep', collection: 'categories'}, function (err, collection) {
-        if(err) {
-            return callback(err);
-        }
-        
-        collection.find({}, function (err, cursor) {
-            if(err) {
-                return callback(err);
-            }
-            
-            cursor.toArray(function (err, cats) {
-                if(err) {
-                    return callback(err);
-                }
-                
-                return callback(null, cats);
-            });
-        });
-    });
-}
-
-/**
- * Creates a simple record making a user a star
- * @param {type} userId
- * @param {type} callback
- * @returns {undefined}
- * @todo Refine method and related functions
- */
-function createStar (userId, data, callback) {
-    db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection, db) {
-        if(err) {
-            return callback(err);
-        }
-    
-        var starId = Math.random() * 1E16;
-        data.starId = starId;
-        data.userId = userId;
-        
-        collection.insert(data, function (err) {
-            if(err) {
-                return callback(err);
-            }
-            
-            db.collection('users', function (err, collection) {
-                collection.update({userId: userId}, {$set: {starId: starId}}, function (err) {
-                    if(err) {
-                        return callback(err);
-                    }
-                    
-                    return callback(null, starId);
-                });
-            });
-        });
-    });
-}

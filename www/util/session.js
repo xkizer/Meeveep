@@ -102,12 +102,6 @@ function requireLogin(callback) {
     });
 }
 
-function getLanguage () {
-    // Meant to get the language from the browser, or from user's preference
-    // TODO: Implement
-    return 'en-us';
-}
-
 module.exports = {
     middleware: function (req, res, next) {
         req.isLoggedIn = isLoggedIn;
@@ -116,8 +110,6 @@ module.exports = {
         req.requireLogin = requireLogin;
         response = res;
         request = req;
-        
-        req.getLanguage = getLanguage;
 
         var sessionId = req.cookies && req.cookies.sid;
 
