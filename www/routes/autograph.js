@@ -15,7 +15,7 @@ module.exports = {
     unsigned: function (req, res, next) {
         // Check if user is logged in...
         req.requireLogin(function (currentUser) {
-            var userInfo = currentUser;
+            var userInfo = currentUser.userData;
 
             if(!userInfo.starId) {
                 // The user is not a star

@@ -15,9 +15,9 @@
                 <span class="cl"></span>
                 <strong>{{txt_autograph_includes}}:</strong>
                 <div class="mm-icons">
-                    <span class="audio">{{audio}}</span>
-                    <span class="video">{{video}}</span>
-                    <span class="hq"><b><em>HQ</em> {{hq_video}}</b></span>
+                    {{#includes_audio}}<span class="audio">{{audio}}</span>{{/includes_audio}}
+                    {{#includes_video}}<span class="video">{{video}}</span>{{/includes_video}}
+                    {{#includes_hq}}<span class="hq"><b><em>HQ</em> {{hq}}</b></span>{{/includes_hq}}
                 </div>
             </div>
         </div>

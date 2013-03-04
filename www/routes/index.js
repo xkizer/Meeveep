@@ -1,5 +1,7 @@
 var step = require('../util/step'),
-    util = require('../util/util');
+    util = require('../util/util'),
+    stars = require('../controllers/stars.js'),
+    products = require('../controllers/products.js');
 
 module.exports = {
     index: function(req, res, next){
@@ -26,6 +28,45 @@ module.exports = {
             });
         }
         
+        chain.add(function (next) {
+            // Get the list of products
+            products.getProducts({limit: 10}, function (err, products) {
+                if(err) {
+                    // Something bad
+                    return res.send('Server error', 500);
+                }
+
+                view.products = [];
+                view.found = products.length;
+                var counter = products.length;
+                
+                // Add images to the objects
+                products.forEach(function (product) {
+                    product.includes.forEach(function (medium) {
+                        product['includes_' + medium] = true;
+                    });
+                    
+                    stars.getStar(product.starId, function (err, star) {
+                        counter--;
+                        
+                        if(err || !star) {
+                            return counter && next();
+                        }
+                        
+                        view.products.push(product);
+                        product.star = star;
+                        return counter && next();
+                    });
+                    
+                    product.image = '/images/stars/thumbs/' + product.starId + '.jpg'; // TODO: Rewrite this function to use a more standard/dynamic image URL generator
+                });
+                
+                if(products.length === 0) {
+                    next();
+                }
+            });
+        });
+        
         var view = {
             title: 'Express',
             newsletter: true,
@@ -44,23 +85,7 @@ module.exports = {
         };
 
         chain.exec(function () {
-            // Get the list of stars
-            require('../controllers/stars.js').getStars({limit: 10}, function (err, stars) {
-                if(err) {
-                    // Something bad
-                    return res.send('Server error', 500);
-                }
-
-                view.stars = stars;
-                view.found = stars.length;
-
-                // Add images to the objects
-                stars.forEach(function (star) {
-                    star.image = '/images/stars/thumbs/' + star.starId + '.jpg'; // TODO: Rewrite this function to use a more standard/dynamic image URL generator
-                });
-
-                renderer.render({page: 'main/index', vars: view}, req, res, next);
-            });
+            renderer.render({page: 'main/index', vars: view}, req, res, next);
         });
     }
 };

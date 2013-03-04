@@ -735,7 +735,7 @@ html {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-	padding-right: 30px;
+	padding-right: 40px;
 }
 
 #personal-autographs .price {
@@ -753,12 +753,12 @@ html {
 	position: absolute;
 	top: 163px;
 	right: 0;
-	width: 40px;
+	width: 65px;
 }
 
-#personal-autographs .mm-icons a {
+#personal-autographs .mm-icons > * {
 	display: block;
-	margin-left: 5px;
+	margin: 0 0 0 5px;
 	float: right;
 	width: 15px;
 	height: 15px;
@@ -767,7 +767,13 @@ html {
 	background: url(../images/icons/icon-sprite.png) -441px -129px;
 }
 
-#personal-autographs .mm-icons a.video {
+#personal-autographs .mm-icons > .hq {
+    background: none;
+    text-indent: 0;
+    width: 16px;
+}
+
+#personal-autographs .mm-icons .video {
 	background-position: -460px -129px;
 }
 

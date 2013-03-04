@@ -119,7 +119,7 @@ function render (opts, req, res, next, callback) {
                         // The variable is formal
                         txt = variable.literal || langFile[variable.text] || variable.text;
                         
-                        if('string' !== typeof txt) {
+                        if('string' !== typeof txt && 'number' !== typeof txt) {
                             vars[i] = variable;
                             continue;
                         }

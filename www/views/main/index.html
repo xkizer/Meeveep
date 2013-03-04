@@ -14,22 +14,23 @@
     </div>
     <section class="content scrolling">
     	<ul>
-    	    {{#stars}}
+    	    {{#products}}
         	<li>
             	<span class="overlay">
                 	<a href="/star/{{starId}}" class="info" title="{{more_information}}">{{txt_information}}</a>
                 	<span class="flag"></span>
-                    <a class="text" href="/star/{{starId}}/book">{{next_step}} &raquo;</a>
+                    <a class="text" href="/product/order/{{productId}}">{{next_step}} &raquo;</a>
                 </span>
                 <img src="{{image}}" alt="{{name}}" />
-                <span class="name">{{name}}</span>
+                <span class="name">{{star.name}}</span>
                 <span class="price {{#sale}}sale{{/sale}}">{{price}}{{currency}}</span>
                 <span class="mm-icons">
-                	{{#video}}<a href="/star/{{starId}}/book/video" class="video">{{txt_video}}</a>{{/video}}
-                	{{#audio}}<a href="/star/{{starId}}/book/audio" class="audio">{{txt_audio}}</a>{{/audio}}
+                	{{#includes_video}}<span class="video">{{txt_video}}</span>{{/includes_video}}
+                	{{#includes_audio}}<span class="audio">{{txt_audio}}</span>{{/includes_audio}}
+                	{{#includes_hq}}<span class="hq">HQ</span>{{/includes_hq}}
                 </span>
             </li>
-            {{/stars}}
+            {{/products}}
         </ul>
     </section>
     <div id="personal-autographs-count">{{found}} {{txt_found}}</div>

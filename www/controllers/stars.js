@@ -108,28 +108,32 @@ function getStars (filter, callback) {
         }
         
         // There will be some other filters, such as expertise, nationality, gender, etc
-        var cursor = collection.find(qry, fields);
-        
-        sort && cursor.sort(sort);
-        limit && cursor.limit(limit);
-        skip && cursor.skip(skip);
-        
-        /*
-         The star objects should contain the following information:
-            name    => star's name
-            price   => autograph cost
-            sale    => whether or not there is a discount
-            search  => a serialization of all searchable string parameters, for easy case-insensitive searching. this does not need to be returned
-            starId  => the unique ID of the star. we do not use _id for identification
-         */
-        
-        // Done
-        cursor.toArray(function (err, stars) {
+        collection.find(qry, fields, function (err, cursor) {
             if(err) {
-                return callback(error(0x9000, err));
+                return callback(err);
             }
             
-            callback(null, stars);
+            sort && cursor.sort(sort);
+            limit && cursor.limit(limit);
+            skip && cursor.skip(skip);
+
+            /*
+             The star objects should contain the following information:
+                name    => star's name
+                price   => autograph cost
+                sale    => whether or not there is a discount
+                search  => a serialization of all searchable string parameters, for easy case-insensitive searching. this does not need to be returned
+                starId  => the unique ID of the star. we do not use _id for identification
+             */
+
+            // Done
+            cursor.toArray(function (err, stars) {
+                if(err) {
+                    return callback(error(0x9000, err));
+                }
+
+                callback(null, stars);
+            });
         });
     });
 }

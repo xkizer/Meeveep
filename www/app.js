@@ -6,6 +6,7 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , products = require('./routes/products.js')
   , auth = require('./routes/auth')
   , stars = require('./routes/stars.js')
   , account = require('./routes/account.js')
@@ -57,9 +58,12 @@ app.configure('development', function(){
 
 app.get(/^\/(?:(?:index|home)(?:\.html)?)?$/, routes.index);
 app.get('/star/:starId([0-9]+)', stars.starInfo);
-app.get('/star/:starId([0-9]+)/book', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
-app.get('/star/:starId([0-9]+)/book/step-:step([1-9])', stars.book);
 app.get('/autographs/unsigned', autographs.unsigned);
+
+// Product ordering
+app.get('/product/order/:productId', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
+app.get('/product/order/:productId/step-:step([1-9])', products.order);
+
 
 app.post('/card/:orderId/update/:medium(signature|video|audio)', autographs.updateMedia);
 

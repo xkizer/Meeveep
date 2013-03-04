@@ -8,7 +8,7 @@ var cli = require('cli-color'),
     manager = require('../controllers/manager.js'),
     i18n = require('../util/i18n'),
     util = require('../util/util'),
-    product = require('../controllers/product'),
+    products = require('../controllers/products'),
     fs = require('fs'),
     db = require('../util/db'),
     users = require('../controllers/user');
@@ -413,7 +413,7 @@ module.exports = {
                     delete data.pieces;
                     
                     // All set, create the product
-                    product.createProduct(data, function (err, productId) {
+                    products.createProduct(data, function (err, productId) {
                         if(err) {
                             return module.exports.addProduct(req, res, next, 'That star does not belong to you!', data);
                         }
