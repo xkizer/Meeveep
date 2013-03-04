@@ -45,3 +45,13 @@
     });
 </script>
 {{/userRegistered}}
+{{#orderComplete}}
+<script>
+    window.addEventListener('load', function () {
+        Meeveep.dialog.create({
+            title: 'Order placed!',
+            message: 'Your order has been placed sucessfully. Your order number is "{{orderComplete}}". Note that your account will not be billed until the autograph is signed.'
+        });
+    });
+</script>
+{{/orderComplete}}

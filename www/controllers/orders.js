@@ -5,7 +5,8 @@
 
 var db = require('../util/db.js'),
     error = require('../util/error.js'),
-    util = require('../util/util.js');
+    util = require('../util/util.js'),
+    cli = require('cli-color');
 
 module.exports = {
     getOrder: getOrder,
@@ -89,19 +90,27 @@ function placeOrder (orderInfo, callback) {
     var orderId = util.generateKey(28);
     orderInfo.orderId = orderId;
     
-    db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection) {
-        if(err) {
-            // Something went wrong...
-            return callback(error(0x9A15, err));
-        }
-    
-        collection.insert(orderInfo, function (err) {
+    db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection, db) {
+        // Verify the product exists and quantities remain
+        db.collection('products', function (err, prods) {
             if(err) {
                 // Something went wrong...
-                return callback(error(0x9A16, err));
+                return callback(error(0x9A15, err));
             }
             
-            callback(null, orderId);
+            prods.findOne({prodictId: orderInfo.product.productId}, function () {
+                
+            });
+
+            collection.insert(orderInfo, function (err) {
+                if(err) {
+                    console.log(cli.green('ORDER INFO'), orderInfo);
+                    // Something went wrong...
+                    return callback(error(0x9A16, err));
+                }
+
+                callback(null, orderId);
+            });
         });
     });
 }

@@ -93,6 +93,7 @@ var errorCodes = {
 
     0x9A01: 'Server error while retrieving order',                              // Database error while getting order information
     0x9A02: 'Order not found',
+    0x9A16: 'Server error while placing order',
 
     0x9A03: 'Server error while retrieving order',                              // Query failed
     0x9013: 'Connection error while updating card',                             // Database connect, while trying to update orders

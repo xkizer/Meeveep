@@ -1,9 +1,10 @@
 
 var db = require('../util/db'),
     cli = require('cli-color'),
-    util = require('util'),
+    util = require('../util/util'),
     stars = require('../controllers/stars'),
-    products = require('../controllers/products');
+    products = require('../controllers/products'),
+    orders = require('../controllers/orders.js');
 
 var renderer = require('../util/pageBuilder.js')();
 
@@ -44,8 +45,8 @@ var productOrdering = {
                 }
                 
                 if(!product) {
-                    console.error('Star not found');
-                    return res.send('Star not found', 404).end();
+                    console.error('Product not found');
+                    return res.send('Product not found', 404).end();
                 }
                 
                 stars.getStar(product.starId, function (err, star) {
@@ -111,8 +112,8 @@ var productOrdering = {
                 }
             
                 if(!product) {
-                    console.error('Star not found');
-                    return res.send('Star not found', 404).end();
+                    console.error('Product not found');
+                    return res.send('Product not found', 404).end();
                 }
                 
                 stars.getStar(product.starId, function (err, star) {
@@ -207,6 +208,11 @@ var productOrdering = {
                     console.error(err);
                     res.send('Something went wrong', 500).end();
                     return;
+                }
+                
+                if(!product) {
+                    console.error('Product not found');
+                    return res.send('Product not found', 404).end();
                 }
                 
                 stars.getStar(product.starId, function (err, star) {
@@ -304,25 +310,29 @@ var productOrdering = {
         
         // User needs to be logged in first
         req.requireLogin(function (currentUser) {
-            // Get star info
-            stars.getStar(productId, function (err, star) {
+            // Get star and product info
+            products.getProduct(productId, function (err, product) {
                 if(err) {
                     console.error(err);
                     res.send('Something went wrong', 500).end();
                     return;
                 }
-            
-                if(!star) {
-                    console.error('Star not found');
-                    return res.send('Star not found', 404).end();
+                
+                if(!product) {
+                    console.error('Product not found');
+                    return res.send('Product not found', 404).end();
                 }
                 
-                // Attach card
-                star.getCard(cardId, function () {
+                stars.getStar(product.starId, function (err, star) {
                     if(err) {
                         console.error(err);
                         res.send('Something went wrong', 500).end();
                         return;
+                    }
+
+                    if(!star) {
+                        console.error('Star not found');
+                        return res.send('Star not found', 404).end();
                     }
                     
                     // Verify the user has a valid card
@@ -338,16 +348,20 @@ var productOrdering = {
                             star: star,
                             user: currentUser,
                             date: new Date(),
-                            card: card
+                            card: card,
+                            product: product
                         });
-
+                        
                         orders.placeOrder(autograph, function (err, orderNumber) {
                             if(err) {
+                                console.log(err);
                                 console.error(cli.red('something went wrong'), err);
                                 return res.send(500, 'Something went wrong!').end();
                             }
-
-                            res.redirect('/?orderComplete=' + orderNumber);
+                            
+                            util.createNonce({orderId: orderNumber, orderComplete: true}, function (err, nonce) {
+                                res.redirect('/?oc=1&ptx=' + nonce.key);
+                            });
                         });
                     });
                 });

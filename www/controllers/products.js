@@ -112,26 +112,31 @@ function getProducts (filter, callback) {
         // Mandatory search conditions
         var now = new Date();
         
-        qry.extend({
-            $and: [
-                {
-                    $or: [
-                        {endDate: { '$gte': now }},
-                        {endDate: null}
-                    ]
-                },
+        if(filter.checkAvailable) {
+            qry.extend({
+                $and: [
+                    {
+                        $or: [
+                            {endDate: { '$gte': now }},
+                            {endDate: null}
+                        ]
+                    },
 
-                {
-                    $or: [
-                        {startDate: null},
-                        {startDate: { '$lte': now }}
-                    ]
-                },
-                {
-                    status: 'valid'
-                }
-            ]
-        });
+                    {
+                        $or: [
+                            {startDate: null},
+                            {startDate: { '$lte': now }}
+                        ]
+                    },
+                    {
+                        status: 'valid'
+                    },
+                    {
+                        available: {$gt: 0}
+                    }
+                ]
+            });
+        }
         
         // There will be some other filters, such as expertise, nationality, gender, etc
         collection.find(qry, fields, function (err, cursor) {
@@ -204,6 +209,9 @@ function getProduct(productId, callback) {
                     },
                     {
                         status: 'valid'
+                    },
+                    {
+                        available: {$gt: 0}
                     }
                 ]
             });

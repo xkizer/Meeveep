@@ -28,9 +28,28 @@ module.exports = {
             });
         }
         
+        if(req.query.oc && req.query.ptx) {
+            // We have an order complete
+            chain.add(function (next) {
+                // Verify that the registration nonce is valid
+                var info = util.resolveNonce(req.query.nonce, function (err, data) {
+                    if(err || !data) {
+                        return next();
+                    }
+                    
+                    if(data.orderComplete === true && data.orderId) {
+                        // Valid
+                        view.orderComplete = data.orderId;
+                    }
+                    
+                    next();
+                });
+            });
+        }
+        
         chain.add(function (next) {
             // Get the list of products
-            products.getProducts({limit: 10}, function (err, products) {
+            products.getProducts({limit: 10, checkAvailable: true}, function (err, products) {
                 if(err) {
                     // Something bad
                     return res.send('Server error', 500);
