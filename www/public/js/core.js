@@ -359,5 +359,49 @@ jQuery(function ($) {
             // TODO: Write implementation
         }
     };
+    
+    // Newsletter subscription
+    $('#newsletter-subscription form').submit(function () {
+        var form = $(this),
+            data = form.serialize();
+        
+        // Submit
+        form.find('input,button').attr('disabled', true);
+        
+        $.ajax({
+            url: form[0].action,
+            type: form[0].method,
+            dataType: 'json',
+            data: data,
+            error: function () {
+                Meeveep.dialog.create({
+                    title: 'Error :(',
+                    message: 'Your subscription was not successful due to a network error. Please check your network connection'
+                });
+            },
+            success: function (data) {
+                if(data.error) {
+                    Meeveep.dialog.create({
+                        title: 'Error :(',
+                        message: 'Your subscription was not successful due to the following error: ' + (data.error.message || data.error.msg || data.error)
+                    });
+                    
+                    return;
+                }
+                
+                form[0].reset();
+                
+                Meeveep.dialog.create({
+                    title: 'Subscribed!',
+                    message: 'You have been successfully subscribed to our newsletter.'
+                });
+            },
+            complete: function () {
+                form.find('input,button').attr('disabled', false);
+            }
+        });
+        
+        return false;
+    });
 });
 

@@ -26,6 +26,8 @@ function getAvailableLaguages () {
 
 /**
  * Get the content of the language file for the specified language
+ * @param {string} lang The ID of the language
+ * @param {function} callback The callback receives an error object and the language file
  */
 function getLangFile (lang, callback) {
     if(!langExists(lang)) {
@@ -38,6 +40,11 @@ function getLangFile (lang, callback) {
 
 /**
  * Translate a text from one language to another
+ * @param {string} text The text to translate
+ * @param {string} fromLang The ID of the language to translate from
+ * @param {string} toLang The ID of the language to translate to
+ * @param {function} callback The callback receives an error object and the
+ * translation results
  */
 function translate (text, fromLang, toLang, callback) {
     getLangFile(fromLang, function (err, fromLang) {

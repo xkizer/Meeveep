@@ -1,7 +1,7 @@
 <div id="personal-autograph-register">
     <header>
         <hgroup>
-            <h1>{{page_title}}</h1>
+            <h1>{{page_title}}{{#manager}} {{txt_as_manager}}{{/manager}}{{#star}} {{txt_as_star}}{{/star}}</h1>
             <h2>{{page_title_description}}</h2>
         </hgroup>
     </header>
@@ -22,7 +22,7 @@
                     <h3>{{txt_firstname}}*</h3>
                     <input value="{{form.defaults.firstName}}" type="text" required pattern="^[a-zA-Z][a-zA-Z\-'\s]*$" name="firstName" />
                 </div>
-                <div class="valid">
+                <div>
                     <h3>{{txt_surname}}*</h3>
                     <input value="{{form.defaults.lastName}}" type="text" required pattern="^[a-zA-Z][a-zA-Z\-'\s]*$" name="lastName" />
                 </div>

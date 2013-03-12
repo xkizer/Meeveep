@@ -57,7 +57,7 @@ var errorCodes = {
     0x4B01: 'User not found',                                                   // User with ID {userId} not found
     0x4B02: 'Server error: could not get user information',                     // Database error trying to get user's information
     0x4B03: 'Incorrect password',                                               // Redis failed us while checking if username is free
-    0x4B04: 'Username is already taken',                                        // Please choose another username!
+    0x4B04: 'Email is already registered',                                        // Please choose another username!
     0x4B05: 'Error retrieving user information',                                // Redis during findByUsername or findByEmail
     0x4B06: 'User not found',                                                   // Maybe not really, but user was not found in the cache
     0x4B07: 'Internal error',                                                   // Mongo failed during getFromMongo

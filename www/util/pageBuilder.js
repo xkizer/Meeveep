@@ -47,28 +47,8 @@ var standardVariables = {
     txtLegal:           {text:'txtLegal',filter:'toLowerCase'},
     txtTerms:           {text:'txtTerms',filter:'toLowerCase'},
     txtService:         'txtService',
-    
-}
-
-function mergeInto(from, to) {
-    for(var i in from) { 
-        if(from.hasOwnProperty(i)) {
-            var val = from[i];
-            
-            if('[object Object]' === String(val) && !(val instanceof Array)) {
-                // Object
-                to[i] = ((to[i] instanceof Object) ? to[i] : {}) || {};
-                
-                mergeInto(from[i], to[i]);
-                continue;
-            }
-            
-            to[i] = from[i];
-        }
-    }
-    
-    return to;
-}
+    partials:           {sidebar: 'sidebar'}
+};
 
 function render (opts, req, res, next, callback) {
     // The template variables
@@ -82,18 +62,20 @@ function render (opts, req, res, next, callback) {
         }
         
         // Merge vars into the standard variables
-        vars = mergeInto(standardVariables, mergeInto(vars, {}));
+        vars = {}.extend(standardVariables).extend(vars);
         
         vars.loggedIn = req.isLoggedIn();
         
         if(vars.loggedIn) {
             req.getUser(function (err, user) {
                 if(err) {
-                    return res.send('Internal Server Error', 500);
+                    console.error(cli.red('Something went wrong at page render'), err);
+                    //return res.send('Internal Server Error', 500);
+                    renderPage();
+                } else {
+                    vars.loggedInUser = user.userData;
+                    renderPage();
                 }
-                
-                vars.loggedInUser = user.userData;
-                renderPage();
             });
         } else {
             renderPage();
@@ -168,7 +150,9 @@ function render (opts, req, res, next, callback) {
 }
 
 module.exports = function (options) {
-    options = mergeInto(options, mergeInto(defaultOptions, {}));
+    options = options || {};
+    
+    options = {}.extend(defaultOptions).extend(options);
     
     var obj =  {
         options: options,
@@ -177,19 +161,19 @@ module.exports = function (options) {
          * Set the options for the current renderer
          */
         setOptions: function (opts) {
-            mergeInto(opts, options);
+            options.extend(opts);
         },
         
         /**
          * Render page
          */
         render: function (opts, req, res, next, callback) {
-            render (mergeInto(opts, mergeInto(options, {})), req, res, next, callback);
+            render ({}.extend(options).extend(opts), req, res, next, callback);
         }
     };
     
     return obj;
-}
+};
 
 
 

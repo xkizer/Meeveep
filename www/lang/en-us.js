@@ -145,6 +145,18 @@ var lang = {
     txtSelectFile: 'Select File',
     txtUpload: 'Upload',
     txtAddStar: 'Add star',
+    txtManager: 'Manager',
+    txtManageStars: 'Manager your stars',
+    txtDashboard: 'Dashboard',
+    txtAddStar: 'Add star',
+    txtAddProduct: 'Add product',
+    txtMyAccount: 'My account',
+    txtManageAutographs: 'Manage autographs',
+    txtManageArtists: 'Manage artists',
+    loggedInAs: 'Logged in as {0}',
+    txtAsManager: 'as manager',
+    txtAsStar: 'as star',
+    
     
     
     

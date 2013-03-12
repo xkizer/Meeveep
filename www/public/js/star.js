@@ -1443,7 +1443,7 @@ jQuery(function ($) {
                 starImage.attr('src', star.image);
                 starImage.css('display', 'block');
                 nameContainer.text(star.name);
-                price.text((parseFloat(priceInput.val()) || 0) + '€');
+                price.text('%.2f'.printf(parseFloat(priceInput.val()) || 0) + '€');
                 
                 // Includes
                 mediaSelector.each(function () {

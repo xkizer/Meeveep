@@ -6,13 +6,13 @@
 var db = require('../util/db.js'),
     error = require('../util/error.js'),
     util = require('../util/util.js'),
-    cli = require('cli-color');
+    cli = require('cli-color'),
+    products = require('./products');
 
 module.exports = {
     getOrder: getOrder,
     updateCard: updateCard,
-    placeOrder: placeOrder,
-    
+    placeOrder: placeOrder
 };
 
 /**
@@ -92,24 +92,56 @@ function placeOrder (orderInfo, callback) {
     
     db.mongoConnect({db: 'meeveep', collection: 'orders'}, function (err, collection, db) {
         // Verify the product exists and quantities remain
-        db.collection('products', function (err, prods) {
+        products.getProduct(orderInfo.product.productId, true, function (err, product) {
             if(err) {
-                // Something went wrong...
-                return callback(error(0x9A15, err));
+                return callback('Product no more available');
+            }
+
+            // Make sure product is still available
+            if(product.available <= 0) {
+                // Not available anymore
+                return callback('Product no more available');
             }
             
-            prods.findOne({prodictId: orderInfo.product.productId}, function () {
-                
-            });
-
-            collection.insert(orderInfo, function (err) {
+            // Update product availablilty
+            db.collection('products', function (err, prods) {
                 if(err) {
-                    console.log(cli.green('ORDER INFO'), orderInfo);
-                    // Something went wrong...
-                    return callback(error(0x9A16, err));
+                    return callback('Unable to place order');
                 }
-
-                callback(null, orderId);
+                
+                prods.update({
+                    productId: product.productId,
+                    available: product.available
+                }, {
+                    $inc: {
+                        available: -1,
+                        sold: 1
+                    }
+                }, {
+                    safe: true,
+                    upsert: false,
+                    multi: false
+                }, function (err, done) {
+                    if(err) {
+                        return callback('Unable to place order');
+                    }
+                    
+                    if(!done) {
+                        // Someone beat us to it, start afresh
+                        return placeOrder(orderInfo, callback);
+                    }
+                    
+                    // Place order
+                    collection.insert(orderInfo, function (err) {
+                        if(err) {
+                            prods.update({productId: product.productId}, { $inc: { available: 1, sold: -1}}, function () {});
+                            // Something went wrong...
+                            return callback(error(0x9A16, err));
+                        }
+                        
+                        callback(null, orderId);
+                    });
+                });
             });
         });
     });

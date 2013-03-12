@@ -283,10 +283,11 @@ function createStar (userId, data, callback) {
         if(err) {
             return callback(err);
         }
-    
-        var starId = Math.random() * 1E16;
+        
+        var starId = Math.floor(Math.random() * 1E16);
         data.starId = starId;
         data.userId = userId;
+        data.cards = [];
         
         collection.insert(data, function (err) {
             if(err) {

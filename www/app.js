@@ -3,6 +3,9 @@
  * Module dependencies.
  */
 
+// Extend objects
+require('./util/extend.js');
+
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
@@ -12,6 +15,7 @@ var express = require('express')
   , account = require('./routes/account.js')
   , manager = require('./routes/manager.js')
   , autographs = require('./routes/autograph.js')
+  , nlt = require('./routes/newsletter.js')
   , media = require('./routes/media.js')
   , http = require('http')
   , path = require('path')
@@ -19,9 +23,6 @@ var express = require('express')
   , session = require('./util/session.js')
   , io = require('socket.io')
   , url = require('url');
-
-// Extend objects
-require('./util/extend.js');
 
 var app = express();
 
@@ -118,6 +119,22 @@ app.options('/star/upload/image', manager.tempUploadImage);
 
 
 
+// Dashboard switch
+app.get('/account/dashboard', function (req, res, next) {
+    req.requireLogin(function (user) {
+        if(user.userData.managerId) {
+            return res.redirect('/manage/dashboard');
+        } else if(user.userData.starId) {
+            return res.redirect('/star/dashboard');
+        }
+        
+        return res.redirect('/user/dashboard');
+    });
+});
+
+
+// Newsletter subscription
+app.post('/nlt/subscribe', nlt.subscribe);
 
 
 

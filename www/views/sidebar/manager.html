@@ -1,16 +1,18 @@
 <section id="live-autographs">
     <div id="live-autograph-stream">
-        <h2>{{txt_manager}}</h2>
-        <span id="live-autograph-found">{{txt_manage_stars}}</span>
+        <h2>{{txt_my_account}}</h2>
+        <span id="live-autograph-found">{{txt_logged_in_as}}</span>
         <div id="live-autograph-list" class="scrolling">
             <nav class="content">
                 <ul>
-                    <li{{#dashboard-page}} class="active"{{/dashboard-page}}><a href="/manage/dashboard">{{txt_dashboard}}</a></li>
-                    <li{{#addStar-page}} class="active"{{/addStar-page}}><a href="/star/add">{{txt_add_star}}</a></li>
-                    <li{{#addProduct-page}} class="active"{{/addProduct-page}}><a href="/product/add">{{txt_add_product}}</a></li>
+                    <li{{#dashboard-page}} class="active"{{/dashboard-page}}><a href="/manage/dashboard">{{txt_manage_autographs}}</a></li>
+                    <li{{#addStar-page}} class="active"{{/addStar-page}}><a href="/star/add">{{txt_manage_artists}}</a></li>
                 </ul>
             </nav>
         </div>
     </div>
     <div id="live-autograph-counter"></div>
 </section>
+{{#newsletter}}
+{{>newsletter}}
+{{/newsletter}}

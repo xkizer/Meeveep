@@ -173,4 +173,45 @@ jQuery(function ($) {
             });
         }).change();
     }
+    
+    // When the form is submitted...
+    $('#add-star-form').on('submit', function (e) {
+        e.preventDefault();
+        
+        // Everything okay... move forward
+        var form = this,
+            data = $(this).serialize();
+        
+        $.ajax({
+            url: '/star/add',
+            type: 'post',
+            dataType: 'json',
+            data: data,
+            error: function () {
+                $(form).find('.error').text('Server error').show();
+            },
+            success: function (data) {
+                if(data.error) {
+                    $(form).find('.error').text(data.error).show();
+                } else if(data.success) {
+                    form.reset();
+                    $(form).find('.error').hide();
+                    Meeveep.dialog.create({
+                        title: 'Star created!',
+                        message: 'The star has been created. You can now create new products for the star.',
+                        buttons: [
+                            {
+                                text: 'Okay »',
+                                action: 'close'
+                            },
+                            {
+                                text: 'Create product',
+                                action: '/product/add'
+                            }
+                        ]
+                    });
+                }
+            }
+        });
+    });
 });

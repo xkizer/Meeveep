@@ -11,7 +11,8 @@ var cli = require('cli-color'),
     products = require('../controllers/products'),
     fs = require('fs'),
     db = require('../util/db'),
-    users = require('../controllers/user');
+    users = require('../controllers/user'),
+    error = require('../util/error');
 
 module.exports = {
     addStarForm: function (req, res, next) {
@@ -20,6 +21,10 @@ module.exports = {
         req.requireLogin(function (user) {
             if(args.length > 3) {
                 var err = args[3];
+            }
+            
+            if(args.length > 4) {
+                var data = args[4];
             }
             
             if(!user.userData.managerId) {
@@ -42,7 +47,7 @@ module.exports = {
                 txt_own_foto: 'txtOwnPhoto',
                 txt_select_file: 'txtSelectFile',
                 txt_upld: {text: 'txtUpload', filter: 'toLower'},
-                txt_submit: 'txtAddStar',
+                txt_submit: 'txtManageArtists',
                 sidebar_counter: ' ',
                 body: {
                     id: 'dashboard-page'
@@ -52,12 +57,31 @@ module.exports = {
                 ],
                 css_files: [
                     '/css/uniform.default.css'
-                ]
+                ],
+                
+                txt_my_account: 'txtMyAccount',
+                txt_logged_in_as: {text: 'loggedInAs', filter: function (txt) {
+                        var usertype = 'user';
+                        
+                        if(user.userData.starId) {
+                            usertype = 'star';
+                        }
+                        
+                        if(user.userData.managerId) {
+                            usertype = 'manager';
+                        }
+                        
+                        return txt.format(usertype);
+                    }},
+                'addStar-page': true,
+                txt_manage_autographs: 'txtManageAutographs',
+                txt_manage_artists: 'txtManageArtists',
+                txt_add_product: 'txtAddProduct',
+                
+                partials: {
+                    sidebar: 'sidebar/manager'
+                }
             };
-
-            if(err) {
-                view.error = err;
-            }
             
             // Get the categories
             var lang = req.getLanguage(),
@@ -91,7 +115,15 @@ module.exports = {
                         cats.forEach(function (cat, i) {
                             view.categories.push({code: categories[i].id, text: cat});
                         });
-
+                        
+                        if(data) {
+                            view.categories.forEach(function (cat) {
+                                if(cat.code === data.category) {
+                                    cat.selected = true;
+                                }
+                            });
+                        }
+                        
                         next();
                     });
                 });
@@ -100,6 +132,17 @@ module.exports = {
             var langs = i18n.getAvailableLaguages();
             view.langs = langs;
             
+            if(data) {
+                view.data = data;
+                
+                // Check currently selected language
+                view.langs.forEach(function (lang) {
+                    if(data.lang === lang.code) {
+                        lang.selected = true;
+                    }
+                });
+            }
+
             if(err) {
                 view.error = err.message || err;
             }
@@ -128,38 +171,66 @@ module.exports = {
             var uploadId = data.uploadId;
             
             if(!data.terms) {
-                return module.exports.addStarForm(req, res, next, 'You have to accept the terms');
+                return res.json({error: 'You have to accept the terms'});
             }
             
             // Create a user for the star
             users.createUser(data, function (err, userId) {
                 if(err) {
                     console.log(err);
-                    return module.exports.addStarForm(req, res, next, err);
+                    return res.json({error: err.message || err});
                 }
                 
                 // User created
                 stars.createStar(userId, data, function (err, starId) {
                     if(err) {
-                        return module.exports.addStarForm(req, res, next, err);
+                        return res.json({error: err.message || err});
                     }
                     
                     // Convert all temprary files
-                    db.mongoConnect({db: 'meeveep', collection: 'cards'}, function (err, collection) {
+                    db.mongoConnect({db: 'meeveep', collection: 'managers'}, function (err, collection, db) {
                         if(err) {
                             console.log(err);
-                            return module.exports.addStarForm(req, res, next, err);
+                            return res.json({error: err.message || err});
                         }
                         
-                        collection.update({uploadId: uploadId, managerId: user.userData.managerId, confirmed: false},
-                                    {$set: {starId: starId, confirmed: new Date()}}, {multi: true}, function (err) {
-                                        if(err) {
-                                            return module.exports.addStarForm(req, res, next, err);
-                                        }
-                                        
-                                        // Done creating star
-                                        res.redirect('/manage/dashboard');
+                        // Add this star to the manager's stars
+                        collection.update({managerId: user.userData.managerId}, {$push: {stars: starId}}, function (err) {
+                            if(err) {
+                                return res.json({error: err.message || err});
+                            }
+                            
+                            db.collection('cards', function (err, collection) {
+                                if(err) {
+                                    return res.json({error: err.message || err});
+                                }
+
+                                collection.update({uploadId: uploadId, managerId: user.userData.managerId, confirmed: false},
+                                            {$set: {starId: starId, confirmed: new Date()}}, {multi: true}, function (err) {
+                                    if(err) {
+                                        return res.json({error: err.message || err});
+                                    }
+                                    
+                                    // Find the star's cards and link them up
+                                    collection.find({starId: starId, uploadId: uploadId}, {cardId: 1}, function (err, cursor) {
+                                        cursor.toArray(function (err, cards) {
+                                            var cds = [];
+                                            cards.forEach(function (card) {
+                                                cds.push(card.cardId);
+                                            });
+
+                                            db.collection('stars', function (err, collection) {
+                                                console.log(cds);
+                                                collection.update({starId: starId}, {$pushAll: {cards: cds}}, function (err) {
+                                                    // Done creating star
+                                                    res.json({success: true});
+                                                });
+                                            });
+                                        });
                                     });
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -205,6 +276,7 @@ module.exports = {
                             }
                             
                             stars.getCard(star.cards[0], function (err, card) {
+                                console.log(star.cards, err);
                                 length--;
                                 
                                 if(err) {
@@ -287,7 +359,18 @@ module.exports = {
                 ],
                 post_scripts: [
                     {src: '/js/star.js'}
-                ]
+                ],
+                
+                txt_my_account: 'txtMyAccount',
+                txt_logged_in_as: 'txtManageStars',
+                'addProduct-page': true,
+                txt_manage_autographs: 'txtManageAutographs',
+                txt_manage_artists: 'txtManageArtists',
+                txt_add_product: 'txtAddProduct',
+                
+                partials: {
+                    sidebar: 'sidebar/manager'
+                }
             };
             
             if(err) {
@@ -477,6 +560,8 @@ module.exports = {
                             product.validTo = 'Infinity'; // TODO: translate
                         }
                         
+                        product.price = '%.2f'.printf(product.price);
+                        
                         stars.getStar(product.starId, function (err, star) {
                             length--;
                             
@@ -511,7 +596,18 @@ module.exports = {
                 },
                 post_scripts: [
                     {src: '/js/dashboard.js'}
-                ]
+                ],
+                
+                txt_my_account: 'txtMyAccount',
+                txt_logged_in_as: 'txtManageStars',
+                'dashboard-page': true,
+                txt_manage_autographs: 'txtManageAutographs',
+                txt_manage_artists: 'txtManageArtists',
+                txt_add_product: 'txtAddProduct',
+                
+                partials: {
+                    sidebar: 'sidebar/manager'
+                }
             };
             
             chain.exec(function () {
@@ -583,7 +679,8 @@ module.exports = {
                             uploaded: new Date(),
                             confirmed: false,
                             file: '/images/stars/' + filename,
-                            uploadId: req.body.uploadId
+                            uploadId: req.body.uploadId,
+                            cardId: Math.floor(Math.random() * 1E16)
                         };
                         
                         collection.insert(data, function (err) {

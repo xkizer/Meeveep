@@ -258,12 +258,7 @@ var productOrdering = {
                             txt_accept_cond_left: 'txtAcceptCondTTL',
                             txt_receive_newsletter: 'txtWishToRecNlt',
                             txt_total_price: 'txtTotalPrice',
-                            price: {text: product.price, filter: function (number) {
-                                    var numberFormat = currentUser.numberFormat || '.,';
-                                    var currencyFormat = currentUser.currencyFormat || '{0}{1}';
-                                    var formatted = Number.prototype.format.call(number, numberFormat[0], numberFormat[1]);
-                                    return currencyFormat.format(formatted, '€');
-                            }},
+                            price: '%.2f'.printf(product.price),
                             txt_what_should_msg_include: 'txtWhatShouldMsgIncl',
                             txt_billing_address: 'txtBillingAddress',
                             txt_incl_vat: 'txtInclVAT',

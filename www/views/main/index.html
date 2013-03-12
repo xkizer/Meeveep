@@ -2,13 +2,17 @@
     <h1>{{page_title}}</h1>
     <p>{{page_title_description}}</p>
     <div class="rightbox">
-    	<form id="personal-autographs-search" method="get" action="/search">
+    	<form id="personal-autographs-search" method="get">
         	<fieldset>
             	<input type="search" name="q" placeholder="{{placeholder_search}}" />
                 <button>Suche</button>
             </fieldset>
         	<fieldset>
-            	<input type="text" name="category" value="{{search_music}}" />
+                <select name="category">
+                    {{#categories}}
+                    <option value="{{code}}"{{#selected}} selected{{/selected}}>{{text}}</option>
+                    {{/categories}}
+                </select>
             </fieldset>
         </form>
     </div>

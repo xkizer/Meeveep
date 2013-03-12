@@ -70,16 +70,16 @@ jQuery(function ($) {
             if(validator instanceof RegExp) {
                 if(!validator.test(value)) {
                     // Failed test
-                    me.closest('form > div > div').addClass('invalid');
+                    me.closest('form > div > div').addClass('invalid').removeClass('valid');
                 } else {
-                    me.closest('form > div > div').removeClass('invalid');
+                    me.closest('form > div > div').addClass('valid').removeClass('invalid');
                 }
             } else if ('function' === typeof validator) {
                 if(!validator.call(this, value)) {
                     // Failed test
-                    me.closest('form > div > div').addClass('invalid');
+                    me.closest('form > div > div').addClass('invalid').removeClass('valid');
                 } else {
-                    me.closest('form > div > div').removeClass('invalid');
+                    me.closest('form > div > div').addClass('valid').removeClass('invalid');
                 }
             }
         }

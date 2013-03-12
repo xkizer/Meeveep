@@ -65,6 +65,9 @@ module.exports = {
             txt_mr: 'txtGreetingMr',
             txt_mrs: 'txtGreetingMrs',
             txt_miss: 'txtGreetingMiss',
+            txt_as_manager: 'txtAsManager',
+            txt_as_star: 'txtAsStar',
+            
             
             css_files: [
                 '/css/uniform.default.css'
@@ -76,6 +79,12 @@ module.exports = {
                 id: 'registration-page'
             }
         };
+        
+        if(req.query._t === 'mrg') {
+            view.manager = true;
+        } else if (req.query._t === 'star') {
+            view.star = true;
+        }
         
         renderer.render({page: 'main/account/register', vars: view}, req, res, next);
     },
@@ -148,7 +157,7 @@ module.exports = {
             var fieldName = fields[i];
             
             if(data.hasOwnProperty(fieldName)) {
-                dt[fieldName] = data['fieldName'];
+                dt[fieldName] = data[fieldName];
             }
         }
         
@@ -157,6 +166,7 @@ module.exports = {
         // Check for account type
         if(req.query._t === 'mrg') {
             data.pendingManagerApproval = true;
+            data.stars = [];
         }
         
         // If we are here, verification was successful

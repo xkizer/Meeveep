@@ -2,35 +2,35 @@
     <h1>{{page_title}}</h1>
     <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
     <section class="content">
-        <form method="post">
-            {{#error}}<div class="error">{{error}}</div>{{/error}}
+        <form method="post" id="add-star-form">
+            <div class="error{{^error}} none{{/error}}">{{error}}</div>
             <div class="left">
                 <div>
                     <h3>{{txt_star_name}}</h3>
-                    <input name="name" type="text" required pattern="^[a-zA-Z].*$" />
+                    <input name="name" type="text" value="{{data.name}}" required pattern="^[a-zA-Z].*$" />
                 </div>
                 <div>
                     <h3>{{txt_choose_language}}</h3>
                     <select name="lang">
                         {{#langs}}
-                        <option value="{{code}}">{{name}}</option>
+                        <option{{#selected}} selected{{/selected}} value="{{code}}">{{name}}</option>
                         {{/langs}}
                     </select>
                 </div>
                 <div>
                     <h3>{{txt_star_email}}</h3>
-                    <input name="email" type="email" required="required" />
+                    <input name="email" value="{{data.email}}" type="email" required="required" />
                 </div>
                 <div>
                     <h3>{{txt_star_pw}}</h3>
-                    <input name="password" type="password" title="6 - 32 chars" required pattern="^.{6,32}$" />
+                    <input name="password" value="{{data.password}}" type="password" title="6 - 32 chars" required pattern="^.{6,32}$" />
                 </div>
                 <div>
                     <h3>{{txt_select_cat}}</h3>
                     <div>
                         <select id="star-category" name="category">
                             {{#categories}}
-                            <option value="{{code}}">{{text}}</option>
+                            <option value="{{code}}"{{#selected}} selected{{/selected}}>{{text}}</option>
                             {{/categories}}
                         </select>
                         <select id="star-subcategory" name="subcategory">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="fineprints">
-                    <input name="terms" value="accept" type="checkbox" /> <span>Hiermit bestätige ich, dass ich für oben angegebene Person einen entsprechenden Account anlegen darf.</span>
+                    <input name="terms" value="accept"{{#data.terms}} checked="checked"{{/data.terms}} type="checkbox" /> <span>Hiermit bestätige ich, dass ich für oben angegebene Person einen entsprechenden Account anlegen darf.</span>
                 </div>
             </div>
             <div class="right">
