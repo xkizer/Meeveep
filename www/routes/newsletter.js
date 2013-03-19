@@ -8,7 +8,6 @@ module.exports = {
     subscribe: function (req, res, next) {
         var email = req.body.email;
         
-        console.log(req.body);
         if(!email || !/^[a-z\-_\.A-Z0-9\[\]\+\$~]+@[a-z\-_\.A-Z0-9\[\]\+\$~]+$/.test(email)) {
             return res.json({error: 'Invalid email provided'}).end();
         }

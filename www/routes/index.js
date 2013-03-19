@@ -50,7 +50,17 @@ module.exports = {
         
         chain.add(function (next) {
             // Get the list of products
-            products.getProducts({limit: 10, checkAvailable: true}, function (err, products) {
+            var qry = {limit: 10, checkAvailable: true};
+            
+            if(typeof req.query.category === 'string') {
+                qry.category = req.query.category;
+            }
+            
+            if(typeof req.query.q === 'string' && req.query.q.trim()) {
+                qry.search = req.query.q;
+            }
+            
+            products.getProducts(qry, function (err, products) {
                 if(err) {
                     // Something bad
                     return res.send('Server error', 500);
@@ -148,7 +158,11 @@ module.exports = {
             txt_audio: 'txtAudio',
             more_information: 'txtMoreInformation',
             txt_information: 'txtInformation',
-            txt_found: {text: 'txtFound', filter: 'toUpperCase'}
+            txt_found: {text: 'txtFound', filter: 'toUpperCase'},
+            
+            post_scripts: [
+                {src: '/js/home.js'}
+            ]
         };
 
         chain.exec(function () {

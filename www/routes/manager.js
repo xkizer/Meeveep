@@ -47,7 +47,7 @@ module.exports = {
                 txt_own_foto: 'txtOwnPhoto',
                 txt_select_file: 'txtSelectFile',
                 txt_upld: {text: 'txtUpload', filter: 'toLower'},
-                txt_submit: 'txtManageArtists',
+                txt_submit: 'txtAddStar',
                 sidebar_counter: ' ',
                 body: {
                     id: 'dashboard-page'
@@ -362,7 +362,19 @@ module.exports = {
                 ],
                 
                 txt_my_account: 'txtMyAccount',
-                txt_logged_in_as: 'txtManageStars',
+                txt_logged_in_as: {text: 'loggedInAs', filter: function (txt) {
+                        var usertype = 'user';
+                        
+                        if(user.userData.starId) {
+                            usertype = 'star';
+                        }
+                        
+                        if(user.userData.managerId) {
+                            usertype = 'manager';
+                        }
+                        
+                        return txt.format(usertype);
+                    }},
                 'addProduct-page': true,
                 txt_manage_autographs: 'txtManageAutographs',
                 txt_manage_artists: 'txtManageArtists',
@@ -599,7 +611,19 @@ module.exports = {
                 ],
                 
                 txt_my_account: 'txtMyAccount',
-                txt_logged_in_as: 'txtManageStars',
+                txt_logged_in_as: {text: 'loggedInAs', filter: function (txt) {
+                        var usertype = 'user';
+                        
+                        if(user.userData.starId) {
+                            usertype = 'star';
+                        }
+                        
+                        if(user.userData.managerId) {
+                            usertype = 'manager';
+                        }
+                        
+                        return txt.format(usertype);
+                    }},
                 'dashboard-page': true,
                 txt_manage_autographs: 'txtManageAutographs',
                 txt_manage_artists: 'txtManageArtists',

@@ -264,7 +264,7 @@ textarea {
     top: -4px !important;
     z-index: 9;
 	border-radius: 0 0 4px 4px;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .sbOptions a {
@@ -618,7 +618,7 @@ html {
 	font-weight: 500;
 	line-height: 17px;
 	height: 38px;
-	width: 630px;
+	width: 554px;
 }
 
 #divide .right .content {
@@ -659,6 +659,9 @@ html {
 	margin-bottom: 8px;
 }
 
+#personal-autographs-search .sbHolder {
+    width: 125px;
+}
 
 #personal-autographs .content li {
 	float: left;
@@ -735,7 +738,7 @@ html {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-	padding-right: 30px;
+	padding-right: 40px;
 }
 
 #personal-autographs .price {
@@ -753,12 +756,12 @@ html {
 	position: absolute;
 	top: 163px;
 	right: 0;
-	width: 40px;
+	width: 65px;
 }
 
-#personal-autographs .mm-icons a {
+#personal-autographs .mm-icons > * {
 	display: block;
-	margin-left: 5px;
+	margin: 0 0 0 5px;
 	float: right;
 	width: 15px;
 	height: 15px;
@@ -767,7 +770,13 @@ html {
 	background: url(../images/icons/icon-sprite.png) -441px -129px;
 }
 
-#personal-autographs .mm-icons a.video {
+#personal-autographs .mm-icons > .hq {
+    background: none;
+    text-indent: 0;
+    width: 16px;
+}
+
+#personal-autographs .mm-icons .video {
 	background-position: -460px -129px;
 }
 
@@ -852,7 +861,7 @@ html {
 	background-position: -460px -129px;
 }
 
-.mm-icons span.hq-video:before {
+.mm-icons span.hq:before {
 	display: none;
 }
 
@@ -1368,7 +1377,7 @@ html {
 	background: rgba(255, 0, 0, 0.25);
 }
 
-#divide #personal-autograph-register form > .error {
+#divide form > .error {
     background: rgba(255, 0, 0, 0.25);
     padding: 10px;
     margin-bottom: 10px;
@@ -1396,6 +1405,12 @@ html {
 
 #personal-autograph-register .last {
 	height: 82px;
+}
+
+#personal-autograph-register .last .fineprints {
+    font-size: 0.85em;
+    line-height: 1.1em;
+    margin-top: 5px;
 }
 
 #personal-autograph-register .right > div,
@@ -1491,6 +1506,14 @@ html {
 	font-weight: bold;
 }
 
+#personal-autograph-dashboard h3 i,
+#personal-autograph-register h3 i {
+    font-style: normal;
+    font-weight: normal;
+    color: #fff;
+    font-size: 0.8em;
+}
+
 #personal-autograph-dashboard h3 i {
 	color: #fff;
 	font-weight: 500;
@@ -1556,7 +1579,8 @@ html {
 }
 
 #dashboard-star-thumbnail img {
-	display: block;
+	width: 152px;
+	display: none;
 	margin-bottom: 3px;
 	box-shadow: 1px 1px 5px rgba(0, 2, 6, 0.45);
 }
@@ -1579,13 +1603,13 @@ html {
 	font-weight: bold;
 	font-style: italic;
 	font-size: 13px;
+    margin: 0 0 0 5px;
 }
 
-#dashboard-star-thumbnail .mm-icons span:after {
+#dashboard-star-thumbnail .mm-icons .audio {
 	width: 15px;
 	height: 15px;
 	float: right;
-	margin-left: 4px;
 	content: ' ';
 	background: url("../images/icons/icon-sprite.png") -441px -129px;
 }
@@ -2277,6 +2301,51 @@ html {
 
 #manage-page #personal-autograph-preview .divide > section {
     width: 341px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.stars-list {
+    width: 704px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.stars-list .name {
+    font-size: 24px;
+    font-weight: 200;
+    width: 427px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.stars-list .category {
+    float: left;
+    font-size: 24px;
+    font-weight: 200;
+    line-height: 25px;
+    margin: 4px 32px 0 4px;
+    text-align: right;
+    white-space: nowrap;
+    width: 200px;
+}
+
+#manage-page #personal-autograph-preview li .subcategory {
+    color: #FFFFFF;
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 15px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.left {
+    opacity: 0.4;
+    position: relative;
+}
+
+#manage-page #personal-autograph-preview .divide > section.left:after {
+    display: block;
+    position: absolute;
+    content: ' ';
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    cursor: not-allowed;
 }
 
 #manage-page #personal-autograph-preview h2 {

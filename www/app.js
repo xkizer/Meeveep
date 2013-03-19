@@ -17,6 +17,7 @@ var express = require('express')
   , autographs = require('./routes/autograph.js')
   , nlt = require('./routes/newsletter.js')
   , media = require('./routes/media.js')
+  , static = require('./routes/static.js')
   , http = require('http')
   , path = require('path')
   , cons = require('consolidate')
@@ -136,6 +137,15 @@ app.get('/account/dashboard', function (req, res, next) {
 // Newsletter subscription
 app.post('/nlt/subscribe', nlt.subscribe);
 
+
+// Static pages
+app.get('/pages/service', static.service);
+app.get('/contact', static.contact);
+app.get('/pages/legal', static.legal);
+app.get('/pages/faq', static.faq);
+app.get('/pages/privacy', static.privacy);
+app.get('/pages/terms', static.terms);
+app.get('/pages/security', static.security);
 
 
 // <<<<<<<<<<<<<<<<<

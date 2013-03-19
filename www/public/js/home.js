@@ -32,4 +32,12 @@ jQuery(function ($) {
                 'line-height': '20px'
             });
     }
+    
+    // Show the login screen if user is not logged in
+    var userIcon = $('#icon-nav-profile'),
+        loginBox = $('#user-info-box');
+    
+    if(loginBox.find('#login-form').length) {
+        userIcon.click();
+    }
 });

@@ -1,0 +1,22 @@
+<section id="live-autographs">
+    <div id="live-autograph-stream">
+        <h2>{{side_title}}</h2>
+        <span id="live-autograph-found">{{txt_how_can_we_help}}</span>
+        <div id="live-autograph-list" class="scrolling">
+            <nav class="content">
+                <ul>
+                    <li{{#contact-page}} class="active"{{/contact-page}}><a href="/contact">{{txt_contact}}</a></li>
+                    <li{{#legal-page}} class="active"{{/legal-page}}><a href="/pages/legal">{{txt_legal}}</a></li>
+                    <li{{#faq-page}} class="active"{{/faq-page}}><a href="/pages/faq">{{txt_faq}}</a></li>
+                    <li{{#privacy-page}} class="active"{{/privacy-page}}><a href="/pages/privacy">{{txt_privacy}}</a></li>
+                    <li{{#terms-page}} class="active"{{/terms-page}}><a href="/pages/terms">{{txt_terms}}</a></li>
+                    <li{{#security-page}} class="active"{{/security-page}}><a href="/pages/security">{{txt_security}}</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div id="live-autograph-counter"></div>
+</section>
+{{#newsletter}}
+{{>newsletter}}
+{{/newsletter}}

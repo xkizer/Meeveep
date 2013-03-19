@@ -195,6 +195,7 @@ jQuery(function ($) {
                     $(form).find('.error').text(data.error).show();
                 } else if(data.success) {
                     form.reset();
+                    $('#dashboard-star-thumbnails ul').empty();
                     $(form).find('.error').hide();
                     Meeveep.dialog.create({
                         title: 'Star created!',

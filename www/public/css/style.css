@@ -663,7 +663,6 @@ html {
     width: 125px;
 }
 
-
 #personal-autographs .content li {
 	float: left;
 	width: 152px;
@@ -2302,6 +2301,35 @@ html {
 
 #manage-page #personal-autograph-preview .divide > section {
     width: 341px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.stars-list {
+    width: 704px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.stars-list .name {
+    font-size: 24px;
+    font-weight: 200;
+    width: 427px;
+}
+
+#manage-page #personal-autograph-preview .divide > section.stars-list .category {
+    float: left;
+    font-size: 24px;
+    font-weight: 200;
+    line-height: 25px;
+    margin: 4px 32px 0 4px;
+    text-align: right;
+    white-space: nowrap;
+    width: 200px;
+}
+
+#manage-page #personal-autograph-preview li .subcategory {
+    color: #FFFFFF;
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 15px;
 }
 
 #manage-page #personal-autograph-preview .divide > section.left {

@@ -1,7 +1,8 @@
 
 var db = require('../util/db'),
     cli = require('cli-color'),
-    util = require('../util/util');
+    util = require('../util/util'),
+    stars = require('./stars');
 
 var sortFields = ['price','name'];
 
@@ -101,12 +102,17 @@ function getProducts (filter, callback) {
             });
         }
         
+        if(filter.search && typeof filter.search === 'string') {
+            var names = filter.search.split(/\s+/);
+            qry['star.name'] = new RegExp('(' + names.join('|') + ')', 'i');
+        }
+        
         if(filter.category) {
-            qry.category = String(filter.category);
+            qry['star.category'] = String(filter.category);
         }
         
         if(filter.subcategory) {
-            qry.subcategory = String(filter.subcategory);
+            qry['star.subcategory'] = String(filter.subcategory);
         }
         
         // Mandatory search conditions
@@ -250,18 +256,27 @@ function createProduct (data, callback) {
     data.sold = 0;
     data.available = parseInt(data.available);
     data.status = 'valid';
-
-    db.mongoConnect({db: 'meeveep', collection: 'products'}, function (err, collection) {
+    
+    // Attach the star information
+    stars.getStar(data.starId, function (err, star) {
         if(err) {
             return callback(err);
         }
+        
+        data.star = star;
 
-        collection.insert(data, function (err) {
+        db.mongoConnect({db: 'meeveep', collection: 'products'}, function (err, collection) {
             if(err) {
                 return callback(err);
             }
 
-            return callback(null, productId);
+            collection.insert(data, function (err) {
+                if(err) {
+                    return callback(err);
+                }
+
+                return callback(null, productId);
+            });
         });
     });
 }
