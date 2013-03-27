@@ -8,7 +8,7 @@ module.exports = {
     login: function (req, res, next) {
         var post    = req.body;
         var accept  = req.headers.accept || '';
-                
+        
         auth.login(post.username, post.password, function (err, details) {
             if(err) {
                 if(accept.indexOf('application/json') >= 0) {

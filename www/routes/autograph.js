@@ -16,7 +16,7 @@ module.exports = {
         // Check if user is logged in...
         req.requireLogin(function (currentUser) {
             var userInfo = currentUser.userData;
-
+            
             if(!userInfo.starId) {
                 // The user is not a star
                 var err = error(0x9343);
@@ -58,7 +58,7 @@ module.exports = {
                         txt_play_pause_descr: 'txtRecPlayPauseDescr',
                         txt_stop_descr: 'txtRecStopDescr',
                         serializeIncludes: function () {
-                            return JSON.stringify(this.card.includes);
+                            return JSON.stringify(this.product.includes);
                         },
 
                         post_scripts: [
@@ -180,15 +180,15 @@ module.exports = {
     rejectOrder: function (req, res, next) {
         req.requireLogin(function (currentUser) {
             var orderId = req.params.orderId;
-
+            
             // Verify the ownership of the card
-            if(currentUser.starId) {
+            if(currentUser.userData.starId) {
                 orders.getOrder(orderId, function (err, order) {
                     if(err) {
                         return res.json(err, 500).end();
                     }
 
-                    if(order.starId !== currentUser.starId) {
+                    if(order.starId !== currentUser.userData.starId) {
                         return res.json({error: 'Not your card'}, 403).end();
                     }
 

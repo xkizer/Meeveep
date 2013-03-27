@@ -2,7 +2,8 @@ var step = require('../util/step'),
     util = require('../util/util'),
     stars = require('../controllers/stars.js'),
     i18n = require('../util/i18n'),
-    products = require('../controllers/products.js');
+    products = require('../controllers/products.js'),
+    cli = require('cli-color');
 
 module.exports = {
     index: function(req, res, next){
@@ -33,7 +34,7 @@ module.exports = {
             // We have an order complete
             chain.add(function (next) {
                 // Verify that the registration nonce is valid
-                var info = util.resolveNonce(req.query.nonce, function (err, data) {
+                var info = util.resolveNonce(req.query.ptx, function (err, data) {
                     if(err || !data) {
                         return next();
                     }
@@ -79,18 +80,25 @@ module.exports = {
                     product.price = '%.2f'.printf(product.price);
                     
                     stars.getStar(product.starId, function (err, star) {
-                        counter--;
-                        
                         if(err || !star) {
+                            counter--;
                             return counter || next();
                         }
                         
-                        view.products.push(product);
-                        product.star = star;
-                        return counter || next();
+                        stars.getProfilePicture(product.starId, function (err, picture) {
+                            counter--;
+                            
+                            if(err || !star) {
+                                return counter || next();
+                            }
+                            
+                            product.image = picture;
+                            view.products.push(product);
+                            product.star = star;
+                            return counter || next();
+                        });
+                        
                     });
-                    
-                    product.image = '/images/stars/thumbs/' + product.starId + '.jpg'; // TODO: Rewrite this function to use a more standard/dynamic image URL generator
                 });
                 
                 if(products.length === 0) {

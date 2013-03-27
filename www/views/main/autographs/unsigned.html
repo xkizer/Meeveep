@@ -15,7 +15,7 @@
                 <span class="cursor-tip">{{star.name}}</span>
                 <ul>
 {{#cards}}
-                    <li data-id="{{cardId}}"><img src="{{card.big}}" alt="{{star.name}}" /></li>
+                    <li data-id="{{cardId}}"><img src="{{card.633x420.path}}" alt="{{star.name}}" /></li>
 {{/cards}}
                 </ul>
             </div>
@@ -50,7 +50,7 @@
 <script>
     window.cardInfo = [
 {{#cards}}
-        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.large}}', penColor: '{{pen-color}}', includes: {{{serializeIncludes}}} {{#signature}}, signature: {{{signature}}}{{/signature}}{{#video}}, video: '{{video}}'{{/video}}{{#audio}}, audio: '{{audio}}'{{/audio}}{{#videoURL}}, videoURL: '{{videoURL}}'{{/videoURL}}{{#audioURL}}, audioURL: '{{audioURL}}'{{/audioURL}}{{#videoPoster}}, videoPoster: '{{videoPoster}}'{{/videoPoster}} },
+        {orderId: '{{orderId}}', name: '{{name}}', msg: '{{msg}}', large: '{{card.original.path}}', penColor: '{{pen-color}}', includes: {{{serializeIncludes}}} {{#signature}}, signature: {{{signature}}}{{/signature}}{{#video}}, video: '{{video}}'{{/video}}{{#audio}}, audio: '{{audio}}'{{/audio}}{{#videoURL}}, videoURL: '{{videoURL}}'{{/videoURL}}{{#audioURL}}, audioURL: '{{audioURL}}'{{/audioURL}}{{#videoPoster}}, videoPoster: '{{videoPoster}}'{{/videoPoster}} },
 {{/cards}}
     ];
 </script>

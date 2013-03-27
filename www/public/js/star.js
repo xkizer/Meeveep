@@ -6,6 +6,7 @@ jQuery(function ($) {
         // Our URLs for AJAX actions
         CARD_SIGNATURE_SAVE_URI = '/card/{0}/update/signature',
 		CARD_ACCEPT_URI = '/card/{0}/accept',
+        CARD_REJECT_URI = '/card/{0}/reject',
         CREATE_RECORDING_SESSION_URI = '/media/createSession',
         CARD_VIDEO_SAVE_URI = '/card/{0}/update/video',
         CARD_AUDIO_SAVE_URI = '/card/{0}/update/audio',
@@ -742,7 +743,7 @@ jQuery(function ($) {
                                     card.videoURL = data.videoURL;
                                     card.videoPoster = data.posterURL;
                                 } else {
-                                    card.audioURL = data.audioURL
+                                    card.audioURL = data.audioURL;
                                 }
                                 
                                 checkCard(card);
@@ -827,6 +828,7 @@ jQuery(function ($) {
                 /**
                  * Compile frames for sending to the server. Frames are compiled every x seconds
                  * and some of the compiling functions (the heavy ones) are handled by the workers.
+                 * @param {string|number} feedbackId The feedbackId, if provided, can be used to track the compilation
                  */
                 function compileFrames (feedbackId) {
                     // Get the WAV audio from the recorder
@@ -842,6 +844,8 @@ jQuery(function ($) {
                  * Send the compiled frames to the server (the compiled frames is
                  * a deflated binary string, so we have to encode it in base64)
                  * @param {string} payload Binary string of the payload to send
+                 * @param {string|number} feedbackId The feedbackId, if provided,
+                 * can be used to know when the server is done processing the frames
                  */
                 function sendFrames (payload, feedbackId) {
                     var data = {data: btoa(payload)};
@@ -976,6 +980,35 @@ jQuery(function ($) {
 				dataType: 'json',
 				contentType: 'application/json',
 				data: JSON.stringify(data),
+				success: function (data) {console.log(data);} // TODO: invent a way to tell the user that the transaction succeeded
+			});
+
+			// Close the card
+			$(card.dom).animate({width: 0}, {complete: function () {
+				$(this).remove();
+				// Update...
+				bigUl.trigger(lastEvent);
+                bigUl[0].recalculate();
+			}});
+		}
+
+		// TODO: implement a notification system to tell the user that the card is not ready for submission
+	}
+
+	/**
+	 * Reject a card and mark as "won't sign"
+	 */
+	function rejectCard () {
+		var card = getCurrentCard();
+        
+		if(card) {
+			var orderId = card.orderId;
+
+			$.ajax({
+				error: function () {console.error('Something went wrong');}, // TODO: invent a way to notify user that an error occured
+				url: CARD_REJECT_URI.format(orderId),
+				type: 'get',
+				dataType: 'json',
 				success: function (data) {console.log(data);} // TODO: invent a way to tell the user that the transaction succeeded
 			});
 
@@ -1373,6 +1406,14 @@ jQuery(function ($) {
 
 		// Submit card
 		doneSigning();
+	});
+
+    // When the card is accepted
+	$('#personal-autograph-preview .rightbox .reject').click(function (e) {
+		e.preventDefault();
+
+		// Reject card
+		rejectCard();
 	});
     
     // Check the cards

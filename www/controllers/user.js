@@ -37,11 +37,17 @@ function User (userId, callback) {
             
             // User was found
             // Unserialize
+            var numberFields = ['userId', 'starId', 'managerId'];
+            
             for(var i in user) {
                 try {
                     user[i] = JSON.parse(user[i]);
                 } catch(e) {
                     // Retain value
+                }
+                
+                if(numberFields.indexOf(i) >= 0) {
+                    user[i] = Number(user[i]);
                 }
             }
             
@@ -59,7 +65,7 @@ function User (userId, callback) {
             enumerable: false,
             value: user
         });
-
+        
         callback(null, me);
     }
     
@@ -99,6 +105,8 @@ function User (userId, callback) {
                     // Serialize
                     var username = user.username.toLowerCase(),
                         userId = user.userId;
+                    
+                    user = {}.extend(user);
                         
                     for(var i in user) {
                         if(typeof user[i] !== 'string') {

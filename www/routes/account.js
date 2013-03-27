@@ -82,7 +82,7 @@ module.exports = {
         
         if(req.query._t === 'mrg') {
             view.manager = true;
-        } else if (req.query._t === 'star') {
+        } else if (req.query._t === 'str') {
             view.star = true;
         }
         

@@ -1,0 +1,15 @@
+{
+  "name": "meeveep-picture-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "redis": "*",
+    "mongodb": "*",
+    "cli-color": "*",
+    "express": "*",
+    "gm": "*"
+  }
+}

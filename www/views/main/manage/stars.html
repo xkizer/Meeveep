@@ -1,0 +1,25 @@
+<div id="personal-autograph-preview">
+    <h1>{{txt_manage_stars}}</h1>
+    <p>Li Europan lingues evvs membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+    <section class="content scrolling">
+        <div class="divide">
+            <section class="stars-list">
+                <h2>{{txt_stars_you_manage}}</h2>
+                <a class="btn" href="/star/add">{{txt_add_star}}</a>
+                <ul>
+                    {{#stars}}
+                    <li>
+                        <span class="name">{{name}}</span>
+                        <span class="category">{{category}}<span class="subcategory">{{subcategory}}</span></span>
+                        <div class="buttons">
+                            <a href="/star/edit/{{starId}}">{{txt_edit}}</a>
+                            <a class="delete" href="/star/delete/{{starId}}">{{txt_del}}</a>
+                        </div>
+                    </li>
+                    {{/stars}}
+                </ul>
+            </section>
+        </div>
+    </section>
+    <div id="personal-autographs-bottom">&nbsp;</div>
+</div>

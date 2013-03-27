@@ -80,12 +80,12 @@ jQuery(function ($) {
                 .hide();
         
         return false;
-    }).delegate('.file-upload input[type="file"]', 'change', function () {
+    }).delegate('.file-upload input[type="file"]', 'change', function (e) {
         // File name
         var filename = this.value.split(/[\/\\]/g);
         filename = filename[filename.length - 1];
         $(this).closest('.file-upload').find('.filename').val(filename);
-    }).delegate('.file-upload .upload', 'click', function (e) {
+//    }).delegate('.file-upload .upload', 'click', function (e) {  // Uncommenting this line reactivates the "upload" link. You must show the link first before doing this.
         e.preventDefault();
         
         var me = $(this),
@@ -153,6 +153,8 @@ jQuery(function ($) {
         parent.find('.filename').val('');
         fileInput.value = ''; // This makes it possible to detect file selection when the user selects the same file again
     });
+
+    $('.file-upload .upload').hide(); // Comment out this line to show the "upload" link.
     
     window.Meeveep.dialog = {
         /**
@@ -342,6 +344,10 @@ jQuery(function ($) {
                 }
                 
                 // TODO: add configButtons method for changing the buttons
+            };
+            
+            dialog.close = function () {
+                dialog.actions.close();
             };
             
             return dialog;

@@ -2380,10 +2380,14 @@ html {
     height: 69px;
 }
 
-#manage-page #personal-autograph-preview .right li.deleting {
+#manage-page #personal-autograph-preview li.deleting {
     opacity: 0.24;
     background-color: #000;
     cursor: progress;
+}
+
+#manage-page #personal-autograph-preview li.deleting .delete {
+    display: none;
 }
 
 #manage-page #personal-autograph-preview .right .left {
@@ -2447,6 +2451,10 @@ html {
 #manage-page #personal-autograph-preview li .buttons a:first-child {
     margin-top: 9px;
     background-position: -155px -256px;
+}
+
+#manage-page #personal-autograph-preview .stars-list li .buttons a:first-child {
+    display: none;
 }
 
 #manage-page #personal-autograph-preview .mm-icons span {

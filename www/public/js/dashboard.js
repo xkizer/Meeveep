@@ -113,6 +113,10 @@ jQuery(function ($) {
         }
         
         profilePic.val($(this).closest('li').data('imageId'));
+        
+        // Hide the profile-pic link for this element and show for every other element
+        $('#dashboard-star-thumbnails ul').find('.profile-pic').show();
+        $(this).hide();
     });
 
     // Delete picture
@@ -195,6 +199,7 @@ jQuery(function ($) {
                     $(form).find('.error').text(data.error).show();
                 } else if(data.success) {
                     form.reset();
+                    $.uniform.update('input[type="checkbox"]');
                     $('#dashboard-star-thumbnails ul').empty();
                     $(form).find('.error').hide();
                     Meeveep.dialog.create({
@@ -213,6 +218,98 @@ jQuery(function ($) {
                     });
                 }
             }
+        });
+    });
+    
+    // Delete star...
+    $('.stars-list .delete').click(function (e) {
+        e.preventDefault();
+        
+        var me = $(this),
+            li = me.closest('li'),
+            action = me.attr('href'),
+            name = li.find('.name').text();
+        
+        var dialog = Meeveep.dialog.create({
+            title: 'Confirm delete star',
+            html: ('You are about to delete the star {0}. Please note that if you continue, the following will happen<ol>' +
+                    "<li>{0}'s account will be deleted, meaning they will not be able to login again</li>" +
+                    "<li>All autograph requests to {0} will be deleted, and inaccessible</li>" +
+                    "<li>All autographs already signed by {0} will remain intact</li>" +
+                    "<li>There is no way to undo this action</li>" +
+                    '</ol> You still want to continue?').format(name),
+            buttons: [
+                {
+                    text: 'Yes, delete star »',
+                    action: function () {
+                        li.addClass('deleting');
+                        dialog.close();
+                        
+                        // Delete
+                        $.ajax({
+                            type: 'GET',
+                            url: action,
+                            dataType: 'json',
+                            error: function () {
+                                var dlg = Meeveep.dialog.create({
+                                    title: 'Error deleting star',
+                                    message: 'A network error has occured while trying to delete the star. Please check your Internet connection and try again.',
+                                    buttons: [
+                                        {
+                                            text: 'Okay »',
+                                            action: 'close'
+                                        },
+                                        {
+                                            text: 'Retry',
+                                            action: function () {
+                                                me.click();
+                                                dlg.close();
+                                            }
+                                        }
+                                    ]
+                                });
+                                
+                                li.removeClass('deleting')
+                            },
+                            success: function (data) {
+                                if(data.error) {
+                                    var dlg = Meeveep.dialog.create({
+                                        title: 'Error deleting star',
+                                        message: 'Could not delete star due to the following error: ' + (data.error.message || data.error),
+                                        buttons: [
+                                            {
+                                                text: 'Okay »',
+                                                action: 'close'
+                                            },
+                                            {
+                                                text: 'Retry',
+                                                action: function () {
+                                                    me.click();
+                                                    dlg.close();
+                                                }
+                                            }
+                                        ]
+                                    });
+
+                                    li.removeClass('deleting');
+                                    return;
+                                }
+                                
+                                if(data.success) {
+                                    li.animate({height: 0}, {complete: function () {
+                                        li.remove();
+                                    }})
+                                }
+                            }
+                        });
+                    }
+                },
+                {
+                    text: 'Joking, never mind',
+                    action: 'close'
+                }
+            ],
+            width: 600
         });
     });
 });

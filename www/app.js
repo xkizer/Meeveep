@@ -48,6 +48,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(require('./util/cards').middleware);
 });
 
 app.configure('development', function(){
@@ -114,9 +115,19 @@ app.get('/product/add', manager.addProduct);
 app.post('/product/add', manager.doAddProduct);
 app.get('/manage/dashboard', manager.listProducts);
 app.get('/product/delete/:productId', manager.deleteProduct);
+app.get('/manage/stars', manager.listStars);
+app.get('/star/delete/:starId', manager.deleteStar);
 
 app.post('/star/upload/image', manager.tempUploadImage);
-app.options('/star/upload/image', manager.tempUploadImage);
+app.get('/star/upload/image/remove/:uploadId/:cardId', manager.deleteTempImage);
+
+app.options('/star/upload/image', function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Allow', 'OPTIONS,POST');
+    res.setHeader("access-control-allow-methods", "POST,OPTIONS");
+    res.setHeader("access-control-allow-headers", "*");
+    res.end();
+});
 
 
 

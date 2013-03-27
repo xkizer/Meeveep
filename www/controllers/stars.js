@@ -1,6 +1,9 @@
 var db = require('../util/db.js'),
     error = require('../util/error.js'),
-    util = require('../util/util.js');
+    util = require('../util/util.js'),
+    users = require('./user'),
+    cards = require('./cards'),
+    cli = require('cli-color');
 
 // Fields we are allowed to sort by
 sortFields = ['price','name'];
@@ -14,7 +17,9 @@ module.exports = {
         return '[controller#Stars:controllers/stars.js]';
     },
     getCategories: getCategories,
-    createStar: createStar
+    createStar: createStar,
+    getProfilePicture: getProfilePicture,
+    getDefaultCard: getDefaultCard
 };
 
 
@@ -274,35 +279,115 @@ function getCategories(callback) {
 /**
  * Creates a simple record making a user a star
  * @param {type} userId
+ * @param {object} data A hash of the user's information
  * @param {type} callback
  * @returns {undefined}
  * @todo Refine method and related functions
  */
 function createStar (userId, data, callback) {
-    db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection, db) {
+    // Make sure we have a valid user
+    userId = Number(userId);
+    
+    users.getUser(userId, function (err, user) {
         if(err) {
             return callback(err);
         }
         
-        var starId = Math.floor(Math.random() * 1E16);
-        data.starId = starId;
-        data.userId = userId;
-        data.cards = [];
-        
-        collection.insert(data, function (err) {
+        db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection, db) {
             if(err) {
                 return callback(err);
             }
+
+            var starId = Math.floor(Math.random() * 1E16);
+            data.starId = starId;
+            data.userId = userId;
+            data.cards = [];
             
-            db.collection('users', function (err, collection) {
-                collection.update({userId: userId}, {$set: {starId: starId}}, function (err) {
+            if(data['profile-pic'])  {
+                data.defaultCard = Number(data['profile-pic']);
+            }
+
+            delete data.password;
+            delete data['profile-pic'];
+            
+            // Check for default card
+            collection.insert(data, function (err) {
+                if(err) {
+                    return callback(err);
+                }
+
+                db.collection('users', function (err, collection) {
+                    collection.update({userId: userId}, {$set: {starId: starId}}, function (err) {
+                        if(err) {
+                            return callback(err);
+                        }
+
+                        callback(null, starId);
+
+                        // Delete the user from cache
+                        db.redisConnect(function (err, redis) {
+                            if(err) {
+                                return;
+                            }
+                            
+                            redis.multi()
+                                .del('auth:user:' + userId)
+                                .del('auth:user:' + user.username)
+                              .exec();
+                        });
+                    });
+                });
+            });
+        });        
+    });
+}
+
+function getDefaultCard (starId, callback) {
+    getStar(starId, function (err, star) {
+        if(err || !star) {
+            return callback(err || 'Star not found');
+        }
+        
+        // Check if we have a default picture
+        if(star.defaultCard) {
+            // Star has a default card set
+            getCard(star.defaultCard, function (err, card) {
+                if(err || !card) {
+                    return getFirstCard();
+                }
+                
+                // Card found
+                return callback(null, card);
+            });
+        } else {
+            getFirstCard();
+        }
+        
+        function getFirstCard() {
+            var cards = star.cards;
+            
+            if(cards && cards.length) {
+                getCard(star.cards[0], function (err, card) {
                     if(err) {
                         return callback(err);
                     }
-                    
-                    return callback(null, starId);
+
+                    // Card found
+                    return callback(null, card);
                 });
-            });
-        });
+            } else {
+                return callback('Card not found'); // TODO: This should return a default card
+            }
+        }
+    });
+}
+
+function getProfilePicture (starId, callback) {
+    getDefaultCard(starId, function (err, card) {
+        if(err) {
+            return callback(err);
+        }
+        
+        return callback(null, card['152x157'].path);
     });
 }

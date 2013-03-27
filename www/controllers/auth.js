@@ -17,7 +17,8 @@ module.exports = {
             // Get the user's information
             user.getUser(username, function (err, userInfo) {
                 if(err) {
-                    return error(0x2900, err);
+                    var errCode = err.code === 0x4B01 ? 0x2901:0x2900;
+                    return callback(error(errCode, err));
                 }
                 
                 userInfo = userInfo.userData;

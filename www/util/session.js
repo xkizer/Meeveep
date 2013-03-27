@@ -118,6 +118,7 @@ module.exports = {
         request = req;
         
         req.getLanguage = getLanguage;
+        req.lang = getLanguage();
 
         var sessionId = req.cookies && req.cookies.sid;
 

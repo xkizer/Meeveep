@@ -220,12 +220,24 @@ module.exports = {
                                             });
 
                                             db.collection('stars', function (err, collection) {
-                                                console.log(cds);
                                                 collection.update({starId: starId}, {$pushAll: {cards: cds}}, function (err) {
                                                     // Done creating star
                                                     res.json({success: true});
                                                 });
                                             });
+                                        });
+                                    });
+                                    
+                                    // Find the associated user and link them up
+                                    db.collection('users', function (err, collection) {
+                                        collection.update({userId: userId}, {$set: {starId: starId}}, function () {});
+                                        
+                                        // Refresh cache
+                                        db.redisConnect(function (err, client) {
+                                            if(client) {
+                                                client.del('auth:user:' + userId);
+                                                client.del('auth:user:' + data.username);
+                                            }
                                         });
                                     });
                                 });
@@ -276,7 +288,6 @@ module.exports = {
                             }
                             
                             stars.getCard(star.cards[0], function (err, card) {
-                                console.log(star.cards, err);
                                 length--;
                                 
                                 if(err) {
@@ -319,6 +330,24 @@ module.exports = {
                 var langs = i18n.getAvailableLaguages();
                 view.langs = langs;
                 next();
+            });
+            
+            chain.add(function (next) {
+                var counter = 0;
+                
+                view.stars.forEach(function (star) {
+                    stars.getProfilePicture(star.starId, function (err, profilePicture) {
+                        if(profilePicture) {
+                            star.profilePicture = profilePicture;
+                        }
+                        
+                        counter++;
+                        
+                        if(counter === view.stars.length) {
+                            return next();
+                        }
+                    });
+                });
             });
             
             var view = {
@@ -423,7 +452,7 @@ module.exports = {
             if(data['terms-accepted'] !== 'yes') {
                 return module.exports.addProduct(req, res, next, 'You need to accept the terms', data);
             }
-                    
+            
             // Check that the language is supported
             if(!i18n.langExists(data.lang)) {
                 // Unsopported language
@@ -433,11 +462,13 @@ module.exports = {
             // Check that at least one option was selected
             var includes = data.includes;
 
-            if(!includes) {
+            if(!includes || !Array.isArray(includes)) {
                 // No option selected, woe!
                 return module.exports.addProduct(req, res, next, 'Please select at least one medium', data);
             }
-                    
+            
+            includes.push('signature');
+            
             // Check price is positive
             if(data.price <= 0) {
                 return module.exports.addProduct(req, res, next, 'Please provide a valid price', data);
@@ -641,6 +672,107 @@ module.exports = {
         });
     },
     
+    listStars: function (req, res, next) {
+        req.requireLogin(function (user) {
+            if(!user.userData.managerId) {
+                // Not a manager
+                return res.send('Access denied', 403);
+            }
+            
+            var chain = step.init();
+            
+            chain.add(function (next) {
+                manager.getStars(user.userData.managerId, function (err, myStars) {
+                    if(err) {
+                        return res.send('Server failure', 500);
+                    }
+                
+                    // Resolve stars
+                    var length = myStars.length;
+                    view.stars = [];
+                    
+                    i18n.getLangFile(req.lang, function (err, lang) {
+                        if(err) {
+                            return res.send('Server error', 500);
+                        }
+                        
+                        myStars.forEach(function (starId) {
+                            stars.getStar(starId, function (err, star) {
+                                length--;
+
+                                if(err || !star) {
+                                    return (length === 0) && next();
+                                }
+                                
+                                if(star.category) {
+                                    star.category = lang['starCategory{0}{1}'.format(star.category[0].toUpper(), star.category.substr(1))];
+                                }
+                                
+                                view.stars.push(star);
+                                (length === 0) && next();
+                            });
+                        });
+
+                        (myStars.length === 0) && next();
+                    });
+                });
+            });
+            
+            var view = {
+                newsletter: true,
+                sidebar_counter: ' ',
+                txt_add_element: 'txtAddNewElement',
+                txt_manage_auto: 'txtManageAutographs',
+                txt_manage_stars: 'txtManageStars',
+                txt_stars_you_manage: 'txtStarsYouManage',
+                txt_edit: 'txtEdit',
+                txt_del: 'txtDelete',
+                txt_add_star: 'txtAddStar',
+                
+                
+                body: {
+                    id: 'manage-page'
+                },
+                post_scripts: [
+                    {src: '/js/dashboard.js'}
+                ],
+                
+                txt_my_account: 'txtMyAccount',
+                txt_logged_in_as: {text: 'loggedInAs', filter: function (txt) {
+                        var usertype = 'user';
+                        
+                        if(user.userData.starId) {
+                            usertype = 'star';
+                        }
+                        
+                        if(user.userData.managerId) {
+                            usertype = 'manager';
+                        }
+                        
+                        return txt.format(usertype);
+                    }},
+                'addStar-page': true,
+                txt_manage_autographs: 'txtManageAutographs',
+                txt_manage_artists: 'txtManageArtists',
+                txt_add_product: 'txtAddProduct',
+                
+                partials: {
+                    sidebar: 'sidebar/manager'
+                }
+            };
+            
+            chain.exec(function () {
+                // Sort alphabetically by name
+                view.stars = view.stars.sort(function (a, b) {
+                    return a.name > b.name ? 1 : -1;
+                });
+                
+                var renderer = require('../util/pageBuilder.js')();
+                renderer.render({page: 'main/manage/stars', vars: view}, req, res, next);
+            });
+        });
+    },
+    
     deleteProduct: function (req, res, next) {
         req.requireLogin(function (user) {
             if(!user.userData.managerId) {
@@ -659,6 +791,26 @@ module.exports = {
         });
     },
     
+    deleteStar: function (req, res, next) {
+        req.requireLogin(function (user) {
+            if(!user.userData.managerId) {
+                // Not a manager
+                return res.send('Access denied', 403);
+            }
+            
+            var accept  = req.headers.accept || '',
+                isJSON  = accept.indexOf('application/json') >= 0;
+            
+            manager.deleteStar(user.userData.managerId, req.params.starId, function (err) {
+                if(err) {
+                    return isJSON ? res.json({error: err}) : res.redirect('/manage/stars');
+                }
+                
+                return isJSON ? res.json({success: true}) : res.redirect('/manage/stars');
+            });
+        });
+    },
+    
     tempUploadImage: function (req, res, next) {
         req.requireLogin(function (user) {
             if(!user.userData.managerId) {
@@ -673,7 +825,132 @@ module.exports = {
                 return res.json({err: 'Bad request'}, 400);
             }
             
+            // Talk to the picture server
+            var convertURL = 'http://localhost:23091/convert';
             var img = files.img;
+            var options = require('url').parse(convertURL);
+            
+            options.method = 'post';
+            
+            var request = require('http').request(options, function(response) {
+                response.setEncoding('utf8');
+                
+                var data = '';
+                
+                response.on('data', function (chunk) {
+                    data += chunk;
+                });
+                
+                response.on('end', function () {
+                    data = JSON.parse(data);
+                    console.log('[%s] Data received', cli.green('INFO'));
+                    
+                    if(data.error) {
+                        // An error occured
+                        console.log('[%s] %s', cli.red('ERROR'), data.error);
+                        return res.json({error: 'Unable to process picture'});
+                    }
+                    
+                    // Everything went fine, save the picture information to the card
+                    var files = data.files,
+                        card = {},
+                        pictures = [];
+                    
+                    files.forEach(function (file) {
+                        // Create a unique path for the image
+                        var path = '/cards/{0}/{1}/{2}'.format(util.generateKey(2), util.generateKey(2), file.md5);
+                        
+                        var fl = {};
+                        card[file.metadata.dimensions] = fl;
+                        fl.length = file.length;
+                        fl.type = file.contentType;
+                        fl.md5 = file.md5;
+                        fl.fileId = file._id;
+                        fl.path = path;
+                        fl.dimensions = file.metadata.dimensions;
+                        pictures.push(fl);
+                    });
+                    
+                    db.mongoConnect({db: 'meeveep', collection: 'cards'}, function (err, collection, db) {
+                        if(err) {
+                            console.log(err);
+                            return res.json({err: 'Server error'}, 500);
+                        }
+                        
+                        var cardId = Math.floor(Math.random() * 1E16);
+                        
+                        // Save individual pictures
+                        db.collection('pictures', function (err, collection) {
+                            pictures.forEach(function (pic) {
+                                pic.cardId = cardId;
+                                collection.insert(pic, function (err) {});
+                            });
+                        });
+                        
+                        // Prepare data
+                        var data = {
+                            managerId: user.userData.managerId,
+                            uploader: user.userData.userId,
+                            uploaded: new Date(),
+                            confirmed: false,
+                            uploadId: req.body.uploadId,
+                            cardId: cardId
+                        };
+                        
+                        data.extend(card);
+                        
+                        collection.insert(data, function (err) {
+                            if(err) {
+                                console.log(err);
+                                return res.json({err: 'Server error'}, 500);
+                            }
+                            
+                            // Succeeded...
+                            res.json({success: true, id: data.cardId});
+                        });
+                    });
+                });
+            });
+            
+            request.on('error', function () {
+                console.log(arguments);
+                return res.json({err: 'Server error'}, 500);
+            });
+            
+            var boundary = util.generateKey(56);
+            request.setHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+            
+            // Send file over to the pics server
+            request.write('--' + boundary + "\r\n");
+            request.write('Content-Type: ' + img.type + "\r\n");
+            request.write('Content-Disposition: form-data; name="img"; filename="' + encodeURIComponent(img.name) + '"\r\n');
+            request.write('Content-Transfer-Encoding: binary\r\n\r\n');
+            
+            fs.createReadStream(img.path, { bufferSize: 4 * 1024 })
+                // set "end" to false in the options so .end() isnt called on the request
+                .on('end', function() {
+                    // mark the end of the one and only part
+                    request.end('\r\n--' + boundary + '--');
+                    console.log('[%s] Ending request', cli.green('INFO'));
+                })
+                .pipe(request, { end: false })
+            
+            return;
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             var filename = util.generateKey(24) + '.' + img.type.split('/')[1];
             
             // Copy to somewhere
@@ -714,9 +991,51 @@ module.exports = {
                             }
                             
                             // Succeeded...
-                            res.json({success: true});
+                            res.json({success: true, id: data.cardId});
                         });
                     });
+                });
+            });
+        });
+    },
+    
+    deleteTempImage: function (req, res, next) {
+        req.requireLogin(function (user) {
+            if(!user.userData.managerId) {
+                // Not a manager
+                return res.json({err: 'Access denied'}, 403);
+            }
+        
+            // Delete card if
+            //      - the image exists
+            //      - belongs to the manager
+            //      - matched the provided uploadId
+            //      - is unconfirmed
+            //
+            db.mongoConnect({db: 'meeveep', collection: 'cards'}, function (err, collection) {
+                if(err) {
+                    console.log(err);
+                    return res.json({err: 'Server error'}, 500);
+                }
+                
+                var query = {
+                    cardId: Number(req.params.cardId),
+                    managerId: user.userData.managerId,
+                    uploadId: String(req.params.uploadId),
+                    confirmed: false
+                };
+                
+                console.log(query);
+                
+                collection.remove(query, function (err) {
+                    console.log(arguments);
+                    if(err) {
+                        return res.json({err: 'Server error'}, 500);
+                    }
+                    
+                    // We do not really care if anything was removed or not, we
+                    // return success
+                    res.json({success: true});
                 });
             });
         });

@@ -158,6 +158,8 @@ var lang = {
     txtFAQ: 'FAQ',
     txtPrivacyPolicy: 'Privacy policy',
     txtSecurity: 'Security',
+    txtStarsYouManage: 'Stars you currently manage',
+    
     
     
     starCategoryMusic: 'Music',

@@ -10,7 +10,7 @@ var db = require('../util/db.js'),
 module.exports = {
 //    createCard: createCard,
     updateCard: updateCard,
-    
+    getCard: getCard
 };
 
 // A blacklist of fields that cannot be updated
@@ -21,4 +21,8 @@ function updateCard (cardId, information, callback) {
     var update = {updated: new Date};
     
     information.forEach();
+}
+
+function getCard (cardId, callback) {
+    
 }
