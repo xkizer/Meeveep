@@ -57,6 +57,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+app.configure('staging', function(){
+  app.use(express.errorHandler());
+  app.use(express.logger('default'));
+});
+
 // Params processor
 // require('./util/params.js')(app); // I doubt the need for this. Every router should process its own params
 
