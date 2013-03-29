@@ -36,6 +36,12 @@ app.engine('html', require('hogan-express'));
 app.engine('txt', require('hogan-express'));
 app.set('json spaces', null);
 
+var logger = 'dev';
+
+app.configure('staging', function(){
+    logger = 'short';
+});
+
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -43,7 +49,7 @@ app.configure(function(){
   app.set('view engine', 'html');
   app.use(express.favicon());
   app.use(express.cookieParser({secret: 'sdfg'}));
-  app.use(express.logger('dev'));
+  app.use(express.logger(logger));
   app.use(express.bodyParser());
   app.use(session.middleware);
   app.use(lang.middleware);
@@ -55,11 +61,6 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler());
-});
-
-app.configure('staging', function(){
-  app.use(express.errorHandler());
-  app.use(express.logger('default'));
 });
 
 // Params processor
