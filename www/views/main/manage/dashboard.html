@@ -68,8 +68,8 @@
                         </div>
                         <span class="date">{{price}}€<span class="time">({{txt_incl_vat}})</span></span>
                         <div class="buttons">
-                            <a href="#" class="config">{{txt_config}}</a>
-                            <a href="#" class="delete">{{txt_del}}</a>
+                            <a href="/product/edit/{{productId}}" class="config">{{txt_config}}</a>
+                            <a href="/product/delete/{{productId}}" class="delete">{{txt_del}}</a>
                         </div>
                     </li>
                     {{/products}}
@@ -79,3 +79,17 @@
     </section>
     <div id="personal-autographs-bottom">&nbsp;</div>
 </div>
+{{#productEdited}}
+<script>
+    window.addEventListener('load', function () {
+        Meeveep.dialog.create({
+            title: 'Product modified!',
+            message: 'The product has been successfully modified. Note that changes will affect only new order.',
+            buttons: [
+                {text: 'View product', action: '/product/order/{{productId}}'},
+                {text: 'Okay »', action: 'close'}
+            ]
+        });
+    });
+</script>
+{{/productEdited}}

@@ -405,12 +405,46 @@ html {
 }
 
 #language-selector {
+    position:  relative;
+    float: left;
 	border: solid rgba(49, 49, 49, 0.22);
 	width: 39px;
 	border-width: 0 1px;
-	overflow: hidden;
 	text-indent: -6000px;
+    z-index: 999;
 	background: url(../images/icons/icon-sprite.png) no-repeat 10px -31px;
+}
+
+#language-selector > span {
+    height: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+#language-selector ul {
+    position: absolute;
+    background: red;
+    width: 120px;
+	background: rgba(49, 49, 49, 0.6);
+    margin-left: -1px;
+    height: 0;
+    overflow: hidden;
+}
+
+#language-selector li {
+    height: 33px;
+    line-height: 33px;
+    border: inherit;
+    border-width: 0 0 1px;
+    cursor: pointer;
+    padding-left: 39px;
+	background: url(../images/icons/icon-sprite.png) no-repeat 10px -31px;
+    text-indent: 0;
+    color: #fff;
+}
+
+#language-selector li:hover {
+	background-color: rgba(49, 49, 49, 0.92);
 }
 
 #header-top-info {

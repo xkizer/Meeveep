@@ -105,7 +105,7 @@ function requireLogin(callback) {
 function getLanguage () {
     // Meant to get the language from the browser, or from user's preference
     // TODO: Implement
-    return 'en-us';
+    return request.lang;
 }
 
 module.exports = {
@@ -118,8 +118,6 @@ module.exports = {
         request = req;
         
         req.getLanguage = getLanguage;
-        req.lang = getLanguage();
-
         var sessionId = req.cookies && req.cookies.sid;
 
         if(!sessionId) {

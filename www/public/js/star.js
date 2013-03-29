@@ -1471,7 +1471,7 @@ jQuery(function ($) {
             
             function checkStar() {
                 var currentId = starSelect.val();
-                var star;
+                var star = {};
                 
                 // Find star object
                 for(var i = 0; i < starInfo.length; i++) {

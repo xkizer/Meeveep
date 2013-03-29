@@ -405,13 +405,69 @@ html {
 }
 
 #language-selector {
+    position:  relative;
+    float: left;
 	border: solid rgba(49, 49, 49, 0.22);
 	width: 39px;
 	border-width: 0 1px;
-	overflow: hidden;
 	text-indent: -6000px;
-	background: url(../images/icons/icon-sprite.png) no-repeat 10px -31px;
+    z-index: 999;
 }
+
+#language-selector > span {
+    height: 33px;
+    display: block;
+    cursor: pointer;
+    width: 39px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#language-selector ul {
+    position: absolute;
+    background: red;
+    width: 120px;
+	background: rgba(49, 49, 49, 0.6);
+    margin-left: -1px;
+    height: 0;
+    overflow: hidden;
+}
+
+#language-selector li {
+    height: 33px;
+    line-height: 33px;
+    border: inherit;
+    border-width: 0 0 1px;
+    cursor: pointer;
+    padding-left: 39px;
+    text-indent: 0;
+    color: #fff;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+}
+
+#language-selector li:hover {
+	background-color: rgba(49, 49, 49, 0.92);
+}
+
+
+.lang-en-us {
+    background-image: url(../images/flags/iso/24/us.png);
+}
+
+.lang-en-gb {
+    background-image: url(../images/flags/iso/24/gb.png);
+}
+
+.lang-de {
+    background-image: url(../images/flags/iso/24/de.png);
+}
+
+.lang-ig-ng {
+    background-image: url(../images/flags/iso/24/ng.png);
+}
+
+
 
 #header-top-info {
 	padding: 0 34px 0 13px;

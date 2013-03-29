@@ -59,6 +59,7 @@ module.exports = {
             
             if(typeof req.query.q === 'string' && req.query.q.trim()) {
                 qry.search = req.query.q;
+                view.search_str = req.query.q;
             }
             
             products.getProducts(qry, function (err, products) {
@@ -159,6 +160,7 @@ module.exports = {
             page_title: 'txtPersonalAutographs',
             page_title_description: 'txtPersonalAutographDescription',
             placeholder_search: {text: 'txtSearch', filter: 'toLowerCase'},
+            txt_search: 'txtSearch',
             search_music: {text: 'txtMusic', filter: 'toLowerCase'},
             next_step: 'txtNextStep',
             currency: '€',
@@ -167,6 +169,7 @@ module.exports = {
             more_information: 'txtMoreInformation',
             txt_information: 'txtInformation',
             txt_found: {text: 'txtFound', filter: 'toUpperCase'},
+            txt_all: 'txtAll',
             
             post_scripts: [
                 {src: '/js/home.js'}

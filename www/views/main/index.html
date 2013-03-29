@@ -4,11 +4,12 @@
     <div class="rightbox">
     	<form id="personal-autographs-search" method="get">
         	<fieldset>
-            	<input type="search" name="q" placeholder="{{placeholder_search}}" />
-                <button>Suche</button>
+            	<input type="search" name="q"{{#search_str}} value="{{search_str}}"{{/search_str}} placeholder="{{placeholder_search}}" />
+                <button>{{txt_search}}</button>
             </fieldset>
         	<fieldset>
                 <select name="category">
+                    <option value="">{{txt_all}}</option>
                     {{#categories}}
                     <option value="{{code}}"{{#selected}} selected{{/selected}}>{{text}}</option>
                     {{/categories}}

@@ -1,5 +1,6 @@
 var session = require('./session.js'),
-    cli = require('cli-color');
+    cli = require('cli-color'),
+    i18n = require('./i18n.js');
 
 /**
  * Default renderer options
@@ -7,9 +8,7 @@ var session = require('./session.js'),
 var defaultOptions = {
     title: {
         suffix: ' | Meeveep'
-    },
-    
-    lang: 'en-us'
+    }
 };
 
 /**
@@ -53,8 +52,7 @@ var standardVariables = {
 function render (opts, req, res, next, callback) {
     // The template variables
     var vars = opts.vars;
-    var lang = opts.lang;
-    var i18n = require('./i18n.js');
+    var lang = opts.lang || req.lang;
     
     i18n.getLangFile(lang, function (err, langFile) {
         if(err) {
@@ -144,6 +142,12 @@ function render (opts, req, res, next, callback) {
             vars.title = (opts.title.prefix || '') + (vars.title || '') + (opts.title.suffix || '');
             
             var layout = opts.layout || 'layout';
+            
+            // deal with the language selector bar
+            var langs = i18n.getAvailableLaguages();
+            vars['_lang-id'] = lang;
+            vars.availableLangs = langs;
+            
             res.render(opts.page, vars, callback);
         }
     });

@@ -269,6 +269,51 @@ module.exports = {
             var chain = step.init(),
                 renderer = require('../util/pageBuilder.js')();
             
+            if(req.params.productId) {
+                chain.add(function (next) {
+                    var productId = req.params.productId;
+                    
+                    // Search for the product
+                    products.getProduct(productId, function (err, product) {
+                        if(err) {
+                            // Probably not found
+                            return nxt();
+                        }
+                        
+                        view.editing = true;
+                        view.product = product;
+                        view.data = {}.extend(product);
+                        
+                        view.data.includes.forEach(function (inc) {
+                            view.data['includes_' + inc] = true;
+                        });
+                        
+                        if(product.startDate) {
+                            var startDate = product.startDate;
+                            view.data.startDate = '%02d/%02d/%d'.printf(startDate.getDate(), startDate.getMonth() + 1, startDate.getFullYear())
+                        }
+                        
+                        if(product.endDate) {
+                            var endDate = product.endDate;
+                            view.data.endDate = '%02d/%02d/%d'.printf(endDate.getDate(), endDate.getMonth() + 1, endDate.getFullYear())
+                        }
+                        
+                        view.data.pieces = product.available; // Show only the available pieces
+                        
+                        // Single star... show profile picture
+                        stars.getProfilePicture(product.star.starId, function (err, picture) {
+                            if(err) {
+                                next();
+                            }
+                            
+                            view.data.profilePic = picture;
+                            view.product.price = '%.02f'.printf(product.price);
+                            next();
+                        });
+                    });
+                });
+            }
+            
             chain.add(function (next) {
                 // Get the list of stars associated with this manager
                 manager.getStars(user.userData.managerId, function (err, strs) {
@@ -287,14 +332,14 @@ module.exports = {
                                 return (length === 0) && next();
                             }
                             
-                            stars.getCard(star.cards[0], function (err, card) {
+                            stars.getProfilePicture(star.starId, function (err, picture) {
                                 length--;
                                 
                                 if(err) {
                                     return (length === 0) && next();
                                 }
                                 
-                                star.tiny = card.tiny;
+                                star.tiny = picture;
                                 view.stars.push(star);
                                 (length === 0) && next();
                             });
@@ -322,6 +367,21 @@ module.exports = {
                 });
             }
             
+            if(req.query.pre === '1' && req.query.cy) {
+                // Potential nonce
+                chain.add(function (next) {
+                    // Verify nonce
+                    util.resolveNonce(req.query.cy, function (err, nonce) {
+                        if(!err && nonce && nonce.productEdited) {
+                            // Product created
+                            view.productEdited = nonce;
+                        }
+                        
+                        next();
+                    });
+                });
+            }
+            
             chain.add(function (next) {
                 view.stars.sort(function (a, b) {
                     return a.name > b.name ? 1 : -1;
@@ -329,6 +389,15 @@ module.exports = {
                 
                 var langs = i18n.getAvailableLaguages();
                 view.langs = langs;
+                
+                if(view.editing) {
+                    view.langs.forEach(function (lang) {
+                        if(lang.code === view.product.lang) {
+                            lang.selected = true;
+                        }
+                    });
+                }
+                
                 next();
             });
             
@@ -428,6 +497,9 @@ module.exports = {
                         data['includes_' + i] = true;
                     });
                 }
+                
+                data.endDate = data['validity.to'];
+                data.startDate = data['validity.from'];
                 
                 view.data = data;
             }
@@ -541,7 +613,7 @@ module.exports = {
                     // All set, create the product
                     products.createProduct(data, function (err, productId) {
                         if(err) {
-                            return module.exports.addProduct(req, res, next, 'That star does not belong to you!', data);
+                            return module.exports.addProduct(req, res, next, err.message || err, data);
                         }
                         
                         // Done...
@@ -565,7 +637,148 @@ module.exports = {
             });
         });
     },
-    
+
+    doEditProduct: function (req, res, next) {
+        // Check permissions
+        req.requireLogin(function (user) {
+            var data = req.body;
+            
+            if(!user.userData.managerId) {
+                // Not a manager
+                return module.exports.addProduct(req, res, next, 'Access denied', data);
+            }
+
+            // Terms
+            if(data['terms-accepted'] !== 'yes') {
+                return module.exports.addProduct(req, res, next, 'You need to accept the terms', data);
+            }
+            
+            // Check that the language is supported
+            if(!i18n.langExists(data.lang)) {
+                // Unsopported language
+                return module.exports.addProduct(req, res, next, 'Please select a valid language', data);
+            }
+
+            // Check that at least one option was selected
+            var includes = data.includes;
+
+            if(!includes || !Array.isArray(includes)) {
+                // No option selected, woe!
+                return module.exports.addProduct(req, res, next, 'Please select at least one medium', data);
+            }
+            
+            includes.push('signature');
+            
+            // Check price is positive
+            if(data.price <= 0) {
+                return module.exports.addProduct(req, res, next, 'Please provide a valid price', data);
+            }
+            
+            // Check that all parameters were filled in correctly
+            // Check thatt the star selected exists, and is owned by the manager
+            products.getProduct(req.params.productId, function (err, product) {
+                if(err) {
+                    console.log(err);
+                    return module.exports.addProduct(req, res, next, 'Product not found', data);
+                }
+                
+                if(user.userData.managerId !== product.managerId) {
+                    // Mismatch
+                    return module.exports.addProduct(req, res, next, 'This is not your product', data);
+                }
+                
+                var starId = product.starId;
+            
+                stars.getStar(starId, function (err, star) {
+                    if(err || !star) {
+                        // Not a star
+                        return module.exports.addProduct(req, res, next, 'Star not found. Maybe star has been deleted?', data);
+                    }
+
+                    // Check that the star is owned by the manager
+                    manager.getStars(user.userData.managerId, function (err, stars) {
+                        if(err) {
+                            return module.exports.addProduct(req, res, next, 'Server error', data);
+                        }
+
+                        if(stars.indexOf(starId) < 0) {
+                            // Star not found in manager's star list
+                            return module.exports.addProduct(req, res, next, 'That star does not belong to you!', data);
+                        }
+
+                        if(!Array.isArray(includes)) {
+                            includes = [includes];
+                            data.includes = includes;
+                        }
+
+                        // Check the dates
+                        var startDate = data['validity.from'],
+                            endDate = data['validity.to'];
+
+                        if(startDate) {
+                            startDate = startDate.split('/');
+
+                            if(startDate.length === 3) {
+                                startDate = new Date(startDate[2], startDate[1], startDate[0], 0, 0, 0, 0);
+                                data.startDate = startDate;
+                            }
+                        }
+
+                        if(endDate) {
+                            endDate = endDate.split('/');
+
+                            if(endDate.length === 3) {
+                                endDate = new Date(endDate[2], endDate[1], endDate[0], 23, 59, 59, 999);
+                                data.endDate = endDate;
+                            }
+                        }
+
+                        delete data['validity.from'];
+                        delete data['validity.to'];
+
+                        // Check the price
+                        data.price = parseFloat(data.price);
+
+                        // Availability
+                        data.available = data.pieces;
+                        data.managerId = user.userData.managerId;
+                        data.starId = starId;
+                        data.productId = product.productId;
+
+                        var newsletter = data.newsletter;
+                        delete data.newsletter;
+                        delete data.star;
+                        delete data.pieces;
+
+                        // All set, create the product
+                        products.editProduct(data, function (err, productId) {
+                            if(err) {
+                                return module.exports.addProduct(req, res, next, err.message || err, data);
+                            }
+
+                            // Done...
+                            util.createNonce({productEdited: true, productId: productId}, function (err, nonce) {
+                                if(err) {
+                                    // Success, but nonce failed. We go to the dashboard and let the manager see for themselves
+                                    return res.redirect('/manage/dashboard');
+                                }
+
+                                // Success
+                                res.redirect('/manage/dashboard?cy={0}&pre=1'.format(nonce.key));
+                            });
+                        });
+
+                        // TODO: subscribe for newsletter
+                        if(newsletter) {
+                            // Do the nanzi-panzi stuff
+                            // ...
+                        }
+                    });
+                });
+            });
+        });
+    },
+
     listProducts: function (req, res, next) {
         req.requireLogin(function (user) {
             if(!user.userData.managerId) {
@@ -780,13 +993,16 @@ module.exports = {
                 return res.send('Access denied', 403);
             }
             
+            var accept  = req.headers.accept || '',
+                isJSON  = accept.indexOf('application/json') >= 0;
+            
             // Delete product
             manager.deleteProduct(user.userData.managerId, req.params.productId, function (err) {
                 if(err) {
-                    return res.json({error: err});
+                    return isJSON ? res.json({error: err}) : res.redirect('/manage/dashboard');
                 }
                 
-                res.json({success: true});
+                isJSON ? res.json({success: true}) : res.redirect('/manage/dashboard');
             });
         });
     },

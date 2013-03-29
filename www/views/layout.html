@@ -36,7 +36,14 @@
                     </nav>
                     <div id="header-star-stat">Nächste Autogrammstunde mit <i>DJ Ötzi</i> in: <i>1 Tag, 3 Std. und 40 MIn.</i></div>
                 	<nav class="right">
-                        <a href="#" id="language-selector">German</a>
+                        <div id="language-selector">
+                            <span class="current lang-{{_lang-id}}">{{_lang-name}}</span>
+                            <ul>
+                                {{#availableLangs}}
+                                <li data-lang="{{code}}" class="lang-{{code}}">{{name}}</li>
+                                {{/availableLangs}}
+                            </ul>
+                        </div>
                     	<a href="/pages/services" id="header-top-info">{{{how_it_works}}}</a>
                     </nav>
                     <div id="user-info-box">

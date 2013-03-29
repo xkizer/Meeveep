@@ -23,7 +23,8 @@ var express = require('express')
   , cons = require('consolidate')
   , session = require('./util/session.js')
   , io = require('socket.io')
-  , url = require('url');
+  , url = require('url')
+  , lang = require('./util/lang');
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(session.middleware);
+  app.use(lang.middleware);
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
@@ -113,6 +115,8 @@ app.get('/star/add', manager.addStarForm);
 app.post('/star/add', manager.addStar);
 app.get('/product/add', manager.addProduct);
 app.post('/product/add', manager.doAddProduct);
+app.get('/product/edit/:productId', manager.addProduct);
+app.post('/product/edit/:productId', manager.doEditProduct);
 app.get('/manage/dashboard', manager.listProducts);
 app.get('/product/delete/:productId', manager.deleteProduct);
 app.get('/manage/stars', manager.listStars);

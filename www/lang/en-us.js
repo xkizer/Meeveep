@@ -97,6 +97,7 @@ var lang = {
     txtSalutation: 'Salutation',
     txtFirstname: 'First name',
     txtSurname: 'Surname',
+    txtAll: 'All',
     txtPleaseSelect: 'Please select',
     txtDateOfBirth: 'Date of birth',
     txtDD: 'DD',

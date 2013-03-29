@@ -4,7 +4,7 @@ var error = require('../util/error.js')
 // Available languages
 var langPacks = {
     'en-us': 'English (US)',
-    'en-uk': 'English (UK)',
+    'en-gb': 'English (UK)',
     'de'   : 'German',
     'ig-ng': 'Igbo (Nigeria)',
 };

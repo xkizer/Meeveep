@@ -409,5 +409,61 @@ jQuery(function ($) {
         
         return false;
     });
+    
+    // Language selector
+    var langSelector = $('#language-selector'),
+        langSelUl = langSelector.find('ul'),
+        lis = langSelector.find('li'),
+        langSelOpener = langSelector.find('span');
+    
+    langSelOpener.click(function () {
+        if(langSelUl.open) {
+            langSelUl.animate({height: 0});
+            langSelUl.open = false;
+        } else {
+            langSelUl.animate({height: langSelUl[0].scrollHeight});
+            langSelUl.open = true;
+        }
+    });
+    
+    lis.click(function () {
+        var me = $(this),
+            langId = me.attr('data-lang');
+        
+        langSelUl.animate({height: 0});
+        
+        // Visual indicator
+        langSelOpener.css({background: me.css('background')});
+        
+        // Set the preference
+        $.ajax({
+            url: '/account/preference/setLang',
+            type: 'post',
+            dataType: 'json',
+            error: function () {
+                // Failed, set the preference on this computer alone and do not attach to account
+                document.cookie = 'lang=' + langId;
+            },
+            success: function (data) {
+                if(data.error) {
+                    document.cookie = 'lang=' + langId;
+                    return;
+                }
+                
+                // Success, the server would send us instruction to set the cookie
+            },
+            complete: function () {
+                // Refresh necessary
+                window.location = window.location.href;
+            }
+        });
+    });
+    
+    $(window).click(function (e) {
+        if(e.target !== langSelector[0] && !langSelector.find(e.target).length && langSelUl.open) {
+            langSelUl.animate({height: 0});
+            langSelUl.open = false;
+        }
+    });
 });
 

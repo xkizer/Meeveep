@@ -67,7 +67,7 @@ module.exports = {
                 return callback(err);
             }
         
-            collection.update({managerId: Number(managerId), status: 'valid', productId: String(productId)}, {$set: {status: 'deleted', deleted: new Date()}}, function (err, stuff) {
+            collection.update({managerId: Number(managerId), status: 'valid', productId: String(productId)}, {$set: {status: 'deleted', deleted: new Date(), by: Number(managerId)}}, function (err, stuff) {
                 if(err) {
                     console.log(err);
                     return callback(err);

@@ -9,7 +9,8 @@ var sortFields = ['price','name'];
 module.exports = {
     getProducts: getProducts,
     createProduct: createProduct,
-    getProduct: getProduct
+    getProduct: getProduct,
+    editProduct: editProduct
 };
 
 /**
@@ -276,6 +277,52 @@ function createProduct (data, callback) {
                 }
 
                 return callback(null, productId);
+            });
+        });
+    });
+}
+
+function editProduct (data, callback) {
+    // Verify data has some basics
+    if(!data.productId || !data.includes || !data.price || !data.available || !data.starId || !data.managerId) {
+        return callback('Incomplete product data');
+    }
+
+    var productId = data.productId; // The product we are editing
+    data = {}.extend(data);
+    data.created = new Date();
+    data.sold = 0;
+    data.available = parseInt(data.available);
+    data.status = 'valid';
+    
+    getProduct(productId, function (err, product) {
+        if(err) {
+            return callback(err);
+        }
+        
+        // Attach the star information... use the starId attached to the
+        // product to prevent overwriting the starId and star in the product
+        stars.getStar(product.starId, function (err, star) {
+            if(err) {
+                return callback(err);
+            }
+
+            data.star = star;
+            delete data.productId;
+            delete data._id;
+
+            db.mongoConnect({db: 'meeveep', collection: 'products'}, function (err, collection) {
+                if(err) {
+                    return callback(err);
+                }
+
+                collection.update({productId: productId}, {$set: data}, function (err) {
+                    if(err) {
+                        return callback(err);
+                    }
+
+                    return callback(null, productId);
+                });
             });
         });
     });
