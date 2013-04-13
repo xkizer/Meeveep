@@ -293,7 +293,7 @@ function createStar (userId, data, callback) {
             return callback(err);
         }
         
-        db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection, db) {
+        db.mongoConnect({db: 'meeveep', collection: 'stars'}, function (err, collection, meeveep) {
             if(err) {
                 return callback(err);
             }
@@ -316,7 +316,7 @@ function createStar (userId, data, callback) {
                     return callback(err);
                 }
 
-                db.collection('users', function (err, collection) {
+                meeveep.collection('users', function (err, collection) {
                     collection.update({userId: userId}, {$set: {starId: starId}}, function (err) {
                         if(err) {
                             return callback(err);
