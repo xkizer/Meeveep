@@ -49,7 +49,7 @@ module.exports = {
                             // The q is set, and is greater than all the previous q's
                             // Check if this is a language we support
                             if(i18n.langExists(lng[0])) {
-                                lang = t[1];
+                                lang = lng[0];
                                 q = t[1];
                                 // Keep looking...
                             }

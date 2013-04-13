@@ -15,11 +15,13 @@ module.exports = {
         req.getUser(function (err, user) {
             console.log(cli.yellow('Displaying user', user));
             // Check if user is a star
-            if(!user || !user.starId) {
-                console.log(user)
+            if(!user || !user.userData.starId) {
+                console.log(user);
                 res.json({"e": "Unauthorised"});
                 return res.json({error: 'Unauthorised'}, 403).end();
             }
+            
+            user = user.userData;
 
             media.createSession(user, function (err, session) {
                 if(err) {
