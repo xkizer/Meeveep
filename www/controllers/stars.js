@@ -19,7 +19,8 @@ module.exports = {
     getCategories: getCategories,
     createStar: createStar,
     getProfilePicture: getProfilePicture,
-    getDefaultCard: getDefaultCard
+    getDefaultCard: getDefaultCard,
+    getLanguages: getLanguages
 };
 
 
@@ -389,5 +390,33 @@ function getProfilePicture (starId, callback) {
         }
         
         return callback(null, card['152x157'].path);
+    });
+}
+
+/**
+ * Get a list of all available languages that the star can register under
+ * @param callback
+ */
+function getLanguages (callback) {
+    db.mongoConnect({db: 'meeveep', collection: 'locales'}, function (err, collection) {
+        if(err) {
+            console.error(err);
+            return callback(err);
+        }
+        
+        collection.find({}, function (err, cursor) {
+            if(err) {
+                console.error(err);
+                return callback(err);
+            }
+            
+            cursor.toArray(function (err, langs) {
+                if(err) {
+                    console.error(err);
+                }
+                
+                callback(err, langs);
+            });
+        });
     });
 }

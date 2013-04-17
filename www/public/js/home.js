@@ -40,4 +40,9 @@ jQuery(function ($) {
     if(loginBox.find('#login-form').length) {
         userIcon.click();
     }
+    
+    // When a category is selected in the search form...
+    $('#personal-autographs-search [name="category"]').on('change', function (e) {
+        $(this).closest('form').submit();
+    });
 });

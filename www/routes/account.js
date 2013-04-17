@@ -67,7 +67,7 @@ module.exports = {
             txt_miss: 'txtGreetingMiss',
             txt_as_manager: 'txtAsManager',
             txt_as_star: 'txtAsStar',
-            
+            txt_terms: 'txtTerms',
             
             css_files: [
                 '/css/uniform.default.css'
@@ -77,6 +77,9 @@ module.exports = {
             ],
             body: {
                 id: 'registration-page'
+            },
+            partials: {
+                sidebar: 'sidebar/terms'
             }
         };
         

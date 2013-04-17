@@ -24,7 +24,7 @@ module.exports = {
                 username: 'meeveep',
                 password: 'T4Bmj3LcZmvD'
             },
-            collections: ['users','stars', 'cards', 'orders', 'managers', 'products', 'categories', 'newsletter', 'pictures']
+            collections: ['users','stars', 'cards', 'orders', 'managers', 'products', 'categories', 'newsletter', 'pictures', 'locales']
         }
     }
 }

@@ -248,6 +248,7 @@ var productOrdering = {
                             txt_payment_method: 'txtPaymentMethod',
                             txt_pencil_color: 'txtPencilColor',
                             txt_autograph_includes: 'txtAutographIncludes',
+                            txt_via_paypal: 'txtCCWithPaypal',
                             audio: 'txtAudio',
                             video: 'txtVideo',
                             hq_video: 'txtHQ',

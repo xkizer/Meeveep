@@ -5,8 +5,13 @@
         <div id="live-autograph-list" class="scrolling">
             <nav class="content">
                 <ul>
+                    {{#user.managerId}}
                     <li{{#dashboard-page}} class="active"{{/dashboard-page}}><a href="/manage/dashboard">{{txt_manage_autographs}}</a></li>
                     <li{{#addStar-page}} class="active"{{/addStar-page}}><a href="/manage/stars">{{txt_manage_artists}}</a></li>
+                    {{/user.managerId}}
+                    {{#user.starId}}
+                    <li{{#autographs-page}} class="active"{{/autographs-page}}><a href="/autographs/unsigned">{{txt_sign_autographs}}</a></li>
+                    {{/user.starId}}
                 </ul>
             </nav>
         </div>

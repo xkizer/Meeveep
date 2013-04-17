@@ -89,9 +89,15 @@ jQuery(function ($) {
                     var data = cnv[0].toDataURL();
                     img[0].src = data;
                     li.removeAttr('data-loaded').removeClass('loading');
-                }).error(function () {
+                }).error(function (e) {
                     li.remove();
-                    alert('Upload failed. Please check network connection');
+                    
+                    if(e.status) {
+                        // We reached the server, but process failed
+                        alert('Upload failed: server error');
+                    } else {
+                        alert('Upload failed. Please check network connection');
+                    }
                 });
             }
         };

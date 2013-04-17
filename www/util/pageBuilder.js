@@ -40,6 +40,7 @@ var standardVariables = {
     footer_trust_text:  'txtFtTrustText',
     meeveep_secure:     'txtMeeveepSecure',
     meeveep_secure_txt: 'txtFtMeeveepSecureTxt',
+    txt‌Login:           'txtLogin',
     txtHelp:            {text:'txtHelp',filter:'toLowerCase'},
     txtPrivacy:         {text:'txtPrivacy',filter:'toLowerCase'},
     txtContact:         {text:'txtContact',filter:'toLowerCase'},
@@ -148,7 +149,23 @@ function render (opts, req, res, next, callback) {
             vars['_lang-id'] = lang;
             vars.availableLangs = langs;
             
-            res.render(opts.page, vars, callback);
+            // Attach the user variable
+            if('undefined' === typeof vars.user) {
+                req.getUser(function (err, user) {
+                    if(err || !user) {
+                        return render();
+                    }
+                    
+                    vars.user = user.userData;
+                    render();
+                });
+            } else {
+                render();
+            }
+            
+            function render() {
+                res.render(opts.page, vars, callback);
+            }
         }
     });
 }

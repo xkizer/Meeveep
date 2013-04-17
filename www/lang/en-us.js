@@ -160,7 +160,11 @@ var lang = {
     txtPrivacyPolicy: 'Privacy policy',
     txtSecurity: 'Security',
     txtStarsYouManage: 'Stars you currently manage',
-    
+    txtSignAutographs: 'Sign autographs',
+    txtLiveAutographSessions: 'Live signing sessions',
+    liveAutographsDatesFound: '{0} dates found',
+    txtLiveAutographNoDatesFound: 'There are no live signing sessions at the moment',
+    txtCCWithPaypal: 'Credit card (with Paypal)',
     
     
     starCategoryMusic: 'Music',

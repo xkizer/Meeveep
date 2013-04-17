@@ -77,6 +77,7 @@ module.exports = {
                 txt_manage_autographs: 'txtManageAutographs',
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
+                txt_sign_autographs: 'txtSignAutographs',
                 
                 partials: {
                     sidebar: 'sidebar/manager'
@@ -129,8 +130,18 @@ module.exports = {
                 });
             });
             
-            var langs = i18n.getAvailableLaguages();
-            view.langs = langs;
+            // Load available languages
+            chain.add(function (next) {
+                stars.getLanguages(function (err, langs) {
+                    if(err) {
+                        console.error(err);
+                        return res.send('Server failure', 500);
+                    }
+                    
+                    view.langs = langs;
+                    next();
+                });
+            });
             
             if(data) {
                 view.data = data;
@@ -188,7 +199,7 @@ module.exports = {
                     }
                     
                     // Convert all temprary files
-                    db.mongoConnect({db: 'meeveep', collection: 'managers'}, function (err, collection, db) {
+                    db.mongoConnect({db: 'meeveep', collection: 'managers'}, function (err, collection, meeveep) {
                         if(err) {
                             console.log(err);
                             return res.json({error: err.message || err});
@@ -200,7 +211,7 @@ module.exports = {
                                 return res.json({error: err.message || err});
                             }
                             
-                            db.collection('cards', function (err, collection) {
+                            meeveep.collection('cards', function (err, collection) {
                                 if(err) {
                                     return res.json({error: err.message || err});
                                 }
@@ -219,7 +230,7 @@ module.exports = {
                                                 cds.push(card.cardId);
                                             });
 
-                                            db.collection('stars', function (err, collection) {
+                                            meeveep.collection('stars', function (err, collection) {
                                                 collection.update({starId: starId}, {$pushAll: {cards: cds}}, function (err) {
                                                     // Done creating star
                                                     res.json({success: true});
@@ -229,7 +240,7 @@ module.exports = {
                                     });
                                     
                                     // Find the associated user and link them up
-                                    db.collection('users', function (err, collection) {
+                                    meeveep.collection('users', function (err, collection) {
                                         collection.update({userId: userId}, {$set: {starId: starId}}, function () {});
                                         
                                         // Refresh cache
@@ -301,9 +312,9 @@ module.exports = {
                         view.data.pieces = product.available; // Show only the available pieces
                         
                         // Single star... show profile picture
-                        stars.getProfilePicture(product.star.starId, function (err, picture) {
+                        stars.getProfilePicture(product.starId, function (err, picture) {
                             if(err) {
-                                next();
+                                return next();
                             }
                             
                             view.data.profilePic = picture;
@@ -477,6 +488,7 @@ module.exports = {
                 txt_manage_autographs: 'txtManageAutographs',
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
+                txt_sign_autographs: 'txtSignAutographs',
                 
                 partials: {
                     sidebar: 'sidebar/manager'
@@ -520,10 +532,12 @@ module.exports = {
                 return module.exports.addProduct(req, res, next, 'Access denied', data);
             }
 
+            /*
             // Terms
             if(data['terms-accepted'] !== 'yes') {
                 return module.exports.addProduct(req, res, next, 'You need to accept the terms', data);
             }
+            */
             
             // Check that the language is supported
             if(!i18n.langExists(data.lang)) {
@@ -533,7 +547,12 @@ module.exports = {
 
             // Check that at least one option was selected
             var includes = data.includes;
-
+            
+            if('string' === typeof includes) {
+                includes = [includes];
+                data.includes = includes;
+            }
+            
             if(!includes || !Array.isArray(includes)) {
                 // No option selected, woe!
                 return module.exports.addProduct(req, res, next, 'Please select at least one medium', data);
@@ -567,11 +586,6 @@ module.exports = {
                         return module.exports.addProduct(req, res, next, 'That star does not belong to you!', data);
                     }
                     
-                    if(!Array.isArray(includes)) {
-                        includes = [includes];
-                        data.includes = includes;
-                    }
-                    
                     // Check the dates
                     var startDate = data['validity.from'],
                         endDate = data['validity.to'];
@@ -580,7 +594,7 @@ module.exports = {
                         startDate = startDate.split('/');
                         
                         if(startDate.length === 3) {
-                            startDate = new Date(startDate[2], startDate[1], startDate[0], 0, 0, 0, 0);
+                            startDate = new Date(startDate[2], startDate[1] - 1, startDate[0], 0, 0, 0, 0);
                             data.startDate = startDate;
                         }
                     }
@@ -589,7 +603,7 @@ module.exports = {
                         endDate = endDate.split('/');
                         
                         if(endDate.length === 3) {
-                            endDate = new Date(endDate[2], endDate[1], endDate[0], 23, 59, 59, 999);
+                            endDate = new Date(endDate[2], endDate[1] - 1, endDate[0], 23, 59, 59, 999);
                             data.endDate = endDate;
                         }
                     }
@@ -648,10 +662,12 @@ module.exports = {
                 return module.exports.addProduct(req, res, next, 'Access denied', data);
             }
 
+            /*
             // Terms
             if(data['terms-accepted'] !== 'yes') {
                 return module.exports.addProduct(req, res, next, 'You need to accept the terms', data);
             }
+            */
             
             // Check that the language is supported
             if(!i18n.langExists(data.lang)) {
@@ -661,6 +677,11 @@ module.exports = {
 
             // Check that at least one option was selected
             var includes = data.includes;
+            
+            if('string' === typeof includes) {
+                includes = [includes];
+                data.includes = includes;
+            }
 
             if(!includes || !Array.isArray(includes)) {
                 // No option selected, woe!
@@ -719,7 +740,7 @@ module.exports = {
                             startDate = startDate.split('/');
 
                             if(startDate.length === 3) {
-                                startDate = new Date(startDate[2], startDate[1], startDate[0], 0, 0, 0, 0);
+                                startDate = new Date(startDate[2], startDate[1] - 1, startDate[0], 0, 0, 0, 0);
                                 data.startDate = startDate;
                             }
                         }
@@ -728,7 +749,7 @@ module.exports = {
                             endDate = endDate.split('/');
 
                             if(endDate.length === 3) {
-                                endDate = new Date(endDate[2], endDate[1], endDate[0], 23, 59, 59, 999);
+                                endDate = new Date(endDate[2], endDate[1] - 1, endDate[0], 23, 59, 59, 999);
                                 data.endDate = endDate;
                             }
                         }
@@ -872,6 +893,7 @@ module.exports = {
                 txt_manage_autographs: 'txtManageAutographs',
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
+                txt_sign_autographs: 'txtSignAutographs',
                 
                 partials: {
                     sidebar: 'sidebar/manager'
@@ -968,6 +990,7 @@ module.exports = {
                 txt_manage_autographs: 'txtManageAutographs',
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
+                txt_sign_autographs: 'txtSignAutographs',
                 
                 partials: {
                     sidebar: 'sidebar/manager'

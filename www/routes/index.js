@@ -69,7 +69,6 @@ module.exports = {
                 }
 
                 view.products = [];
-                view.found = products.length;
                 var counter = products.length;
                 
                 // Add images to the objects
@@ -170,10 +169,17 @@ module.exports = {
             txt_information: 'txtInformation',
             txt_found: {text: 'txtFound', filter: 'toUpperCase'},
             txt_all: 'txtAll',
+            txt_live_autograph_sessions: 'txtLiveAutographSessions',
+            live_autographs_dates_found: {text: 'liveAutographsDatesFound', variables: [0]},
+            txt_no_dates: 'txtLiveAutographNoDatesFound',
             
             post_scripts: [
                 {src: '/js/home.js'}
-            ]
+            ],
+            
+            partials: {
+                sidebar: 'sidebar/live-autographs'
+            }
         };
 
         chain.exec(function () {

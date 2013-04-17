@@ -22,11 +22,13 @@ module.exports = {
         // Look in the database
         db.mongoConnect({db: 'meeveep', collection: 'pictures'}, function (err, collection, db) {
             if(err) {
+                console.log(err);
                 return res.send('Server error', 500).end();
             }
             
             collection.findOne({path: filePath.pathname}, function (err, pic) {
                 if(err) {
+                    console.log(err);
                     return res.send('Server error', 500).end();
                 }
                 
@@ -39,12 +41,13 @@ module.exports = {
                 
                 grid.get(mongo.ObjectID(pic.fileId), function (err, file) {
                     if(err) {
+                        console.log(err);
                         return res.send('Server error', 500).end();
                     }
                     
                     // Create the file
                     var paths = filePath.pathname.trim('/').split('/'),
-                        current = path.normalize(__dirname + '/../public/'),
+                        current = path.normalize(__dirname + '/../cache/'),
                         counter = 0;
                     
                     function createDir () {
@@ -74,6 +77,7 @@ module.exports = {
                                 } else {
                                     fs.mkdir(current, function (err) {
                                         if(err) {
+                                            console.log(err);
                                             return res.send('Server error', 500).end();
                                         }
                                         

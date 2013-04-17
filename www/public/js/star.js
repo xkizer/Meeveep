@@ -1431,6 +1431,7 @@ jQuery(function ($) {
         defaultDate: "+0d",
         changeMonth: true,
         numberOfMonths: 3,
+        dateFormat: 'dd/mm/yy',
         onClose: function( selectedDate ) {
             toContainer.datepicker( "option", "minDate", selectedDate );
         }
@@ -1441,6 +1442,7 @@ jQuery(function ($) {
         defaultDate: "+1m",
         changeMonth: true,
         numberOfMonths: 3,
+        dateFormat: 'dd/mm/yy',
         onClose: function( selectedDate ) {
             fromContainer.datepicker( "option", "maxDate", selectedDate );
         }
