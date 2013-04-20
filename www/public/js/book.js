@@ -217,4 +217,10 @@ jQuery(function ($) {
         var currentUrl = location.pathname + location.search;
         window.location = '/account/billing/edit?done=' + encodeURIComponent(currentUrl);
     });
+    
+    // Check if the user has billing information set
+    if(!$('#billing-info-address').text().trim()) {
+        // User has no billing information, force billing information edit
+        $('#billing-edit').click();
+    }
 });

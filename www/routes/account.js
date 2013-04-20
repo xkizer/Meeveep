@@ -387,6 +387,9 @@ module.exports = {
                 txt_sign_autographs: 'txtSignAutographs',
                 txt_edit_billing: 'txtEditBillingAddress',
                 
+                post_scripts: [
+                    {src: '/js/billing.js'}
+                ],
                 
                 partials: {
                     sidebar: 'sidebar/manager'
