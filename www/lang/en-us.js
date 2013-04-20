@@ -167,7 +167,6 @@ var lang = {
     txtCCWithPaypal: 'Credit card (with Paypal)',
     txtBillingInformation: 'Billing information',
     txtName: 'Name',
-    txtBillingAddress: 'Billing address',
     txtPhoneNo: 'Phone number',
     txtSaveInformation: 'Save information',
     txtZIP: 'ZIP',
