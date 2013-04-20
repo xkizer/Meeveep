@@ -404,13 +404,13 @@ function getLanguages (callback) {
             return callback(err);
         }
         
-        collection.find({}, function (err, cursor) {
+        collection.find({enabled: true}, function (err, cursor) {
             if(err) {
                 console.error(err);
                 return callback(err);
             }
             
-            cursor.toArray(function (err, langs) {
+            cursor.sort({name: 1}).toArray(function (err, langs) {
                 if(err) {
                     console.error(err);
                 }

@@ -125,13 +125,13 @@ jQuery(function ($) {
                 // Check if it has a video attached
                 if(card.videoURL) {
                     videoContainer.show();
-                    vidElem.src = card.videoURL + '?type=ogv';
+                    vidElem.src = card.videoURL + '?type=' + (vidElem.canPlayType('video/mp4') ? 'mp4' : 'ogv');
                     vidElem.poster = card.videoPoster;
                     videoContainer.attr('data-mode', 'playback').addClass('ready');
                     videoContainer.addClass('video');
                 } else if (card.audioURL) {
                     videoContainer.show();
-                    vidElem.src = card.videoURL + '?type=ogv';
+                    vidElem.src = card.videoURL + '?type=' + vidElem.canPlayType('video/mp4') ? 'mp4' : 'ogv';
                     videoContainer.attr('data-mode', 'playback').addClass('ready');
                     videoContainer.removeClass('video');
                 } else {
@@ -1376,18 +1376,18 @@ jQuery(function ($) {
         vidElem.play();
         videoContainer.addClass('playing');
         
-        vidElem.onended = function () {
+        vidElem.addEventListener('ended', function () {
             endPlay();
-        };
+        });
         
-        vidElem.ontimeupdate = function () {
+        vidElem.addEventListener('timeupdate', function () {
             var secs = vidElem.currentTime % 60,
                 mins = Math.floor(vidElem.currentTime / 60),
                 totSec = vidElem.duration % 60,
                 totMin = Math.floor(vidElem.duration / 60);
 
             timeElem.text('%02d:%02d/%02d:%02d'.printf(mins, secs, totMin, totSec));
-        };
+        });
     }
     
     function endPlay() {

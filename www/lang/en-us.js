@@ -165,6 +165,18 @@ var lang = {
     liveAutographsDatesFound: '{0} dates found',
     txtLiveAutographNoDatesFound: 'There are no live signing sessions at the moment',
     txtCCWithPaypal: 'Credit card (with Paypal)',
+    txtBillingInformation: 'Billing information',
+    txtName: 'Name',
+    txtBillingAddress: 'Billing address',
+    txtPhoneNo: 'Phone number',
+    txtSaveInformation: 'Save information',
+    txtZIP: 'ZIP',
+    txtState: 'State',
+    txtCity: 'City',
+    txtContd: 'cont\'d',
+    txtAddress: 'Address',
+    txtEditBillingAddress: 'Edit billing address',
+    
     
     
     starCategoryMusic: 'Music',

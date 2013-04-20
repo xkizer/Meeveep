@@ -25,7 +25,7 @@
             <address>
                 <h3>{{txt_billing_address}}</h3>
                 <span>{{user.billing.name}}</span>
-                <span>{{user.billing.address1}}</span>
+                <span>{{user.billing.address}}</span>
                 {{#user.billing.address2}}
                 <span>{{user.billing.address2}}</span>
                 {{/user.billing.address2}}
@@ -33,7 +33,7 @@
                 <span>{{user.billing.zip}} {{user.billing.state}}</span>
                 <span><strong>E-Mail:</strong> {{user.billing.email}}</span>
                 <span><strong>Tel.:</strong> {{user.billing.phone}}</span>
-                <a href="#" class="edit">{{txt_edit}}</a>
+                <a href="#" class="edit" id="billing-edit">{{txt_edit}}</a>
             </address>
             <div id="payment-method">
                 <h3>{{txt_payment_method}}</h3>
@@ -45,7 +45,7 @@
             <div id="payment-method2">
                 <h3>{{txt_payment_method}}</h3>
                 <span><label><input type="checkbox" name="terms_agree" /> <span class="text">{{txt_accept_cond_left}}.</span></label><i class="cl"></i></span>
-                <span><label><input type="checkbox" name="recieve_newsletter" /> <span class="text">{{txt_receive_newsletter}}.</span></label><i class="cl"></i></span>
+                <!-- <span><label><input type="checkbox" name="recieve_newsletter" /> <span class="text">{{txt_receive_newsletter}}.</span></label><i class="cl"></i></span> -->
                 <i class="cl"></i>
             </div>
             <div id="total-price">

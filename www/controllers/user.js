@@ -139,6 +139,8 @@ User.prototype = {
         return {}.extend(this._data);
     },
     
+    updateBilling: _updateBilling,
+    
     /**
      * Reset the user's password
      * @param {string} newPass The new password
@@ -342,6 +344,35 @@ function findByEmail(email, callback) {
             }
 
             new User(user.userId, callback);
+        });
+    });
+}
+
+function _updateBilling (info, callback) {
+    var me = this;
+    
+    db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
+        if(err) {
+            return callback(err);
+        }
+
+        collection.update({userId: me._data.userId}, {$set: {billing: info}}, function (err) {
+            if(err) {
+                return callback(err);
+            }
+
+            // Delete cache
+            db.redisConnect(function (err, client) {
+                if(!err) {
+                    client
+                      .multi()
+                        .del('auth:user:' + me._data.userId)
+                        .del('auth:user:' + me._data.username)
+                      .exec();
+                } // Else, the user will have to wait till the cache expires
+            });
+            
+            return callback(null);
         });
     });
 }

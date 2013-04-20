@@ -1,0 +1,51 @@
+<div id="personal-autograph-register">
+    <header>
+        <hgroup>
+            <h1>{{txt_billing_info}}</h1>
+            <h2>{{page_title_description}}</h2>
+        </hgroup>
+    </header>
+    <section class="content">
+        <form method="post">
+            {{#form.error_msg}}<div class="error">{{form.error_msg}}</div>{{/form.error_msg}}
+            <div class="left">
+                <div>
+                    <h3>{{txt_address}}*</h3>
+                    <input type="text" value="{{form.defaults.address}}" required name="address" />
+                </div>
+                <div>
+                    <h3>{{txt_address}} {{txt_contd}}</h3>
+                    <input type="text" value="{{form.defaults.address2}}" name="address2" />
+                </div>
+                <div>
+                    <h3>{{txt_city}}*</h3>
+                    <input type="text" value="{{form.defaults.city}}" required name="city" />
+                </div>
+                <div>
+                    <h3>{{txt_state}}*</h3>
+                    <input type="text" value="{{form.defaults.state}}" required name="state" />
+                </div>
+                <div>
+                    <h3>{{txt_zip}}*</h3>
+                    <input type="text" value="{{form.defaults.zip}}" required name="zip" />
+                </div>
+            </div>
+            <div class="right">
+                <div>
+                    <h3>{{txt_name}}*</h3>
+                    <input type="text" required value="{{form.defaults.name}}" name="name" />
+                </div>
+                <div>
+                    <h3>{{txt_email_address}}*</h3>
+                    <input type="email" value="{{form.defaults.email}}" required name="email" />
+                </div>
+                <div>
+                    <h3>{{txt_phone_no}}*</h3>
+                    <input type="text" value="{{form.defaults.phone}}" required name="phone" />
+                </div>
+                <button type="submit">{{txt_save_info}} »</button>
+            </div>
+        </form>
+    </section>
+    <div id="personal-autographs-bottom">&nbsp;</div>
+</div>

@@ -312,5 +312,139 @@ module.exports = {
                 });
             });
         });
+    },
+    
+    billingAddressForm: function (req, res, next) {
+        var args = arguments;
+        
+        req.requireLogin(function (user) {
+            user = user.userData;
+            var renderer = require('../util/pageBuilder.js')();
+            var errorMsg, err, defaults;
+
+            if(args.length > 3) {
+                err = args[3];
+            }
+
+            if(args.length > 4) {
+                defaults = args[4];
+            } else if(user.billing) {
+                defaults = user.billing;
+            }
+
+            if(err) {
+                if(err.message) {
+                    errorMsg = err.message;
+                } else {
+                    errorMsg = String(err);
+                }
+            }
+            
+            if(!defaults) {
+                defaults = {};
+                
+                if(user.firstName && user.lastName) {
+                    defaults.name = '{0} {1}'.format(user.firstName, user.lastName)
+                } else if (user.name) {
+                    defaults.name = '{0}'.format(user.name);
+                }
+                
+                defaults.email = user.email;
+            }
+            
+            var view = {
+                form: {
+                    error_msg: errorMsg,
+                    defaults: defaults,
+                },
+
+                newsletter: true,
+
+                txt_billing_info: 'txtBillingInformation',
+                page_title_description: 'txtStarClose',
+                txt_name: 'txtName',
+                txt_address: 'txtAddress',
+                txt_email_address: 'txtEmailAddress',
+                txt_phone_no: 'txtPhoneNo',
+                txt_save_info: 'txtSaveInformation',
+                txt_contd: 'txtContd',
+                txt_city: 'txtCity',
+                txt_state: 'txtState',
+                txt_zip: 'txtZIP',
+                
+                'billing-page': true,
+                
+
+                css_files: [
+                    '/css/uniform.default.css'
+                ],
+                body: {
+                    id: 'billing-page'
+                },
+                txt_manage_autographs: 'txtManageAutographs',
+                txt_manage_artists: 'txtManageArtists',
+                txt_add_product: 'txtAddProduct',
+                txt_sign_autographs: 'txtSignAutographs',
+                txt_edit_billing: 'txtEditBillingAddress',
+                
+                
+                partials: {
+                    sidebar: 'sidebar/manager'
+                }
+            };
+
+            if(req.query._t === 'mrg') {
+                view.manager = true;
+            } else if (req.query._t === 'str') {
+                view.star = true;
+            }
+
+            renderer.render({page: 'main/account/billing', vars: view}, req, res, next);
+        });
+    },
+    
+    editBillingInfo: function (req, res, next) {
+        req.requireLogin(function (user) {
+            // Verify data
+            var data = req.body;
+            
+            if(!data.email) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide an email address', data);
+            }
+            
+            if(!data.name) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide a billing name', data);
+            }
+            
+            if(!data.phone) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide a valid phone number', data);
+            }
+            
+            if(!data.address) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide a valid address', data);
+            }
+            
+            if(!data.city) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide a valid city', data);
+            }
+            
+            if(!data.state) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide a valid state', data);
+            }
+            
+            if(!data.zip) {
+                return module.exports.billingAddressForm(req, res, next, 'Please provide a valid ZIP code', data);
+            }
+            
+            // Save data
+            user.updateBilling(data, function (err) {
+                if(err) {
+                    return module.exports.billingAddressForm(req, res, next, 'Server error: could not update information', data);
+                }
+                
+                var done = 'string' === typeof req.query.done ? req.query.done : '/';
+                res.redirect(done);
+            });
+        });
     }
 };

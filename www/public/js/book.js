@@ -209,4 +209,12 @@ jQuery(function ($) {
         
         location.href = next + '?' + search.join('&');
     });
+    
+    // Edit billing address
+    $('#billing-edit').click(function (e) {
+        e.preventDefault();
+        
+        var currentUrl = location.pathname + location.search;
+        window.location = '/account/billing/edit?done=' + encodeURIComponent(currentUrl);
+    });
 });

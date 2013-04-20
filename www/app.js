@@ -116,6 +116,9 @@ app.get('/register', account.register); // Alias
 app.post('/account/register', account.doRegister);
 app.post('/account/register', account.register); // If the registration fails
 
+app.get('/account/billing/edit', account.billingAddressForm);
+app.post('/account/billing/edit', account.editBillingInfo);
+
 
 // Star management
 app.get('/star/add', manager.addStarForm);

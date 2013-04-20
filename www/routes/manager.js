@@ -78,6 +78,7 @@ module.exports = {
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
                 txt_sign_autographs: 'txtSignAutographs',
+                txt_edit_billing: 'txtEditBillingAddress',
                 
                 partials: {
                     sidebar: 'sidebar/manager'
@@ -143,16 +144,20 @@ module.exports = {
                 });
             });
             
-            if(data) {
-                view.data = data;
+            chain.add(function (next) {
+                if(data) {
+                    view.data = data;
+
+                    // Check currently selected language
+                    view.langs.forEach(function (lang) {
+                        if(data.lang === lang.code) {
+                            lang.selected = true;
+                        }
+                    });
+                }
                 
-                // Check currently selected language
-                view.langs.forEach(function (lang) {
-                    if(data.lang === lang.code) {
-                        lang.selected = true;
-                    }
-                });
-            }
+                next();
+            });
 
             if(err) {
                 view.error = err.message || err;
@@ -398,18 +403,25 @@ module.exports = {
                     return a.name > b.name ? 1 : -1;
                 });
                 
-                var langs = i18n.getAvailableLaguages();
-                view.langs = langs;
-                
-                if(view.editing) {
-                    view.langs.forEach(function (lang) {
-                        if(lang.code === view.product.lang) {
-                            lang.selected = true;
-                        }
-                    });
-                }
-                
-                next();
+            
+                // Load available languages
+                stars.getLanguages(function (err, langs) {
+                    if(err) {
+                        console.error(err);
+                        return res.send('Server failure', 500);
+                    }
+
+                    view.langs = langs;
+                    next();
+
+                    if(view.editing) {
+                        view.langs.forEach(function (lang) {
+                            if(lang.code === view.product.lang) {
+                                lang.selected = true;
+                            }
+                        });
+                    }
+                });
             });
             
             chain.add(function (next) {
@@ -489,6 +501,8 @@ module.exports = {
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
                 txt_sign_autographs: 'txtSignAutographs',
+                txt_edit_billing: 'txtEditBillingAddress',
+                
                 
                 partials: {
                     sidebar: 'sidebar/manager'
@@ -540,7 +554,8 @@ module.exports = {
             */
             
             // Check that the language is supported
-            if(!i18n.langExists(data.lang)) {
+//            if(!i18n.langExists(data.lang)) {
+            if('string' !== typeof data.lang) {
                 // Unsopported language
                 return module.exports.addProduct(req, res, next, 'Please select a valid language', data);
             }
@@ -670,7 +685,8 @@ module.exports = {
             */
             
             // Check that the language is supported
-            if(!i18n.langExists(data.lang)) {
+//            if(!i18n.langExists(data.lang)) {
+            if('string' !== typeof data.lang) {
                 // Unsopported language
                 return module.exports.addProduct(req, res, next, 'Please select a valid language', data);
             }
@@ -894,6 +910,7 @@ module.exports = {
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
                 txt_sign_autographs: 'txtSignAutographs',
+                txt_edit_billing: 'txtEditBillingAddress',
                 
                 partials: {
                     sidebar: 'sidebar/manager'
@@ -991,6 +1008,7 @@ module.exports = {
                 txt_manage_artists: 'txtManageArtists',
                 txt_add_product: 'txtAddProduct',
                 txt_sign_autographs: 'txtSignAutographs',
+                txt_edit_billing: 'txtEditBillingAddress',
                 
                 partials: {
                     sidebar: 'sidebar/manager'

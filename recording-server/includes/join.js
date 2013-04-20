@@ -194,6 +194,7 @@ module.exports = {
                 '-qscale', '1',
                 '-i', path + '%d.jpg',
                 '-pix_fmt', 'yuv420p',
+                '-vcodec', 'libx264',
                 path + 'video.mp4'
             ];
             
@@ -251,6 +252,7 @@ module.exports = {
             '-i', path + 'video.mp4',
             '-i', path + 'audio.wav',
             '-strict', 'experimental',
+            '-vcodec', 'libx264',
             '-map', '0:0',
             '-map', '1:0',
             path + 'audio-video.mp4'

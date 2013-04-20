@@ -238,7 +238,7 @@ var productOrdering = {
                         // Star found, render the star booking confirmation page
                         var view = {
                             star: star,
-                            user: currentUser,
+                            user: currentUser.userData,
                             txt_for: 'txtFor',
                             txt_of: {text: 'txtOf', filter: 'toLowerCase'},
                             txt_step: 'txtStep',

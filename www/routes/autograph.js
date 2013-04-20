@@ -86,6 +86,8 @@ module.exports = {
         var medium = req.params.medium; // What we are to update
 
         req.requireLogin(function (currentUser) {
+            currentUser = currentUser.userData;
+            
             var payload = req.body[medium],
                 orderId = req.params.orderId;
 
