@@ -58,7 +58,11 @@ module.exports = {
                         txt_play_pause_descr: 'txtRecPlayPauseDescr',
                         txt_stop_descr: 'txtRecStopDescr',
                         serializeIncludes: function () {
-                            return JSON.stringify(this.product.includes);
+                            try {
+                                return JSON.stringify(this.product.includes);
+                            } catch (e) {
+                                return JSON.stringify(['signature']);
+                            }
                         },
 
                         post_scripts: [

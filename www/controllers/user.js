@@ -260,11 +260,13 @@ function createUser (userInfo, callback) {
         // Create user
         db.mongoConnect({db: 'meeveep', collection: 'users'}, function (err, collection) {
             if(err) {
+                console.error(err);
                 return callback(error(0x4B07, err));
             }
             
             collection.insert(info, function (err) {
                 if(err) {
+                    console.error(err);
                     return callback(error(0x4B09, err));
                 }
                 
@@ -272,6 +274,7 @@ function createUser (userInfo, callback) {
                 db.redisConnect(function (err, client) {
                     if(err) {
                         // Error occured... delete information from mongo
+                        console.error(err);
                         collection.remove(info, fn);
                         return callback(error(0x4B0A, err));
                     }
@@ -286,6 +289,7 @@ function createUser (userInfo, callback) {
                     client.hmset('auth:user:' + username, dt, function (err) {
                         if(err) {
                             // Could not cache login information
+                            console.error(err);
                             collection.remove(info, fn);
                             return callback(error(0x4B0B, err));
                         }

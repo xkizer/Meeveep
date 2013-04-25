@@ -151,7 +151,7 @@ app.get('/account/dashboard', function (req, res, next) {
         if(user.userData.managerId) {
             return res.redirect('/manage/dashboard');
         } else if(user.userData.starId) {
-            return res.redirect('/star/dashboard');
+            return res.redirect('/autographs/unsigned');
         }
         
         return res.redirect('/user/dashboard');

@@ -697,6 +697,9 @@ html {
 
 #personal-autographs-search input {
 	width: 125px;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 #personal-autographs-search button {
