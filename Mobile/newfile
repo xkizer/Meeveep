@@ -1,0 +1,26 @@
+server {
+        listen   80;
+        listen   [::]:80 default ipv6only=on;
+        # Make site accessible from http://localhost/
+        server_name 91.250.80.237;
+
+        access_log  /var/log/nginx/log/www.meeveep.access.log  main;
+        error_log  /var/log/nginx/log/www.meeveep.error.log;
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+
+        
+        location / {
+            proxy_pass        http://meeveep;
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_set_header        Host            $host;
+            proxy_set_header        X-Real-IP       $remote_addr;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+}
+
+upstream meeveep  {
+      server 127.0.0.1:6050; #First server
+}
