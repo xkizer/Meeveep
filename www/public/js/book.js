@@ -186,7 +186,7 @@ jQuery(function ($) {
         
         var paymentMethod = $('#payment-method select').val(),
             termsAgreed = $('#payment-method2 [name="terms_agree"]')[0].checked,
-            receiveNlt = $('#payment-method2 [name="recieve_newsletter"]')[0].checked,
+//            receiveNlt = $('#payment-method2 [name="recieve_newsletter"]')[0].checked,
             next = $(this).attr('data-next') || 'step-4';
         
         if(!termsAgreed && next === 'step-4') {
@@ -196,7 +196,7 @@ jQuery(function ($) {
         
         urlObj['payment-method'] = encodeURIComponent(paymentMethod);
         urlObj['accepted-terms'] = encodeURIComponent(termsAgreed);
-        urlObj['newsletter'] = encodeURIComponent(receiveNlt);
+        //urlObj['newsletter'] = encodeURIComponent(receiveNlt);
         
         // Build url
         var search = [];

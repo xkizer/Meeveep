@@ -14,7 +14,8 @@ var presets = [
     '152x157',
     '67x',
     '633x420',
-    '340×227'
+    '340x227',
+    '102x105'
 ];
 
 module.exports = {
@@ -55,7 +56,7 @@ module.exports = {
                 
                 var fname = '/tmp/' + util.generateKey(32);
 
-                var resize = size.split(/x|×/),
+                var resize = size.split('x'),
                     resizeX = parseInt(resize[0]),
                     resizeY = parseInt(resize[1]),
                     resizeRatio = resizeX/resizeY;

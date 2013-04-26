@@ -88,7 +88,6 @@ $( document ).bind( "pagebeforechange", function( e, data ) {
 			// that hash the query params in the hash.
 
 			var u2 = $.mobile.path.parseUrl( u.hash.replace( /^#/, "" ) );
-            console.log('a', data, e);
 			if ( u2.search ) {
 				if ( !data.options.dataUrl ) {
 					data.options.dataUrl = data.toPage;
@@ -98,6 +97,37 @@ $( document ).bind( "pagebeforechange", function( e, data ) {
 			}
 		}
 	}
+});
+
+$( document ).bind( "pagechange", function( e, data ) {
+
+	// We only want to handle the case where we are being asked
+	// to go to a page by URL, and only if that URL is referring
+	// to an internal page by id.
+
+	if ( typeof data.absUrl === "string" ) {
+		var u = $.mobile.path.parseUrl( data.absUrl );
+		if ( $.mobile.path.isEmbeddedPage( u ) ) {
+
+			// The request is for an internal page, if the hash
+			// contains query (search) params, strip them off the
+			// toPage URL and then set options.dataUrl appropriately
+			// so the location.hash shows the originally requested URL
+			// that hash the query params in the hash.
+
+			var u2 = $.mobile.path.parseUrl( u.hash.replace( /^#/, "" ) );
+            
+			if ( u2.search ) {
+				$(data.toPage).data('pageData', queryStringToObject( u2.search ));
+			} else {
+                $(data.toPage).data('pageData', {});
+            }
+		}
+	}
+});
+
+$( document ).bind( "pageinit", function( e, data ) {
+    //location.hash = location.hash + '?' + u2.search;
 });
 
 })( jQuery, window );
