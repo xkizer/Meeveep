@@ -21,6 +21,188 @@ module.exports = {
         
         // Let express handle the 404
         next();
+    },
+    
+    search: function (req, res, next) {
+        // Get the list of products
+        var qry = {limit: 10, checkAvailable: true};
+
+        if(typeof req.query.category === 'string') {
+            qry.category = req.query.category;
+        }
+
+        if(typeof req.query.q === 'string' && req.query.q.trim()) {
+            qry.search = req.query.q;
+        }
+        
+        if(typeof req.query.limit === 'string') {
+            var limit = parseInt(req.query.limit);
+            
+            qry.limit = Math.max(1, Math.min(limit, 200));
+        }
+        
+            
+        products.getProducts(qry, function (err, products) {
+            if(err) {
+                // Something bad
+                return res.json({error: 'Failed to retrieve products list'}, 500);
+            }
+
+            var prods = [],
+                counter = products.length;
+
+            // Add images to the objects
+            products.forEach(function (product) {
+                var prod = {};
+                prod.includes   = product.includes;
+                prod.price      = '%.2f'.printf(product.price);
+                prod.name       = product.star.name;
+                prod.productId  = product.productId;
+
+                stars.getStar(product.starId, function (err, star) {
+                    if(err || !star) {
+                        counter--;
+                        return counter || next();
+                    }
+
+                    stars.getProfilePicture(product.starId, function (err, picture) {
+                        counter--;
+
+                        if(err || !star) {
+                            return counter || next();
+                        }
+
+                        prod.thumbnail = picture;
+                        prods.push(prod);
+                        return counter || next();
+                    });
+                });
+            });
+
+            function next () {
+                res.json(prods);
+            }
+
+            if(products.length === 0) {
+                next();
+            }
+        });
+    },
+    
+    getCards: function (req, res, next) {
+        var productId = req.params.productId;
+        
+        // Get the card for the star associated with the product
+        products.getProduct(productId, function (err, product) {
+            if(err) {
+                return res.json({error: 'Unable to get product details'});
+            }
+            
+            stars.getStar(product.starId, function (err, star) {
+                if(err) {
+                    return res.json({error: 'Unable to get star associated with product'});
+                }
+
+                star.getCards(function (err, cards) {
+                    if(err) {
+                        return res.json({error: 'Unable to load cards'});
+                    }
+                    
+                    var cds = [];
+                    var copy = ['67x', '152x157', '340x227', '633x420', 'original', 'cardId', 'starId'];
+                    
+                    cards.forEach(function (card) {
+                        var cd = {}, prop;
+                        
+                        for(var i = 0; i < copy.length; i++) {
+                            prop = copy[i];
+                            cd[prop] = card[prop];
+                            console.log(prop);
+                            
+                            if('object' === typeof cd[prop] && cd[prop].path) {
+                                cd[prop] = cd[prop].path;
+                            }
+                        }
+                        
+                        cds.push(cd);
+                    });
+                    
+                    res.json(cds);
+                });
+            })
+        });
+    },
+    
+    placeOrder: function (req, res, next) {
+        // The fourth step saves the autograph and redirects to home page
+        // TODO: Verification
+        var autograph = req.body,
+            productId = autograph.productId,
+            ctrlStar = stars,
+            cardId = autograph.cardId || false;
+        
+        if(!cardId) {
+            // Error, 401
+            console.error('Card ID not supplied');
+            return res.json({error: 'Where is the card ID?'}).end();;
+        }
+        
+        // User needs to be logged in first
+        req.requireLogin(function (currentUser) {
+            // Get star and product info
+            products.getProduct(productId, function (err, product) {
+                if(err) {
+                    console.error(err);
+                    res.json({error: 'Something went wrong'}).end();
+                    return;
+                }
+                
+                if(!product) {
+                    console.error('Product not found');
+                    return res.json({eror: 'Product not found'}, 404).end();
+                }
+                
+                stars.getStar(product.starId, function (err, star) {
+                    if(err) {
+                        console.error(err);
+                        res.json({error: 'Something went wrong'}, 500).end();
+                        return;
+                    }
+
+                    if(!star) {
+                        console.error('Star not found');
+                        return res.json({error: 'Star not found'}, 404).end();
+                    }
+                    
+                    // Verify the user has a valid card
+                    ctrlStar.getCard(cardId, function (err, card) {
+                        if(err) {
+                            // Something went wrong...
+                            console.error(err);
+                            return res.json({error: 'Something went wrong'});
+                        }
+
+                        // Everything okay, save
+                        autograph.extend({
+                            star: star,
+                            user: currentUser,
+                            date: new Date(),
+                            card: card,
+                            product: product
+                        });
+                        
+                        orders.placeOrder(autograph, function (err, orderNumber) {
+                            if(err) {
+                                console.error(cli.red('something went wrong'), err);
+                                return res.json({error: 'Something went wrong!'}, 500).end();
+                            }
+                            
+                            res.json({success: true});
+                        });
+                    });
+                });
+            });
+        });
     }
 };
 

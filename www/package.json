@@ -10,7 +10,6 @@
     "mustache": "*",
     "redis": "*",
     "mongodb": "*",
-    "consolidate": "*",
     "hogan-express": "*",
     "cli-color": "*",
     "webrtc.io": "*",

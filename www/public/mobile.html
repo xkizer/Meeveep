@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+    <head>
+    	<title>Meeveep Mobile</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="mobile/css/jq-mobile/jquery.mobile-1.2.1.min.css" rel="stylesheet" />
+        <link href="mobile/css/style.css" rel="stylesheet" />
+        <script src="mobile/js/lib/jquery-1.8.3.min.js"></script>
+        <script src="mobile/js/lib/jquery.mobile-1.3.1.min.js"></script>
+        <script src="js/lib/util.js"></script>
+        <script src="mobile/js/lib/jqm.page.params.js"></script>
+        <script src="mobile/js/mobile.js"></script>
+    </head>
+    <body>
+        
+        <!-- Login box -->
+        <div id="login-box">
+            <div class="login">
+            	<h1>Login</h1>
+                <p>Um in deinen persönlichen Bereich zu gelangen, musst du dich zuerst einloggen.</p>
+                <form>
+                    <fieldset>
+                    	<input type="email" name="email" required placeholder="E-Mail-Adresse" />
+                    	<input type="password" name="password" required placeholder="Passwort" />
+                        <button type="submit">Absenden</button>
+                        <span class="cl"></span>
+                    </fieldset>
+                </form>
+                <a href="#">Noch kein Konto? Registrieren »</a>
+            </div>
+            <div class="logged-in">
+            </div>
+        </div>
+        
+        <!-- #### HOME PAGE #### -->
+        <div data-role="page" id="home" data-title="Home page">
+            <!-- GENERAL HEADER -->
+            <header data-position="fixed" class="header-main" data-fullscreen="true" data-id="header-main" id="header-main" data-role="header">
+                <h1><a href="#home"><img src="mobile/images/meeveep-junior.png" /></a></h1>
+                <div id="header-buttons">
+                    <a data-role="button" id="header-nav-user" data-inline="true" href="#login">&nbsp</a>
+                    <a data-role="button" id="header-nav-options" data-inline="true" href="#">&nbsp</a>
+                    <a data-role="button" id="header-nav-info" data-inline="true" href="#">&nbsp</a>
+                </div>
+            </header>
+            <div data-role="content">
+                <h1>Digitale Autogramme deiner Stars</h1>
+                <div class="divide" id="home-divide">
+                    <div class="left">
+                    	<img src="mobile/images/imgs/home-img.jpg" alt="Some image" />
+                    </div>
+                    <div class="right">
+                    	<h2>Willkommen bei Meeveep.</h2>
+                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules. </p>
+                    </div>
+                    <span class="cl"></span>
+                </div>
+                <div class="buttons">
+                	<a href="#login" data-role="button" data-theme="m">Login &amp; Registrierung</a>
+                	<a href="#autographs-list" data-role="button" data-theme="n">Kaufautogramme</a>
+                	<a href="#login" data-role="button" data-theme="n">Live-Autogrammstunden</a>
+                </div>
+            </div> 
+        </div>
+        
+        <!-- #### AUTOGRAPHS LIST #### -->
+        <div data-role="page" id="autographs-list">
+            <div data-role="content">
+            	<h1>Kaufautogramme</h1>
+                <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                <a href="#home" data-role="button" data-theme="m" class="arrow prev">Zurück zur Startseite</a>
+                <div class="stripe dark" id="autograph-search">
+                    <form>
+                    	<fieldset>
+                            <select data-inline="true" id="autographs-list-category-selector">
+                            	<option value="">All</option>
+                            	<option value="music">Music</option>
+                            	<option value="tv">Television</option>
+                            	<option value="sports">Sports</option>
+                            </select>
+                            <input id="autographs-list-search" type="search" placeholder="Search" data-inline="true" />
+                        </fieldset>	
+                    </form>
+                </div>
+                <ul id="autographs-list-items"><!-- will contain the star list --></ul>
+            </div>
+        </div>
+        
+        
+        <!-- #### ORDER STEP 1 #### -->
+        <div data-role="page" id="order">
+        	<div data-role="content">
+            	<h1>Motiv wählen</h1>
+                <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                <div id="order-choose-card">
+                    <ul></ul>
+                </div>
+                <button data-theme="m" class="next arrow">Weiter zu Schritt 2</button>
+            </div>
+        </div>
+        
+        
+        <!-- #### ORDER STEP 2 #### -->
+        <div data-role="page" id="order-2">
+        	<div data-role="content">
+            	<h1>Kommentar hinzufügen</h1>
+                <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                <form>
+                    <fieldset>
+                    	<div>
+                            <h3>Diese Karte ist für:</h3>
+                            <input name="for" type="text" />
+                        </div>
+                        <div>
+                            <h3>Was soll die Nachricht beinhalten?*</h3>
+                            <textarea name="message"></textarea>
+                        </div>
+                        <h3>Stiftfarbe</h3>
+                        <ul>
+                            <li class="pen-color pen-color-red" data-color="red"></li>
+                            <li class="pen-color pen-color-orange" data-color="orange"></li>
+                            <li class="pen-color pen-color-yellow" data-color="yellow"></li>
+                            <li class="pen-color pen-color-green" data-color="green"></li>
+                            <li class="pen-color pen-color-cyan" data-color="cyan"></li>
+                            <li class="pen-color pen-color-blue" data-color="blue"></li>
+                            <li class="pen-color pen-color-purple" data-color="purple"></li>
+                            <li class="pen-color pen-color-pink active" data-color="pink"></li>
+                            <li class="pen-color pen-color-black" data-color="black"></li>
+                            <li class="pen-color pen-color-white" data-color="white"></li>
+                        </ul>
+                        <span class="cl"></span>
+                    </fieldset>
+                </form>
+                <button data-theme="m" class="next arrow">Weiter zu Schritt 3</button>
+            </div>
+        </div>
+        
+        
+        <!-- #### ORDER STEP 3 #### -->
+        <div data-role="page" id="order-3">
+            <div data-role="content">
+            	<h1>Bestellung aufgeben</h1>
+                <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                <form>
+                    <fieldset>
+                        <div id="order-billing-address">
+                            <h3>Rechnungsadresse</h3>
+                            <address>
+                                <span class="name">Benjamin Braun</span>
+                                <span class="address">Am Rennerpark 6</span>
+                                <span class="address2">51645 Gummersbach</span>
+                                <span class="email">braun@megahunger.com</span>
+                                <span class="phone">01639669301</span>
+                            </address>
+                            <a href="#" class="edit">bearbeiten</a>
+                        </div>
+                        <div id="order-payment-method">
+                            <h3>Bezahlmethode wählen</h3>
+                            <select name="payment-method">
+                            	<option value="paypal">Kreditkarte (PayPal)</option>
+                            </select>
+                        </div>
+                        <div id="order-terms-conditions" data-role="controlgroup">
+                            <h3>Bitte bestätigen</h3>
+                            <label><input name="terms-accepted" type="checkbox" /> <span>Ja, ich habe die AGB gelesen und akzeptiere diese.</span></label>
+                            <label><input name="newsletter" type="checkbox" /> <span>Ja, ich möchte über Neuigkeiten bei Meeveep informiert werden.</span></label>
+                        </div>
+                        <div id="order-final-quote">
+                            <h3>Gesamtpreis</h3>
+                            <div>EUR <span class="price"></span> (inkl. MwSt.)</div>
+                        </div>
+                    </fieldset>
+                </form>
+                <button data-theme="m">kostenpflichtig bestellen »</button>
+            </div>
+        </div>
+        
+        
+    </body>
+</html>

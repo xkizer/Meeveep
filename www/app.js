@@ -75,6 +75,9 @@ app.get('/autographs/unsigned', autographs.unsigned);
 // Product ordering
 app.get('/product/order/:productId', function (req, res) { res.redirect(301, (req.url + '/step-1').itrim('/')); });
 app.get('/product/order/:productId/step-:step([1-9])', products.order);
+app.get('/search', products.search);
+app.get('/product/:productId/getCards', products.getCards);
+app.post('/order/place', products.placeOrder);
 
 
 app.post('/card/:orderId/update/:medium(signature|video|audio)', autographs.updateMedia);
