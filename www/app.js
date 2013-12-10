@@ -186,6 +186,20 @@ server.listen(process.env.PORT || 3000, function(){
 
 io = io.listen(server);
 
+process.on('SIGINT', function () {
+//  app.close();
+  console.log('Shutting down server..');
+  process.exit(0);
+});
+
+/*
+ * Catch uncaught exceptions
+ */
+process.on('uncaughtException', function(err){
+  console.log('Exception: ' + err.stack);
+});
+
+
 /*
 // Take advantage of multi-core systems
 

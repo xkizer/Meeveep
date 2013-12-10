@@ -1,5 +1,5 @@
 jQuery(function ($) {
-    var PICTURE_UPLOAD_URL = 'http://meeveep.dev:3000/star/upload/image';
+    var PICTURE_UPLOAD_URL = 'http://192.168.1.98:3000/star/upload/image';
     var PICTURE_DELETE_URL = '/star/upload/image/remove/{0}/{1}';
     var PRODUCT_DELETE_URL = '/product/delete/{0}';
     var worker = new Worker('/js/blob-converter.js');
