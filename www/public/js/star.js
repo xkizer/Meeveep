@@ -891,7 +891,7 @@ jQuery(function ($) {
                 worker.onmessage = function (event) {
                     var data = event.data;
                     // There are different types of messages the worker may send
-                    // us. We use switch to find out `which.
+                    // us. We use switch to find out which.
                     switch(data.type) {
                         // Ready event signifies the worker is ready to start crunching numbers.
                         // This event is usually a response to the 'ready' event we sent to the worker.

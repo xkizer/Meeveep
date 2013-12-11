@@ -7,6 +7,7 @@ lib-cov
 *.pid
 *.gz
 *.psd
+*.java
 
 pids
 logs
@@ -38,3 +39,6 @@ Slices
 /www/cache/
 !/Mobile/
 /www/public/images/flags/
+.buildpath
+.project
+/.settings/
