@@ -42,7 +42,7 @@ module.exports = {
                 return callback(err);
             }
         
-            collection.find({managerId: Number(managerId), status: 'valid', $or: [{endDate: null}, {endDate: {$gte: new Date()}}]}, function (err, stuff) {
+            collection.find({managerId: Number(managerId), status: 'valid', /*$or: [{endDate: null}, {endDate: {$gte: new Date()}}]*/}, function (err, stuff) {
                 if(err) {
                     console.log(err);
                     return callback(err);

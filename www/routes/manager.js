@@ -827,6 +827,7 @@ module.exports = {
             
             chain.add(function (next) {
                 manager.getProducts(user.userData.managerId, function (err, products) {
+
                     if(err) {
                         return res.send('Server failure', 500);
                     }
