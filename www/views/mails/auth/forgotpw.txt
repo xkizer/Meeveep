@@ -1,7 +1,7 @@
 How are you doing Chuks?
 
 You said you forgot your password, right? If so, click on the address below (or copy it to your address bar)
-http://meeveep.dev:3000/auth/resetpw/I42mRdmhknMyVskKmHn4upCaL6TghRWL9PUf/g9LXCATgCkpAB0G46joRj7oF.
+http://192.168.1.98:3000/auth/resetpw/I42mRdmhknMyVskKmHn4upCaL6TghRWL9PUf/g9LXCATgCkpAB0G46joRj7oF.
 
 If not, then someone has definitely been playing with your account. Ignore this mail and the above link will become inactive after 6 hours.
 

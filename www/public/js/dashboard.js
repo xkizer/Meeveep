@@ -177,7 +177,11 @@ jQuery(function ($) {
             subCatSelect.empty();
             
             subCats.forEach(function (sub) {
-                var option = $('<option>').attr('value', sub).text(sub).appendTo(subCatSelect);
+                var option = $('<option>').attr('value', sub).text(sub);
+                if(sub==subcategory) {
+                    option.attr('selected','selected');
+                }
+                option.appendTo(subCatSelect);
                 subCatSelect.selectbox('detach');
                 subCatSelect.selectbox('attach');
             });

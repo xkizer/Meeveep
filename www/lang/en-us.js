@@ -176,8 +176,6 @@ var lang = {
     txtAddress: 'Address',
     txtEditBillingAddress: 'Edit billing address',
     
-    
-    
     starCategoryMusic: 'Music',
     starCategorySports: 'Sports',
     starCategoryTv: 'Television'

@@ -11,7 +11,7 @@ var joiner = require('./includes/join');
 require('./util/extend');
 
 var SERVER_ID = 'V42KBoJY0sJnfYzHn8VJulOmEjVoX6ptpYTLNGOPArkfKPHC';
-var SERVER_ADDR = process.env.MAIN_SERVER || 'meeveep.dev';
+var SERVER_ADDR = process.env.MAIN_SERVER || '192.168.1.98';
 var SERVER_PORT = port; // Port for the recording server
 var HTTP_PORT = Number(port) + 1; // Port for HTTP (used for streaming videos)
 var RECORDING_DIR = '/data/recordings/'; // The directory we are to store recordings (could be /dev/sdh/ or anything)
@@ -27,7 +27,7 @@ global.SERVER = {
 var connections = 0;
 
 var mainServer = {
-    host: process.env.MAIN_SERVER || 'meeveep.dev',
+    host: process.env.MAIN_SERVER || '192.168.1.98',
     port: process.env.MAIN_SERVER_PORT || 3000
 };
 

@@ -8,6 +8,7 @@ var cli = require('cli-color'),
     step = require('../util/step'),
     auth = require('../controllers/auth');
 
+
 module.exports = {
     /**
      * Display the "register account" page
@@ -154,7 +155,7 @@ module.exports = {
         
         // Security... make sure the data we have is the data we should have
         var dt = {};
-        var fields = ['firstName', 'lastName', 'salutation', 'email', 'terms', 'password', 'birthday'];
+        var fields = ['firstName', 'lastName', 'salutation', 'email', 'terms', 'password', 'birthday', 'username'];
         
         for(var i = 0; i < fields.length; i++) {
             var fieldName = fields[i];
@@ -205,6 +206,7 @@ module.exports = {
     },
     
     displayChangePassword: function (req, res, next) {
+
         var args = arguments;
         
         req.requireLogin(function () {
@@ -268,7 +270,11 @@ module.exports = {
                 sidebar_counter: ' ',
                 body: {
                     id: 'login-page'
-                }
+                },
+                partials: {
+                    sidebar: 'sidebar/live-autographs'
+                },
+                changepw_pg: true,
             };
 
             chain.exec(function () {

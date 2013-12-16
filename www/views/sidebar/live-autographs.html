@@ -3,9 +3,17 @@
         <h2>{{txt_live_autograph_sessions}}</h2>
         <span id="live-autograph-found">{{live_autographs_dates_found}}</span>
         <div id="live-autograph-list" class="scrolling">
-            <div class="content">
+            <nav class="content">
+                {{#loggedIn}}
+                <ul>
+                    <li {{#home_pg}} class="active" {{/home_pg}} ><a href="/home"> Home </a></li>
+                    <li {{#changepw_pg}} class="active" {{/changepw_pg}} ><a href="/account/changepw">{{txt_change_pw}}</a></li>
+                </ul>
+                {{/loggedIn}}
+                {{^loggedIn}}
                 <h3>{{txt_no_dates}}</h3>
-            </div>
+                {{/loggedIn}}
+            </nav>
         </div>
     </div>
     <div id="live-autograph-counter"></div>

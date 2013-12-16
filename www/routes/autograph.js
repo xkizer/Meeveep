@@ -66,6 +66,7 @@ module.exports = {
                         },
 
                         post_scripts: [
+                            { src: '/js/lib/webkitAudioContextMonkeyPatch.js' },
                             { src: '/js/book.js' },
                             { src: '/js/star.js' },
                             {src: '/socket.io/socket.io.js'},

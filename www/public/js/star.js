@@ -858,7 +858,8 @@ jQuery(function ($) {
                 }
 
                 // Audio...
-                var context = new audioContext();
+                //var context = new audioContext();
+                var context = new webkitAudioContext();
                 var mediaStreamSource = context.createMediaStreamSource(stream);
                 var rec = new Recorder(mediaStreamSource, recorderConfig);
 

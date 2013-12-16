@@ -440,13 +440,14 @@ jQuery(function ($) {
             url: '/account/preference/setLang',
             type: 'post',
             dataType: 'json',
+            data:{ 'lang': langId },
             error: function () {
                 // Failed, set the preference on this computer alone and do not attach to account
-                document.cookie = 'lang=' + langId;
+                //document.cookie = 'lang=' + langId;
             },
             success: function (data) {
                 if(data.error) {
-                    document.cookie = 'lang=' + langId;
+                    //document.cookie = 'lang=' + langId;
                     return;
                 }
                 

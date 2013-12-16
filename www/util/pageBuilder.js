@@ -53,8 +53,12 @@ var standardVariables = {
 function render (opts, req, res, next, callback) {
     // The template variables
     var vars = opts.vars;
-    var lang = opts.lang || req.lang;
-    
+    //var lang = opts.lang || req.lang;
+    var lang = req.session.lang || opts.lang || req.acceptedLanguages[0];
+    lang = lang.toLowerCase();
+
+    console.log("## lang="+lang);
+
     i18n.getLangFile(lang, function (err, langFile) {
         if(err) {
             throw err;

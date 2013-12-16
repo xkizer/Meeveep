@@ -10,7 +10,7 @@ module.exports = {
         var renderer = require('../util/pageBuilder.js')();
         //res.render('index', { title: 'Express', sidebar_counter: 'Some content' });
         var chain = step.init();
-        
+
         if(req.query.regComplete && req.query.nonce) {
             // We have a registration complete
             chain.add(function (next) {
@@ -50,6 +50,7 @@ module.exports = {
         }
         
         chain.add(function (next) {
+
             // Get the list of products
             var qry = {limit: 10, checkAvailable: true};
             
@@ -63,6 +64,7 @@ module.exports = {
             }
             
             products.getProducts(qry, function (err, products) {
+                
                 if(err) {
                     // Something bad
                     return res.send('Server error', 500);
@@ -172,6 +174,7 @@ module.exports = {
             txt_live_autograph_sessions: 'txtLiveAutographSessions',
             live_autographs_dates_found: {text: 'liveAutographsDatesFound', variables: [0]},
             txt_no_dates: 'txtLiveAutographNoDatesFound',
+            txt_change_pw: 'txtChangePassword',
             
             post_scripts: [
                 {src: '/js/home.js'}
@@ -179,7 +182,8 @@ module.exports = {
             
             partials: {
                 sidebar: 'sidebar/live-autographs'
-            }
+            },
+            home_pg: true,
         };
 
         chain.exec(function () {
