@@ -31,7 +31,8 @@ function getAvailableLaguages () {
  */
 function getLangFile (lang, callback) {
     if(!langExists(lang)) {
-        return callback(error(0x3401));
+    //    return callback(error(0x3401));
+        lang = "en-us";
     }
     
     var langFile = require('../lang/' + lang + '.js');

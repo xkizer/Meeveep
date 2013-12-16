@@ -17,7 +17,7 @@ var cli = require('cli-color'),
 module.exports = {
     addStarForm: function (req, res, next) {
         var args = arguments;
-        
+
         req.requireLogin(function (user) {
             if(args.length > 3) {
                 var err = args[3];
@@ -34,6 +34,32 @@ module.exports = {
 
             var chain = step.init(),
                 renderer = require('../util/pageBuilder.js')();
+
+            if(req.params.starId) {
+                chain.add(function (next) {
+                    var starId = req.params.starId;
+                    stars.getStar(starId, function(err, star) {
+                        if(err) {
+                            // Probably not found
+                            return next();
+                        }
+
+                        view.editing = true;
+                        view.star = star;
+                        view.data = {}.extend(star);
+
+                        // Single star... show profile picture
+                        stars.getProfilePicture(starId, function (err, picture) {
+                            if(err) {
+                                return next();
+                            }
+                            
+                            view.data.profilePic = picture;
+                            next();
+                        });
+                    });
+                });
+            }
             
             var view = {
                 newsletter: true,
@@ -118,12 +144,13 @@ module.exports = {
                             view.categories.push({code: categories[i].id, text: cat});
                         });
                         
-                        if(data) {
+                        if(view.star) {
                             view.categories.forEach(function (cat) {
-                                if(cat.code === data.category) {
+                                if(cat.code === view.star.category) {
                                     cat.selected = true;
                                 }
                             });
+                            view.subcategory = view.star.subcategory;
                         }
                         
                         next();
@@ -145,12 +172,12 @@ module.exports = {
             });
             
             chain.add(function (next) {
-                if(data) {
-                    view.data = data;
 
+                if(view.star) {
                     // Check currently selected language
                     view.langs.forEach(function (lang) {
-                        if(data.lang === lang.code) {
+
+                        if(view.star.lang === lang.code) {
                             lang.selected = true;
                         }
                     });
@@ -1075,7 +1102,7 @@ module.exports = {
                 // Not a manager
                 return res.json({err: 'Access denied'}, 403);
             }
-        
+
             var files = req.files;
             var uploadId = req.body.uploadId;
 
@@ -1091,6 +1118,9 @@ module.exports = {
             options.method = 'post';
             
             var request = require('http').request(options, function(response) {
+
+                console.log("response="+JSON.stringify(response));
+                
                 response.setEncoding('utf8');
                 
                 var data = '';

@@ -119,6 +119,12 @@ app.get('/register', account.register); // Alias
 app.post('/account/register', account.doRegister);
 app.post('/account/register', account.register); // If the registration fails
 
+app.post('/account/preference/setLang', function (req, res, next) {
+  var lang = req.body.lang;
+  req.session.lang = lang;
+  res.send("ok");
+});
+
 app.get('/account/billing/edit', account.billingAddressForm);
 app.post('/account/billing/edit', account.editBillingInfo);
 
@@ -126,6 +132,9 @@ app.post('/account/billing/edit', account.editBillingInfo);
 // Star management
 app.get('/star/add', manager.addStarForm);
 app.post('/star/add', manager.addStar);
+app.get('/star/edit/:starId', manager.addStarForm);
+app.post('/star/edit/:starId', manager.editStar);
+
 app.get('/product/add', manager.addProduct);
 app.post('/product/add', manager.doAddProduct);
 app.get('/product/edit/:productId', manager.addProduct);

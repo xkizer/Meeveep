@@ -376,7 +376,7 @@ jQuery(function ($) {
     lis.click(function () {
         var me = $(this),
             langId = me.attr('data-lang');
-        
+
         langSelUl.animate({height: 0});
         
         // Visual indicator
